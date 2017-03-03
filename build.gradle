@@ -7,7 +7,9 @@ buildscript {
     dependencies {
         classpath 'com.android.tools.build:gradle:2.2.3'
         classpath 'com.jakewharton.hugo:hugo-plugin:1.2.1' //打印log的工具
-        classpath 'com.github.dcendents:android-maven-gradle-plugin:1.4.1'
+        classpath "io.realm:realm-gradle-plugin:2.2.1"
+        classpath 'me.tatarka:gradle-retrolambda:3.2.5'
+        classpath 'com.bugtags.library:bugtags-gradle:latest.integration'
 
         // NOTE: Do not place your application dependencies here; they belong
         // in the individual module build.gradle files
