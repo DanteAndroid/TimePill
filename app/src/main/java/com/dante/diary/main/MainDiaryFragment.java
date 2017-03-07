@@ -3,7 +3,6 @@ package com.dante.diary.main;
 
 import android.os.Bundle;
 import android.os.Handler;
-import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -20,6 +19,7 @@ import com.dante.diary.model.Diary;
 import com.dante.diary.utils.SpUtil;
 import com.dante.diary.utils.UiUtils;
 import com.dante.diary.utils.WrapContentLinearLayoutManager;
+import com.yqritc.recyclerviewflexibledivider.HorizontalDividerItemDecoration;
 
 import java.util.List;
 
@@ -73,10 +73,12 @@ public class MainDiaryFragment extends RecyclerFragment {
 
         adapter = new DiaryListAdapter(null);
         adapter.openLoadAnimation(BaseQuickAdapter.SCALEIN);
-//        adapter.divi
         adapter.isFirstOnly(false);
         recyclerView.setAdapter(adapter);
-        recyclerView.addItemDecoration(new DividerItemDecoration(context, layoutManager.getOrientation()));
+        recyclerView.addItemDecoration(new HorizontalDividerItemDecoration.Builder(context)
+                .size(2)
+                .margin(48)
+                .build());
 //        RecyclerView.ItemAnimator animator = recyclerView.getItemAnimator();
 //        if (animator instanceof SimpleItemAnimator) {
 //            ((SimpleItemAnimator) animator).setSupportsChangeAnimations(false);

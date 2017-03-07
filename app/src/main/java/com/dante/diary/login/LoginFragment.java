@@ -7,11 +7,10 @@ import android.text.TextUtils;
 import android.widget.Toast;
 
 import com.dante.diary.R;
-import com.dante.diary.base.Constants;
 import com.dante.diary.base.BaseFragment;
+import com.dante.diary.base.Constants;
 import com.dante.diary.model.DataBase;
 import com.dante.diary.model.Diary;
-import com.dante.diary.net.TimeApi;
 import com.dante.diary.utils.SpUtil;
 import com.dante.diary.utils.UiUtils;
 
@@ -48,14 +47,18 @@ public class LoginFragment extends BaseFragment {
 
     @Override
     protected void initViews() {
+        if (isLogin()) {
+            login();
+            return;
+        }
+
         ((DefaultLoginView) login.getLoginView()).setListener((loginUser, loginPass) -> {
             Editable userName = loginUser.getEditText().getText();
             Editable password = loginPass.getEditText().getText();
-
             if (TextUtils.isEmpty(userName)) {
-                UiUtils.showSnack(getView(), "请输入用户名 ~");
+                UiUtils.showSnack(getView(), "请输入用户名~");
             } else if (TextUtils.isEmpty(password)) {
-                UiUtils.showSnack(getView(), "请输入密码 ~");
+                UiUtils.showSnack(getView(), "请输入密码~");
             } else {
                 name = userName.toString();
                 psw = password.toString();
@@ -69,6 +72,15 @@ public class LoginFragment extends BaseFragment {
         });
     }
 
+    private boolean isLogin() {
+        name = SpUtil.getString(Constants.NAME);
+        psw = SpUtil.getString(Constants.PASSWORD);
+
+        return !(name.isEmpty() || psw.isEmpty());
+
+
+    }
+
     private void login() {
         if (TextUtils.isEmpty(name) || TextUtils.isEmpty(psw)) {
             UiUtils.showSnack(getView(), "用户名或密码不能为空哦");
@@ -77,12 +89,7 @@ public class LoginFragment extends BaseFragment {
 
         LoginManager.login(name, psw)
                 .compose(applySchedulers())
-                .map(new Func1<TimeApi.Result<List<Diary>>, List<Diary>>() {
-                    @Override
-                    public List<Diary> call(TimeApi.Result<List<Diary>> listResult) {
-                        return listResult.diaries;
-                    }
-                })
+                .map(listResult -> listResult.diaries)
                 .flatMap(new Func1<List<Diary>, Observable<Diary>>() {
                     @Override
                     public Observable<Diary> call(List<Diary> diaries) {

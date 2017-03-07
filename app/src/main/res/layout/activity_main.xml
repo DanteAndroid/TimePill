@@ -18,7 +18,7 @@
             android:layout_height="?actionBarSize"
             android:background="?colorPrimary"
             android:minHeight="48dp"
-            app:layout_scrollFlags="scroll|snap"
+            app:layout_scrollFlags="enterAlways"
             app:popupTheme="@style/ThemeOverlay.AppCompat.Dark"/>
 
     </android.support.design.widget.AppBarLayout>
