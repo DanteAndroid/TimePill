@@ -1,2 +1,2 @@
 # TimeDiary
-A private diary app.imgod first to see
+A private diary app.
