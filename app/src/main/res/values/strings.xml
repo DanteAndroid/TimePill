@@ -1,3 +1,14 @@
 <resources>
     <string name="app_name">时光日记</string>
+    <string name="test_diary">
+        你必须实现onCreate方法来处理应用的一些基本启动逻辑，它只在activity的整个生命周期中执行一次。比如，定义UI，初始化一些类级别的变量。onCreate执行后，onStart和onResume会立刻紧接着被执行，然后activity会停留在onResume，直到发生改变状态的事件，比如接电话，或者跳到别的activity、屏幕关闭。
+        相比于生命周期的第一个回调onCreate，最后一个被调用的是onDestroy。系统调用它作为你activity实例被完全从内存中移除的标志。大部分app
+        不需要实现这个方法，因为本地类引用(local class
+        references)和activity一同被销毁，而你的activity应当在onPause和onStop中做大部分清理工作。
+    </string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="share_to">分享到</string>
+    <string name="is_loading">正在加載，喝杯茶吧~</string>
 </resources>

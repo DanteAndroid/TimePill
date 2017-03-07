@@ -1,4 +1,4 @@
-package com.dante.diary.net;
+package com.dante.diary.utils;
 
 import java.io.IOException;
 

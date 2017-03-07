@@ -4,15 +4,24 @@
     <color name="colorPrimaryDark">#388E3C</color>
     <color name="colorPrimaryLight">#C8E6C9</color>
     <color name="colorAccent">#FF5252</color>
+
+    <!--diary item color-->
+    <color name="diary_item_background">#f5f5f5f5</color>
+    <color name="divider_gray">#BDBDBD</color>
+    <color name="white_background">#f5eded</color>
+
+
     <color name="halfer_transparent">#66000000</color>
     <color name="dark_transparent">#ba000000</color>
-    <color name="divider_gray">#BDBDBD</color>
     <color name="line_gray">#ccc</color>
 
     <color name="darker_gray">#aaa</color>
     <color name="pink">#F06292</color>
     <color name="black_overlay">#66000000</color>
     <color name="black_back">#131313</color>
-    <color name="black_87pc">#DD000000</color>
+    <color name="black">#000000</color>
+
+    <color name="black_id">#0b0b0b</color>
+    <color name="black_content">#3d3c3c</color>
     <color name="grey">#faf2f2</color>
 </resources>

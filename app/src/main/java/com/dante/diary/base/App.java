@@ -1,4 +1,4 @@
-package com.dante.diary.app;
+package com.dante.diary.base;
 
 import android.annotation.SuppressLint;
 import android.app.Application;
@@ -35,6 +35,7 @@ public class App extends Application {
         Utils.init(this);
 
         if (BuildConfig.DEBUG) {
+
         }
 
     }
