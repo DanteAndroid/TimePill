@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layer-list
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools" android:opacity="opaque">
+    <!-- background -->
+    <item>
+        <shape>
+            <solid android:color="@color/white_background"/>
+        </shape>
+    </item>
+    <!-- fake toolbar (56+40dp + 24 dp ) -->
+    <item
+        android:height="80dp"
+        android:gravity="top" tools:targetApi="m">
+        <shape android:shape="rectangle">
+            <solid android:color="?colorPrimary"/>
+        </shape>
+    </item>
+    <!-- fake toolbar ( 24dp above Android M) -->
+    <item
+        android:height="24dp"
+        android:gravity="top">
+        <shape android:shape="rectangle">
+            <solid android:color="?colorPrimaryDark"/>
+        </shape>
+    </item>
+
+    <!--        Toolbar height
+        56dp (default)
+        48dp (landscape)
+        64dp (sw600dp; i.e. tablet)
+    -->
+</layer-list>

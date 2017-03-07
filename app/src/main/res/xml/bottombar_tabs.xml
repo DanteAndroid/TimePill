@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<tabs>
+    <tab
+        icon="@mipmap/ic_launcher"
+        id="@+id/main"
+        title="Today"/>
+    <tab
+        icon="@mipmap/ic_launcher"
+        id="@+id/following"
+        title="Following"/>
+    <tab
+        icon="@mipmap/ic_launcher"
+        id="@+id/other"
+        title="other"/>
+    <tab
+        icon="@mipmap/ic_launcher"
+        id="@+id/me"
+        title="Me"/>
+
+</tabs>

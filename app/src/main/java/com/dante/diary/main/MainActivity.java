@@ -1,12 +1,11 @@
-package com.dante.diary.base;
+package com.dante.diary.main;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 
-import com.dante.diary.main.DiaryFragment;
-import com.dante.diary.main.dummy.DummyContent;
+import com.dante.diary.base.BaseControllerActivity;
 
-public class MainActivity extends BaseControllerActivity implements DiaryFragment.OnInteractListener {
+public class MainActivity extends BaseControllerActivity {
 
     @Override
     protected void initViews(@Nullable Bundle savedInstanceState) {
@@ -18,10 +17,6 @@ public class MainActivity extends BaseControllerActivity implements DiaryFragmen
         return false;
     }
 
-    @Override
-    public void onInteract(DummyContent.DummyItem item) {
-
-    }
 
 
     private void initFab() {
