@@ -2,6 +2,7 @@ package com.dante.diary.base;
 
 
 import android.os.Bundle;
+import android.support.annotation.CallSuper;
 import android.support.v4.content.res.ResourcesCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.RecyclerView;
@@ -53,9 +54,12 @@ public abstract class RecyclerFragment extends BaseFragment implements SwipeRefr
     @Override
     public void onDestroy() {
         super.onDestroy();
-        compositeSubscription.unsubscribe();
+        if (subscription != null) {
+            subscription.unsubscribe();
+        }
     }
 
+    @CallSuper
     @Override
     protected void initViews() {
         recyclerView.setHasFixedSize(true);

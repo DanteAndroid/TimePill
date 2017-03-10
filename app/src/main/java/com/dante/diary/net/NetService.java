@@ -53,7 +53,7 @@ public class NetService {
             //debug 模式开启log
             HttpLoggingInterceptor logging = new HttpLoggingInterceptor();
             logging.setLevel(BuildConfig.DEBUG ?
-                    HttpLoggingInterceptor.Level.BASIC : HttpLoggingInterceptor.Level.NONE);
+                    HttpLoggingInterceptor.Level.BODY : HttpLoggingInterceptor.Level.NONE);
             httpClient.addInterceptor(logging);
 
             if (!httpClient.interceptors().contains(interceptor)) {
@@ -73,4 +73,6 @@ public class NetService {
         }
         return api;
     }
+
+
 }

@@ -7,8 +7,8 @@
 
     <!--diary item color-->
     <color name="diary_item_background">#f5f5f5f5</color>
-    <color name="divider_gray">#BDBDBD</color>
-    <color name="white_background">#f5eded</color>
+    <color name="divider_gray">#c9c9c9</color>
+    <color name="white_background">#f5f2f2</color>
 
 
     <color name="halfer_transparent">#66000000</color>
@@ -22,6 +22,8 @@
     <color name="black">#000000</color>
 
     <color name="black_id">#0b0b0b</color>
-    <color name="black_content">#3d3c3c</color>
-    <color name="grey">#faf2f2</color>
+    <color name="black_content">#414040</color>
+
+    <color name="grey">#d7d7d7</color>
+    <color name="fade_text">#8f8f8f</color>
 </resources>

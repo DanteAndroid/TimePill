@@ -2,6 +2,7 @@
 <FrameLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    android:background="@color/white_background"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
     <!-- framelayout 是解决swipeRefresh造成fragment overlap的bug-->
@@ -9,8 +10,7 @@
     <android.support.v4.widget.SwipeRefreshLayout
         android:id="@+id/swipe_refresh"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        >
+        android:layout_height="match_parent">
 
         <android.support.v7.widget.RecyclerView
             android:id="@+id/list"
@@ -20,4 +20,13 @@
             android:scrollbars="vertical"
             tools:listitem="@layout/list_diary_item"/>
     </android.support.v4.widget.SwipeRefreshLayout>
+
+    <TextView
+        android:id="@+id/stateText"
+        android:visibility="gone"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="128dp"
+        android:gravity="center"
+        android:text="空空如也"/>
 </FrameLayout>

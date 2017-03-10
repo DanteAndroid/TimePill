@@ -2,7 +2,6 @@ package com.dante.diary.main;
 
 
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -14,6 +13,7 @@ import com.dante.diary.R;
 import com.dante.diary.base.BaseActivity;
 import com.dante.diary.base.Constants;
 import com.dante.diary.base.RecyclerFragment;
+import com.dante.diary.login.LoginManager;
 import com.dante.diary.model.DataBase;
 import com.dante.diary.model.Diary;
 import com.dante.diary.utils.SpUtil;
@@ -24,6 +24,9 @@ import com.yqritc.recyclerviewflexibledivider.HorizontalDividerItemDecoration;
 import java.util.List;
 
 import io.realm.RealmResults;
+import rx.Observable;
+import rx.Subscriber;
+import rx.functions.Func1;
 
 
 public class MainDiaryFragment extends RecyclerFragment {
@@ -103,32 +106,90 @@ public class MainDiaryFragment extends RecyclerFragment {
 
     @Override
     protected void initData() {
-        diaries = DataBase.findDiaries(realm, "");
+        diaries = DataBase.allDiaries(realm, "");
+        diaryList = realm.copyFromRealm(diaries);
+
         adapter.setNewData(diaries);
+
+        Log.d(TAG, "fetch: ");
+        if (LoginManager.getApi() == null) {
+            UiUtils.showSnack(getView(), "您还未登陆");
+            return;
+        }
 
         adapter.setOnLoadMoreListener(() -> {
             page = SpUtil.getInt(Constants.PAGE, 1);
-            page++;
             log("load more ", page);
+            page++;
             fetch();
         });
 
         if (diaries.isEmpty()) {
             adapter.setEnableLoadMore(false);
             firstFetch = true;
-            fetch();
             changeState(true);
+            fetch();
         }
     }
 
     private void fetch() {
-        Log.d(TAG, "fetch: ");
-        new Handler().postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                changeState(false);
-            }
-        }, 3000);
+
+
+        subscription = LoginManager.getApi()
+                .allTodayDiaries(page, 5)
+                .compose(applySchedulers())
+                .map(listResult -> listResult.diaries)
+                .flatMap(new Func1<List<Diary>, Observable<Diary>>() {
+                    @Override
+                    public Observable<Diary> call(List<Diary> diaries) {
+                        return Observable.from(diaries);
+                    }
+                })
+                .subscribe(new Subscriber<Diary>() {
+                    int oldSize;
+                    int newSize;
+
+                    @Override
+                    public void onStart() {
+                        oldSize = diaries.size();
+                    }
+
+                    @Override
+                    public void onCompleted() {
+                        diaries = DataBase.allDiaries(realm, "");
+                        newSize = diaries.size();
+                        log(" old--" + oldSize + " new--" + newSize);
+                        if (newSize > oldSize) {
+                            SpUtil.save(Constants.PAGE, page);
+                            if (page == 1) {
+                                log("", " insert " + (newSize - oldSize));
+                                adapter.notifyItemRangeInserted(0, newSize - oldSize);
+                                recyclerView.smoothScrollToPosition(0);
+                                adapter.setEnableLoadMore(true);
+
+                            } else {
+                                adapter.notifyItemRangeChanged(oldSize, newSize);
+                            }
+
+                            adapter.loadMoreComplete();
+                        } else {
+                            adapter.loadMoreEnd();
+
+                        }
+
+                        changeRefresh(false);
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        e.printStackTrace();
+                    }
+
+                    @Override
+                    public void onNext(Diary diary) {
+                        DataBase.save(realm, diary);
+                    }
+                });
     }
 
     @Override

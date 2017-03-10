@@ -8,7 +8,8 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.target.SimpleTarget;
 import com.dante.diary.R;
-import com.dante.diary.base.App;
+
+import static com.dante.diary.base.App.context;
 
 /**
  * loading img encapsulation.
@@ -41,6 +42,13 @@ public class Imager {
                 .into(target);
     }
 
+    public static void load(final android.support.v4.app.Fragment fragment, String url, ImageView target) {
+        Glide.with(fragment)
+                .load(url)
+                .crossFade()
+                .into(target);
+    }
+
     public static void load(Context context, int resourceId, ImageView view) {
         Glide.with(context)
                 .load(resourceId)
@@ -50,7 +58,7 @@ public class Imager {
 
 
     public static void load(String url, int animationId, ImageView view) {
-        Glide.with(App.context)
+        Glide.with(context)
                 .load(url)
                 .animate(animationId)
                 .into(view);

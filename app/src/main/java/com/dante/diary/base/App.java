@@ -5,10 +5,9 @@ import android.app.Application;
 import android.content.Context;
 
 import com.blankj.utilcode.utils.Utils;
-import com.dante.diary.BuildConfig;
-import com.squareup.leakcanary.LeakCanary;
-import com.squareup.leakcanary.RefWatcher;
 import com.bugtags.library.Bugtags;
+import com.dante.diary.BuildConfig;
+import com.squareup.leakcanary.RefWatcher;
 
 import io.realm.Realm;
 
@@ -29,7 +28,7 @@ public class App extends Application {
     public void onCreate() {
         super.onCreate();
         context = this;
-        refWatcher = LeakCanary.install(this);
+//        refWatcher = LeakCanary.install(this);
         Bugtags.start("1ddf7128d535505cc4adbda213e8c12f", this, Bugtags.BTGInvocationEventNone);
         Realm.init(this);
         Utils.init(this);

@@ -1,10 +1,14 @@
 package com.dante.diary.net;
 
+import com.dante.diary.model.Comment;
 import com.dante.diary.model.Diary;
+import com.dante.diary.model.Notebook;
+import com.dante.diary.model.User;
 
 import java.util.List;
 
 import retrofit2.http.GET;
+import retrofit2.http.Path;
 import retrofit2.http.Query;
 import rx.Observable;
 
@@ -60,14 +64,47 @@ public interface TimeApi {
      * ]
      * }
      */
+    //获得全站今天日记
     @GET("diaries/today")
-    Observable<Result<List<Diary>>> getTodayDiaries(@Query("page") int page, @Query("page_size") int pageSize);
+    Observable<Result<List<Diary>>> allTodayDiaries(@Query("page") int page, @Query("page_size") int pageSize);
+
+    //获得用户今天日记
+    @GET("users/{user_id}/diaries")
+    Observable<List<Diary>> getTodayDiaries(@Path("user_id") int userId);
+
+    //获得指定日记
+    @GET("diaries/{diary_id}")
+    Observable<Diary> getDiaryDetail(@Path("diary_id") int diaryId);
+    //获得指定日记的评论
+    @GET("diaries/{diary_id}/comments")
+    Observable<List<Comment>> getDiaryComments(@Path("diary_id") int diaryId);
+
+    //获得登录用户资料
+    @GET("users/my")
+    Observable<User> getMyProfile();
+
+    //获得指定用户资料
+    @GET("users/{id}")
+    Observable<User> getProfile(@Path("user_id") int userId);
+
+    @GET("users/{user_id}/notebooks")
+    Observable<List<Notebook>> getMyNotebooks(@Path("user_id") int userId);
+
+    @GET("notebooks/{notebook_id}/diaries")
+    Observable<ItemResult<List<Diary>>> getDiariesOfNotebook(@Path("notebook_id") int notebookId, @Query("page") int page);
 
     class Result<T> {
         public int count;
         public int page;
         public int page_size;
         public T diaries;
+    }
+
+    class ItemResult<T> {
+        public int count;
+        public int page;
+        public int page_size;
+        public T items;
     }
 
 }

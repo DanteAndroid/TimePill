@@ -10,6 +10,18 @@ import io.realm.annotations.PrimaryKey;
  */
 
 public class User extends RealmObject{
+    @Override
+    public String toString() {
+        return "User{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", intro='" + intro + '\'' +
+                ", created='" + created + '\'' +
+                ", state=" + state +
+                ", avatarUrl='" + avatarUrl + '\'' +
+                '}';
+    }
+
     /**
      * id : 12
      * name : 张××

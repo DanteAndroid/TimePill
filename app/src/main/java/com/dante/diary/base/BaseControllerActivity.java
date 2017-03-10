@@ -9,6 +9,7 @@ import android.widget.FrameLayout;
 import com.dante.diary.R;
 import com.dante.diary.login.LoginFragment;
 import com.dante.diary.main.MainDiaryFragment;
+import com.dante.diary.profile.ProfileFragment;
 import com.ncapdevi.fragnav.FragNavController;
 import com.roughike.bottombar.BottomBar;
 import com.roughike.bottombar.OnTabReselectListener;
@@ -82,7 +83,7 @@ public class BaseControllerActivity extends BaseActivity implements FragNavContr
             case FOLLOWING:
                 return MainDiaryFragment.newInstance(index);
             case OTHER:
-                return MainDiaryFragment.newInstance(index);
+                return new ProfileFragment();
             case ME:
                 return new LoginFragment();
         }

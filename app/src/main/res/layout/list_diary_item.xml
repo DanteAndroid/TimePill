@@ -3,82 +3,97 @@
               xmlns:tools="http://schemas.android.com/tools"
               android:layout_width="wrap_content"
               android:layout_height="wrap_content"
-              android:orientation="horizontal"
-              android:layout_marginTop="8dp"
+              android:background="?attr/selectableItemBackground"
               android:layout_marginBottom="8dp"
-              android:paddingEnd="@dimen/activity_horizontal_margin"
-              android:paddingLeft="@dimen/activity_horizontal_margin"
-              android:paddingTop="10dp"
-              android:paddingBottom="10dp"
-              android:paddingRight="@dimen/activity_horizontal_margin">
+              android:layout_marginTop="8dp"
+              android:orientation="vertical">
 
-    <ImageView
-        android:id="@+id/avatar"
-        android:layout_width="56dp"
-        android:layout_height="56dp"
-        android:layout_marginRight="12dp"
-        android:textAppearance="?attr/textAppearanceListItem"
-        tools:src="@mipmap/ic_launcher"/>
-
-    <RelativeLayout
-        android:id="@+id/diary_layout"
+    <TextView
+        android:id="@+id/diaryDate"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="@dimen/item_margin"
-        android:orientation="vertical">
-
-        <TextView
-            android:id="@+id/userName"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textColor="@color/black_id"
-            android:textSize="14sp"
-            tools:text="DanteId"/>
-        <TextView
-            android:id="@+id/notebookSubject"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="8dp"
-            android:layout_marginStart="8dp"
-            android:layout_toEndOf="@+id/userName"
-            android:layout_toRightOf="@+id/userName"
-            android:paddingTop="2dp"
-            android:textSize="12sp"
-            tools:text="This is diary title"/>
-        <TextView
-            android:id="@+id/time"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
-            android:layout_alignRight="@+id/content"
-            android:layout_marginLeft="8dp"
-            android:layout_marginStart="8dp"
-            android:textSize="12sp"
-            tools:text="22:30"/>
-
-        <TextView
-            android:id="@+id/content"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/userName"
-            android:layout_marginTop="8dp"
-            android:lineSpacingMultiplier="1.2"
-            android:textColor="@color/black_content"
-            tools:text="@string/test_diary"/>
-
-    <ImageView
-        android:id="@+id/attachPicture"
-        android:layout_marginTop="8dp"
-        android:layout_below="@+id/content"
-        android:layout_alignStart="@+id/content"
+        android:background="@color/grey"
+        android:padding="5dp"
+        android:paddingEnd="@dimen/activity_horizontal_margin"
+        android:paddingStart="@dimen/activity_horizontal_margin"
         android:visibility="gone"
-        tools:src="@mipmap/ic_launcher"
-        tools:visibility="visible"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"/>
+        tools:text="2015-09-04"
+        tools:visibility="visible"/>
 
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:paddingBottom="10dp"
+        android:paddingEnd="@dimen/activity_horizontal_margin"
+        android:paddingStart="@dimen/activity_horizontal_margin"
+        android:paddingTop="10dp">
+        <ImageView
+            android:id="@+id/avatar"
+            android:layout_width="56dp"
+            android:layout_height="56dp"
+            android:layout_marginRight="12dp"
+            android:textAppearance="?attr/textAppearanceListItem"
+            tools:src="@mipmap/ic_launcher"/>
 
-    </RelativeLayout>
+        <RelativeLayout
+            android:id="@+id/diary_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/item_margin"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/userName"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/black_id"
+                android:textSize="14sp"
+                tools:text="DanteId"/>
+            <TextView
+                android:id="@+id/notebookSubject"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="6dp"
+                android:layout_marginStart="6dp"
+                android:layout_toEndOf="@+id/userName"
+                android:layout_toRightOf="@+id/userName"
+                android:paddingTop="2dp"
+                android:textSize="12sp"
+                tools:text="This is diary title"/>
+            <TextView
+                android:id="@+id/time"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_alignRight="@+id/content"
+                android:layout_marginLeft="8dp"
+                android:layout_marginStart="8dp"
+                android:textSize="12sp"
+                tools:text="22:30"/>
+
+            <TextView
+                android:id="@+id/content"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/userName"
+                android:layout_marginTop="8dp"
+                android:lineSpacingMultiplier="1.2"
+                android:textColor="@color/black_content"
+                tools:text="@string/test_diary"/>
+
+            <ImageView
+                android:id="@+id/attachPicture"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignStart="@+id/content"
+                android:layout_below="@+id/content"
+                android:layout_marginTop="8dp"
+                android:visibility="gone"
+                tools:src="@mipmap/ic_launcher"
+                tools:visibility="visible"/>
+
+        </RelativeLayout>
+    </LinearLayout>
 
 
 </LinearLayout>
