@@ -70,6 +70,11 @@ public class LoginFragment extends BaseFragment {
     }
 
     private void goUserProfile() {
+        activity.getSupportFragmentManager()
+                .beginTransaction()
+                .replace(R.id.container, ProfileFragment.newInstance(id))
+                .commit();
+
         activity.controller.replaceFragment(ProfileFragment.newInstance(id));
     }
 
@@ -78,7 +83,6 @@ public class LoginFragment extends BaseFragment {
             UiUtils.showSnack(getView(), "用户名或密码不能为空哦");
             return;
         }
-
         KeyboardUtils.hideSoftInput(activity);
 
         LoginManager.login(name, psw)

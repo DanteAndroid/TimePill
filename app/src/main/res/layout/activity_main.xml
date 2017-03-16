@@ -7,8 +7,23 @@
     android:layout_height="match_parent"
     tools:context=".main.MainActivity">
 
+    <FrameLayout
+        android:id="@+id/container"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/white">
+    </FrameLayout>
 
-    <include layout="@layout/content_main"/>
+    <!--<include layout="@layout/framelayout"/>-->
+
+    <com.roughike.bottombar.BottomBar
+        android:id="@+id/bottomBar"
+        android:layout_width="match_parent"
+        android:layout_height="52dp"
+        android:layout_gravity="bottom"
+        app:bb_behavior="shifting|shy"
+        app:bb_inActiveTabAlpha="0.6"
+        app:bb_tabXmlResource="@xml/bottombar_tabs"/>
 
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/fab"

@@ -6,6 +6,7 @@ import android.net.Uri;
 
 import com.blankj.utilcode.utils.IntentUtils;
 import com.dante.diary.R;
+import com.dante.diary.base.App;
 
 
 /**
@@ -28,4 +29,7 @@ public class Share {
                         context.getString(R.string.share_to)));
     }
 
+    public static String appendUrl(String text) {
+        return String.format("%s from: " + App.context.getString(R.string.timepill_url), text);
+    }
 }

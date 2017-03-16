@@ -11,6 +11,20 @@ import io.realm.RealmObject;
  */
 
 public class Comment extends RealmObject{
+    @Override
+    public String toString() {
+        return "Comment{" +
+                "id=" + id +
+                ", userIid=" + userIid +
+                ", recipientId=" + recipientId +
+                ", dairyId=" + dairyId +
+                ", content='" + content + '\'' +
+                ", created=" + created +
+                ", user=" + user +
+                ", recipient=" + recipient +
+                '}';
+    }
+
     /**
      * id : 104
      * user_id : 23
@@ -50,7 +64,7 @@ public class Comment extends RealmObject{
         this.id = id;
     }
 
-    public int getUserIid() {
+    public int getUserId() {
         return userIid;
     }
 

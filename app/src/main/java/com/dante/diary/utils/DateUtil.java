@@ -32,7 +32,7 @@ public class DateUtil {
      * @return "yyyy-MM-dd" for display
      */
     public static String getDisplayTime(Date date) {
-        SimpleDateFormat formatter = new SimpleDateFormat("hh-mm-ss", Locale.getDefault());
+        SimpleDateFormat formatter = new SimpleDateFormat("hh:mm:ss", Locale.getDefault());
         return formatter.format(date);
     }
     public static String getDisplayDay(Date date) {

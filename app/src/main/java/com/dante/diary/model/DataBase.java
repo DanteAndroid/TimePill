@@ -124,6 +124,6 @@ public class DataBase {
     public static List<Comment> findComments(Realm realm, int diaryId) {
         realm = initRealm(realm);
 
-        return realm.where(Comment.class).equalTo("diaryId", diaryId).findAll();
+        return realm.where(Comment.class).equalTo("dairyId", diaryId).findAll();
     }
 }

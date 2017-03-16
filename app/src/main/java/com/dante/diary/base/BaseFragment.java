@@ -1,31 +1,50 @@
 package com.dante.diary.base;
 
+import android.annotation.TargetApi;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.design.widget.AppBarLayout;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.Toolbar;
+import android.transition.Fade;
+import android.transition.Transition;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.dante.diary.BuildConfig;
+import com.dante.diary.R;
+import com.dante.diary.profile.ProfileFragment;
 
 import butterknife.ButterKnife;
 import io.realm.Realm;
 import rx.Observable;
+import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
+import rx.subscriptions.CompositeSubscription;
 
 /**
  * BaseFragment helps onCreateView, and initViews(when root is null), init data on Activity Created.
  */
 public abstract class BaseFragment extends Fragment {
 
+    public CompositeSubscription compositeSubscription = new CompositeSubscription();
+    public Subscription subscription;
     protected View rootView;
     protected Realm realm;
     protected Toolbar toolbar;
-    protected BaseControllerActivity activity;
+    protected BottomBarActivity activity;
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            setAnimations();
+        }
+    }
 
     @Nullable
     @Override
@@ -39,6 +58,25 @@ public abstract class BaseFragment extends Fragment {
         return rootView;
     }
 
+
+    @TargetApi(Build.VERSION_CODES.LOLLIPOP)
+    protected void setAnimations() {
+        setEnterTransition(initTransitions());
+        setExitTransition(initTransitions());
+        setAllowEnterTransitionOverlap(isTransitionAllowOverlap());
+        setAllowReturnTransitionOverlap(isTransitionAllowOverlap());
+        postponeEnterTransition();
+    }
+
+    @TargetApi(Build.VERSION_CODES.KITKAT)
+    protected Transition initTransitions() {
+        return new Fade();
+    }
+
+    protected boolean isTransitionAllowOverlap() {
+        return false;
+    }
+
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
@@ -48,7 +86,10 @@ public abstract class BaseFragment extends Fragment {
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        activity = (BaseControllerActivity) getActivity();
+        if (getActivity() instanceof BottomBarActivity) {
+            activity = (BottomBarActivity) getActivity();
+        }
+        initAppBar();
         initData();
     }
 
@@ -61,6 +102,9 @@ public abstract class BaseFragment extends Fragment {
     public void onDestroy() {
         super.onDestroy();
 //        App.getWatcher(getActivity()).watch(this);
+        if (compositeSubscription.hasSubscriptions()) {
+            compositeSubscription.unsubscribe();
+        }
     }
 
     protected abstract int initLayoutId();
@@ -69,6 +113,20 @@ public abstract class BaseFragment extends Fragment {
         ButterKnife.bind(this, rootView);
         realm = ((BaseActivity) getActivity()).realm;
         toolbar = ((BaseActivity) getActivity()).toolbar;
+    }
+
+    public void initAppBar() {
+        toolbar = (Toolbar) getView().findViewById(R.id.toolbar);
+        if (activity != null && null != toolbar) {
+            activity.setSupportActionBar(toolbar);
+            activity.getSupportActionBar().setDisplayHomeAsUpEnabled(needNavigation());
+            toolbar.setNavigationOnClickListener(v -> activity.onBackPressed());
+        }
+
+    }
+
+    protected boolean needNavigation() {
+        return true;
     }
 
     protected abstract void initViews();
@@ -96,4 +154,28 @@ public abstract class BaseFragment extends Fragment {
         log(key, "");
     }
 
+    public void goProfile(int userId) {
+        log("gogogo " + userId);
+        Fragment f = ProfileFragment.newInstance(userId);
+        activity.controller.pushFragment(f);
+    }
+
+    public void setScrollFlag(boolean scrollable) {
+        AppBarLayout.LayoutParams params =
+                (AppBarLayout.LayoutParams) toolbar.getLayoutParams();
+        params.setScrollFlags(scrollable ? AppBarLayout.LayoutParams.SCROLL_FLAG_SCROLL
+                | AppBarLayout.LayoutParams.SCROLL_FLAG_ENTER_ALWAYS : 0);
+    }
+
+    public void finishFragment() {
+        if (activity != null) {
+            activity.controller.popFragment();
+        }
+    }
+
+    public void addFragment(Fragment f) {
+        if (activity != null) {
+            activity.controller.pushFragment(f);
+        }
+    }
 }

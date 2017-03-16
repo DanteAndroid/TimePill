@@ -2,20 +2,29 @@ package com.dante.diary.main;
 
 
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.transition.Fade;
 import android.util.Log;
 import android.view.View;
+import android.widget.ProgressBar;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.resource.drawable.GlideDrawable;
+import com.bumptech.glide.request.RequestListener;
+import com.bumptech.glide.request.target.Target;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.listener.OnItemClickListener;
 import com.dante.diary.R;
 import com.dante.diary.base.BaseActivity;
 import com.dante.diary.base.Constants;
 import com.dante.diary.base.RecyclerFragment;
+import com.dante.diary.detail.DiaryDetailFragment;
 import com.dante.diary.login.LoginManager;
 import com.dante.diary.model.DataBase;
 import com.dante.diary.model.Diary;
+import com.dante.diary.utils.ImageProgresser;
 import com.dante.diary.utils.SpUtil;
 import com.dante.diary.utils.UiUtils;
 import com.dante.diary.utils.WrapContentLinearLayoutManager;
@@ -63,20 +72,26 @@ public class MainDiaryFragment extends RecyclerFragment {
 
     @Override
     protected int initLayoutId() {
-        return R.layout.fragment_recycler;
+        return R.layout.fragment_diary_main;
+    }
+
+    @Override
+    protected void setAnimations() {
+        setReturnTransition(new Fade(Fade.IN));
+        setEnterTransition(new Fade(Fade.IN));
+//        setAllowEnterTransitionOverlap(false);
+//        setAllowReturnTransitionOverlap(false);
     }
 
     @Override
     protected void initViews() {
         super.initViews();
-
         context = (BaseActivity) getActivity();
         layoutManager = new WrapContentLinearLayoutManager(context);
         recyclerView.setLayoutManager(layoutManager);
 
         adapter = new DiaryListAdapter(null);
-        adapter.openLoadAnimation(BaseQuickAdapter.SCALEIN);
-        adapter.isFirstOnly(false);
+//        adapter.openLoadAnimation(BaseQuickAdapter.SLIDEIN_RIGHT);
         recyclerView.setAdapter(adapter);
         recyclerView.addItemDecoration(new HorizontalDividerItemDecoration.Builder(context)
                 .size(2)
@@ -89,23 +104,62 @@ public class MainDiaryFragment extends RecyclerFragment {
         recyclerView.addOnItemTouchListener(new OnItemClickListener() {
             @Override
             public void onSimpleItemClick(BaseQuickAdapter baseQuickAdapter, View view, int i) {
-                onImageClicked(view, i);
+                int diaryId = adapter.getItem(i).getId();
+                Fragment f = DiaryDetailFragment.newInstance(diaryId);
+                activity.controller.pushFragment(f);
             }
-        });
-        recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+
             @Override
-            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
-                if (dy < 30) {
-                    return;
+            public void onItemChildClick(BaseQuickAdapter adapter, View view, int i) {
+                int id = view.getId();
+                if (id == R.id.avatar) {
+                    onAvatarClicked(view, i);
+                } else if (id == R.id.attachPicture) {
+                    onPictureClicked(view, i);
                 }
-                firstPosition = layoutManager.findFirstVisibleItemPosition();
-                lastPosition = layoutManager.findLastVisibleItemPosition();
+
             }
         });
+
+    }
+
+    private void onPictureClicked(View view, int i) {
+        setExitTransition(new Fade());
+
+        final ProgressBar progressBar = ImageProgresser.attachProgress(view);
+        String url = adapter.getItem(i).getPhotoUrl();
+        Glide.with(this).load(url).listener(new RequestListener<String, GlideDrawable>() {
+            @Override
+            public boolean onException(Exception e, String model, Target<GlideDrawable> target, boolean isFirstResource) {
+                progressBar.setVisibility(View.GONE);
+                return false;
+            }
+
+            @Override
+            public boolean onResourceReady(GlideDrawable resource, String model, Target<GlideDrawable> target, boolean isFromMemoryCache, boolean isFirstResource) {
+                progressBar.setVisibility(View.GONE);
+                activity.startViewer(view, url);
+                return false;
+            }
+        }).preload();
+    }
+
+
+    private void onAvatarClicked(View view, int i) {
+        goProfile(adapter.getItem(i).getUserId());
+    }
+
+    @Override
+    protected boolean needNavigation() {
+        return false;
     }
 
     @Override
     protected void initData() {
+        activity.showBottomBar();
+        toolbar.setTitle(getString(R.string.app_name));
+        toolbar.setNavigationIcon(R.mipmap.ic_launcher);
+
         diaries = DataBase.allDiaries(realm, "");
         diaryList = realm.copyFromRealm(diaries);
 
@@ -124,16 +178,11 @@ public class MainDiaryFragment extends RecyclerFragment {
             fetch();
         });
 
-        if (diaries.isEmpty()) {
-            adapter.setEnableLoadMore(false);
-            firstFetch = true;
-            changeState(true);
-            fetch();
-        }
+        changeState(true);
+        fetch();
     }
 
     private void fetch() {
-
 
         subscription = LoginManager.getApi()
                 .allTodayDiaries(page, 5)
@@ -145,6 +194,7 @@ public class MainDiaryFragment extends RecyclerFragment {
                         return Observable.from(diaries);
                     }
                 })
+                .distinct()
                 .subscribe(new Subscriber<Diary>() {
                     int oldSize;
                     int newSize;
@@ -165,23 +215,21 @@ public class MainDiaryFragment extends RecyclerFragment {
                                 log("", " insert " + (newSize - oldSize));
                                 adapter.notifyItemRangeInserted(0, newSize - oldSize);
                                 recyclerView.smoothScrollToPosition(0);
-                                adapter.setEnableLoadMore(true);
 
                             } else {
                                 adapter.notifyItemRangeChanged(oldSize, newSize);
                             }
-
                             adapter.loadMoreComplete();
                         } else {
                             adapter.loadMoreEnd();
 
                         }
-
                         changeRefresh(false);
                     }
 
                     @Override
                     public void onError(Throwable e) {
+                        changeRefresh(false);
                         e.printStackTrace();
                     }
 
@@ -212,11 +260,6 @@ public class MainDiaryFragment extends RecyclerFragment {
     public void onStop() {
         super.onStop();
         changeState(false);
-    }
-
-
-    protected void onImageClicked(View view, int position) {
-        // TODO: 17/3/6
     }
 
 

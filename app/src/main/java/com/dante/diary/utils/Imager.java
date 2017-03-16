@@ -2,6 +2,7 @@ package com.dante.diary.utils;
 
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.support.v4.app.Fragment;
 import android.widget.ImageView;
 
 import com.bumptech.glide.Glide;
@@ -17,7 +18,7 @@ import static com.dante.diary.base.App.context;
 public class Imager {
 
 
-    public static void loadDefer(final Context context, String url, SimpleTarget<Bitmap> target) {
+    public static void loadDefer(final Fragment context, String url, SimpleTarget<Bitmap> target) {
         Glide.with(context)
                 .load(url)
                 .asBitmap()
@@ -38,21 +39,19 @@ public class Imager {
     public static void load(final Context context, String url, ImageView target) {
         Glide.with(context)
                 .load(url)
-                .crossFade()
                 .into(target);
     }
 
     public static void load(final android.support.v4.app.Fragment fragment, String url, ImageView target) {
         Glide.with(fragment)
                 .load(url)
-                .crossFade()
+                .error(R.drawable.error_holder)
                 .into(target);
     }
 
     public static void load(Context context, int resourceId, ImageView view) {
         Glide.with(context)
                 .load(resourceId)
-                .crossFade()
                 .into(view);
     }
 
