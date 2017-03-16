@@ -34,8 +34,10 @@ public class Diary extends RealmObject {
 
     @PrimaryKey
     private int id;
+
     @SerializedName("user_id")
     private int userId;
+
     @SerializedName("notebook_id")
     private int notebookId;
     @SerializedName("notebook_subject")

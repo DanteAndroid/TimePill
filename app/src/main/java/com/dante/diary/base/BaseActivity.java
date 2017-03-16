@@ -1,8 +1,9 @@
 package com.dante.diary.base;
 
+import android.app.ProgressDialog;
 import android.os.Bundle;
+import android.support.annotation.CallSuper;
 import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.animation.AccelerateInterpolator;
@@ -21,7 +22,7 @@ public abstract class BaseActivity extends AppCompatActivity {
     public Realm realm;
     public Toolbar toolbar;
     private boolean isShowToolbar = true;
-    private Fragment currentFragment;
+    private ProgressDialog dialog;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -31,9 +32,7 @@ public abstract class BaseActivity extends AppCompatActivity {
 
     protected abstract int initLayoutId();
 
-    /**
-     * MUST override and call the SUPER method
-     */
+    @CallSuper
     protected void initViews(@Nullable Bundle savedInstanceState) {
         setContentView(initLayoutId());
         ButterKnife.bind(this);
@@ -43,7 +42,6 @@ public abstract class BaseActivity extends AppCompatActivity {
 
     private void initSDK() {
         realm = Realm.getDefaultInstance();
-
     }
 
 
@@ -57,7 +55,7 @@ public abstract class BaseActivity extends AppCompatActivity {
         }
     }
 
-    protected boolean needNavigation(){
+    protected boolean needNavigation() {
         return true;
     }
 
@@ -92,6 +90,19 @@ public abstract class BaseActivity extends AppCompatActivity {
     public void setToolbarTitle(String title) {
         if (toolbar != null) {
             toolbar.setTitle(title);
+        }
+    }
+
+    public void showProgress() {
+        if (dialog == null) {
+            dialog = new ProgressDialog(this);
+        }
+        dialog.show();
+    }
+
+    public void hideProgress() {
+        if (dialog != null) {
+            dialog.dismiss();
         }
     }
 

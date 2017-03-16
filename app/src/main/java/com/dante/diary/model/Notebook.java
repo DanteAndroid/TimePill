@@ -2,11 +2,14 @@ package com.dante.diary.model;
 
 import com.google.gson.annotations.SerializedName;
 
+import io.realm.RealmObject;
+import io.realm.annotations.PrimaryKey;
+
 /**
  * Created by yons on 17/3/3.
  */
 
-public class Notebook {
+public class Notebook extends RealmObject{
 
     /**
      * id : 15
@@ -22,6 +25,7 @@ public class Notebook {
      * isPublic : true
      */
 
+    @PrimaryKey
     private int id;
     @SerializedName("user_id")
     private int userId;

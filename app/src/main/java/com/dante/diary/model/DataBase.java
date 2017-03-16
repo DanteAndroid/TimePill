@@ -4,12 +4,15 @@ package com.dante.diary.model;
 import android.support.annotation.Nullable;
 
 import com.dante.diary.base.Constants;
+import com.dante.diary.utils.DateUtil;
 
+import java.util.Date;
 import java.util.List;
 
 import io.realm.Realm;
 import io.realm.RealmObject;
 import io.realm.RealmResults;
+import io.realm.Sort;
 
 /**
  * Deals with cache, data
@@ -64,13 +67,13 @@ public class DataBase {
         return realm.where(Diary.class).equalTo(Constants.URL, url).findFirst();
     }
 
-    public static RealmResults<Diary> findDiaries(Realm realm, String type) {
+    public static RealmResults<Diary> allDiaries(Realm realm, String type) {
         realm = initRealm(realm);
 //        if (Constants.FAVORITE.equals(type)) {
 //            return findFavoriteDiaries(realm);
 //        }
         return realm.where(Diary.class)
-                .findAllSorted("created");
+                .findAllSorted("created", Sort.DESCENDING);
     }
 
     public static RealmResults<Diary> findFavoriteDiaries(Realm realm) {
@@ -85,5 +88,42 @@ public class DataBase {
         realm.beginTransaction();
         realm.delete(Diary.class);
         realm.commitTransaction();
+    }
+
+    public static User findUser(Realm realm, int id) {
+        realm = initRealm(realm);
+        return realm.where(User.class).equalTo(Constants.ID, id).findFirst();
+    }
+
+    //// TODO: 17/3/9
+    public static RealmResults<Diary> findMyDiaries(Realm realm, int id) {
+        realm = initRealm(realm);
+        Date date = new Date();
+
+        DateUtil.getDisplayTime(date);
+        return realm.where(Diary.class).equalTo(Constants.ID, id).findAll();
+    }
+
+    public static RealmResults<Notebook> findNotebooks(Realm realm, int userId) {
+        realm = initRealm(realm);
+
+        return realm.where(Notebook.class).equalTo("userId", userId).findAll();
+    }
+
+    public static RealmResults<Diary> findDiariesOfNotebook(Realm realm, int notebookId) {
+        realm = initRealm(realm);
+        return realm.where(Diary.class).equalTo("notebookId", notebookId).findAll();
+    }
+
+    public static Diary findDiary(Realm realm, int diaryId) {
+        realm = initRealm(realm);
+
+        return realm.where(Diary.class).equalTo(Constants.ID, diaryId).findFirst();
+    }
+
+    public static List<Comment> findComments(Realm realm, int diaryId) {
+        realm = initRealm(realm);
+
+        return realm.where(Comment.class).equalTo("dairyId", diaryId).findAll();
     }
 }

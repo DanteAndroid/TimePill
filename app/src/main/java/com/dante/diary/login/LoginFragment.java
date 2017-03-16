@@ -4,26 +4,25 @@ package com.dante.diary.login;
 import android.support.v4.app.Fragment;
 import android.text.Editable;
 import android.text.TextUtils;
-import android.widget.Toast;
+import android.util.Log;
 
+import com.blankj.utilcode.utils.KeyboardUtils;
 import com.dante.diary.R;
-import com.dante.diary.base.Constants;
 import com.dante.diary.base.BaseFragment;
+import com.dante.diary.base.Constants;
 import com.dante.diary.model.DataBase;
-import com.dante.diary.model.Diary;
-import com.dante.diary.net.TimeApi;
+import com.dante.diary.model.User;
+import com.dante.diary.profile.ProfileFragment;
 import com.dante.diary.utils.SpUtil;
 import com.dante.diary.utils.UiUtils;
 
-import java.util.List;
-
 import butterknife.BindView;
-import rx.Observable;
 import rx.Subscriber;
-import rx.functions.Func1;
 import shem.com.materiallogin.DefaultLoginView;
 import shem.com.materiallogin.DefaultRegisterView;
 import shem.com.materiallogin.MaterialLoginView;
+
+import static com.dante.diary.login.LoginManager.isLogin;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -36,10 +35,12 @@ public class LoginFragment extends BaseFragment {
 
     String name;
     String psw;
+    int id;
 
     public LoginFragment() {
         // Required empty public constructor
     }
+
 
     @Override
     protected int initLayoutId() {
@@ -51,11 +52,10 @@ public class LoginFragment extends BaseFragment {
         ((DefaultLoginView) login.getLoginView()).setListener((loginUser, loginPass) -> {
             Editable userName = loginUser.getEditText().getText();
             Editable password = loginPass.getEditText().getText();
-
             if (TextUtils.isEmpty(userName)) {
-                UiUtils.showSnack(getView(), "请输入用户名 ~");
+                UiUtils.showSnack(getView(), "请输入用户名~");
             } else if (TextUtils.isEmpty(password)) {
-                UiUtils.showSnack(getView(), "请输入密码 ~");
+                UiUtils.showSnack(getView(), "请输入密码~");
             } else {
                 name = userName.toString();
                 psw = password.toString();
@@ -69,59 +69,68 @@ public class LoginFragment extends BaseFragment {
         });
     }
 
+    private void goUserProfile() {
+        activity.getSupportFragmentManager()
+                .beginTransaction()
+                .replace(R.id.container, ProfileFragment.newInstance(id))
+                .commit();
+
+        activity.controller.replaceFragment(ProfileFragment.newInstance(id));
+    }
+
     private void login() {
         if (TextUtils.isEmpty(name) || TextUtils.isEmpty(psw)) {
             UiUtils.showSnack(getView(), "用户名或密码不能为空哦");
             return;
         }
+        KeyboardUtils.hideSoftInput(activity);
 
         LoginManager.login(name, psw)
                 .compose(applySchedulers())
-                .map(new Func1<TimeApi.Result<List<Diary>>, List<Diary>>() {
+                .subscribe(new Subscriber<User>() {
                     @Override
-                    public List<Diary> call(TimeApi.Result<List<Diary>> listResult) {
-                        return listResult.diaries;
+                    public void onCompleted() {
+                        goUserProfile();
                     }
-                })
-                .flatMap(new Func1<List<Diary>, Observable<Diary>>() {
+
                     @Override
-                    public Observable<Diary> call(List<Diary> diaries) {
-                        return Observable.from(diaries);
+                    public void onError(Throwable e) {
+
                     }
-                }).subscribe(new Subscriber<Diary>() {
 
-            @Override
-            public void onStart() {
-
-            }
-
-            @Override
-            public void onCompleted() {
-                Toast.makeText(activity.getApplicationContext(), "Login success!", Toast.LENGTH_SHORT).show();
-                saveLoginData();
-            }
-
-            @Override
-            public void onError(Throwable e) {
-                e.printStackTrace();
-            }
-
-            @Override
-            public void onNext(Diary diary) {
-                DataBase.save(realm, diary);
-            }
-        });
+                    @Override
+                    public void onNext(User user) {
+                        id = user.getId();
+                        Log.d(TAG, "onNext: id " + id);
+                        DataBase.save(realm, user);
+                        saveUserAccount();
+                    }
+                });
 
     }
 
-    private void saveLoginData() {
+    private void loginSuccess() {
+
+    }
+
+    private void saveUserAccount() {
         SpUtil.save(Constants.NAME, name);
         SpUtil.save(Constants.PASSWORD, psw);
+        SpUtil.save(Constants.ID, id);
     }
 
     @Override
     protected void initData() {
+        if (isLogin()) {
+            initUserAccount();
+            goUserProfile();
+        }
+    }
 
+    private void initUserAccount() {
+        name = SpUtil.getString(Constants.NAME);
+        psw = SpUtil.getString(Constants.PASSWORD);
+        id = SpUtil.getInt(Constants.ID);
     }
 
 

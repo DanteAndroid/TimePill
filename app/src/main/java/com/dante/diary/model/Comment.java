@@ -2,11 +2,29 @@ package com.dante.diary.model;
 
 import com.google.gson.annotations.SerializedName;
 
+import java.util.Date;
+
+import io.realm.RealmObject;
+
 /**
  * Created by yons on 17/3/3.
  */
 
-public class Comment {
+public class Comment extends RealmObject{
+    @Override
+    public String toString() {
+        return "Comment{" +
+                "id=" + id +
+                ", userIid=" + userIid +
+                ", recipientId=" + recipientId +
+                ", dairyId=" + dairyId +
+                ", content='" + content + '\'' +
+                ", created=" + created +
+                ", user=" + user +
+                ", recipient=" + recipient +
+                '}';
+    }
+
     /**
      * id : 104
      * user_id : 23
@@ -26,9 +44,17 @@ public class Comment {
     @SerializedName("dairy_id")
     private int dairyId;
     private String content;
-    private String created;
-    private UserBean user;
-    private RecipientBean recipient;
+    private Date created;
+    private User user;
+    private User recipient;
+
+    public User getRecipient() {
+        return recipient;
+    }
+
+    public void setRecipient(User recipient) {
+        this.recipient = recipient;
+    }
 
     public int getId() {
         return id;
@@ -38,7 +64,7 @@ public class Comment {
         this.id = id;
     }
 
-    public int getUserIid() {
+    public int getUserId() {
         return userIid;
     }
 
@@ -70,79 +96,21 @@ public class Comment {
         this.content = content;
     }
 
-    public String getCreated() {
+    public Date getCreated() {
         return created;
     }
 
-    public void setCreated(String created) {
+    public void setCreated(Date created) {
         this.created = created;
     }
 
-    public UserBean getUser() {
+    public User getUser() {
         return user;
     }
 
-    public void setUser(UserBean user) {
+    public void setUser(User user) {
         this.user = user;
     }
 
-    public RecipientBean getRecipient() {
-        return recipient;
-    }
 
-    public void setRecipient(RecipientBean recipient) {
-        this.recipient = recipient;
-    }
-
-    public static class UserBean {
-        /**
-         * id : 23
-         * name : 裴痦痦是小恶魔
-         */
-
-        private int id;
-        private String name;
-
-        public int getId() {
-            return id;
-        }
-
-        public void setId(int id) {
-            this.id = id;
-        }
-
-        public String getName() {
-            return name;
-        }
-
-        public void setName(String name) {
-            this.name = name;
-        }
-    }
-
-    public static class RecipientBean {
-        /**
-         * id : 12
-         * name : 张××
-         */
-
-        private int id;
-        private String name;
-
-        public int getId() {
-            return id;
-        }
-
-        public void setId(int id) {
-            this.id = id;
-        }
-
-        public String getName() {
-            return name;
-        }
-
-        public void setName(String name) {
-            this.name = name;
-        }
-    }
 }

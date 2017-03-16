@@ -1,19 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <tabs>
     <tab
-        icon="@mipmap/ic_launcher"
+        icon="@drawable/home"
         id="@+id/main"
         title="Today"/>
     <tab
-        icon="@mipmap/ic_launcher"
+        icon="@drawable/favorite"
         id="@+id/following"
         title="Following"/>
     <tab
-        icon="@mipmap/ic_launcher"
+        icon="@drawable/notifications"
         id="@+id/other"
         title="other"/>
     <tab
-        icon="@mipmap/ic_launcher"
+        icon="@drawable/person"
         id="@+id/me"
         title="Me"/>
 
