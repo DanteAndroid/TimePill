@@ -5,13 +5,15 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:fitsSystemWindows="true"
     tools:context=".main.MainActivity">
 
     <FrameLayout
         android:id="@+id/container"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/white">
+        android:background="@color/whiteBackground"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior">
     </FrameLayout>
 
     <!--<include layout="@layout/framelayout"/>-->
@@ -19,9 +21,10 @@
     <com.roughike.bottombar.BottomBar
         android:id="@+id/bottomBar"
         android:layout_width="match_parent"
-        android:layout_height="52dp"
+        android:layout_height="56dp"
         android:layout_gravity="bottom"
-        app:bb_behavior="shifting|shy"
+        app:bb_activeTabColor="@color/grey"
+        app:bb_behavior="shifting"
         app:bb_inActiveTabAlpha="0.6"
         app:bb_tabXmlResource="@xml/bottombar_tabs"/>
 
@@ -30,10 +33,10 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="top|start"
-        android:layout_margin="@dimen/fab_margin"
-        android:scaleX="0"
-        android:scaleY="0"
-        android:src="@drawable/ic_favorite_white_24dp"
+        android:layout_marginBottom="72dp"
+        android:layout_marginRight="@dimen/fab_margin"
+        android:src="@drawable/ic_send_white_36px"
+        android:visibility="invisible"
         app:layout_anchor="@+id/container"
         app:layout_anchorGravity="bottom|right"/>
 

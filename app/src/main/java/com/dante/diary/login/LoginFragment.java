@@ -41,7 +41,6 @@ public class LoginFragment extends BaseFragment {
         // Required empty public constructor
     }
 
-
     @Override
     protected int initLayoutId() {
         return R.layout.fragment_login;
@@ -49,6 +48,8 @@ public class LoginFragment extends BaseFragment {
 
     @Override
     protected void initViews() {
+
+
         ((DefaultLoginView) login.getLoginView()).setListener((loginUser, loginPass) -> {
             Editable userName = loginUser.getEditText().getText();
             Editable password = loginPass.getEditText().getText();
@@ -75,7 +76,7 @@ public class LoginFragment extends BaseFragment {
                 .replace(R.id.container, ProfileFragment.newInstance(id))
                 .commit();
 
-        activity.controller.replaceFragment(ProfileFragment.newInstance(id));
+//        activity.controller.replaceFragment(ProfileFragment.newInstance(id));
     }
 
     private void login() {
@@ -95,11 +96,12 @@ public class LoginFragment extends BaseFragment {
 
                     @Override
                     public void onError(Throwable e) {
-
+                        UiUtils.showSnack(rootView, R.string.login_failed);
                     }
 
                     @Override
                     public void onNext(User user) {
+                        Log.d(TAG, "onNext: " + user.toString());
                         id = user.getId();
                         Log.d(TAG, "onNext: id " + id);
                         DataBase.save(realm, user);
@@ -126,6 +128,7 @@ public class LoginFragment extends BaseFragment {
             goUserProfile();
         }
     }
+
 
     private void initUserAccount() {
         name = SpUtil.getString(Constants.NAME);

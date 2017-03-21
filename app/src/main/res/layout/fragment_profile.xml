@@ -21,7 +21,7 @@
             android:paddingRight="@dimen/activity_horizontal_margin"
             android:paddingTop="@dimen/activity_horizontal_margin"
             app:contentScrim="?attr/colorPrimary"
-            app:layout_scrollFlags="scroll|exitUntilCollapsed">
+            app:layout_scrollFlags="scroll|exitUntilCollapsed|snap">
 
             <include layout="@layout/profile_layout"/>
 
@@ -43,16 +43,16 @@
         android:layout_gravity="center"
         android:visibility="invisible"/>
 
-    <include layout="@layout/profile_diaries_layout"/>
+    <include layout="@layout/tab_pager_layout"/>
 
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/follow"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="bottom|right"
-        android:layout_margin="@dimen/fab_margin"
+        android:layout_gravity="bottom|end"
+        android:layout_marginBottom="72dp"
+        android:layout_marginRight="@dimen/fab_margin"
         android:src="@drawable/ic_favorite_white_24dp"
-        app:layout_anchor="@+id/toolbar"
-        app:layout_anchorGravity="end|bottom"/>
+        android:visibility="invisible"/>
 
 </android.support.design.widget.CoordinatorLayout>

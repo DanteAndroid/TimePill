@@ -1,10 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <tabs>
     <tab
+        barColorWhenSelected="#f02196f3"
         icon="@drawable/home"
         id="@+id/main"
         title="Today"/>
     <tab
+        barColorWhenSelected="#f0ff5722"
         icon="@drawable/favorite"
         id="@+id/following"
         title="Following"/>

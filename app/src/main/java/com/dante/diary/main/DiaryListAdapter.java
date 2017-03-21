@@ -1,11 +1,11 @@
 package com.dante.diary.main;
 
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.bumptech.glide.Glide;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
 import com.dante.diary.R;
@@ -17,13 +17,8 @@ import com.dante.diary.utils.TimeUtil;
 
 import java.util.List;
 
-import jp.wasabeef.glide.transformations.CropCircleTransformation;
-
-import static com.dante.diary.base.App.context;
-
 public class DiaryListAdapter extends BaseQuickAdapter<Diary, BaseViewHolder> {
     private OnItemClickListener listener;
-    private boolean showAvatar = true;
 
     public DiaryListAdapter(List<Diary> data) {
         super(R.layout.list_diary_item, data);
@@ -33,32 +28,27 @@ public class DiaryListAdapter extends BaseQuickAdapter<Diary, BaseViewHolder> {
         super(itemLayoutId, data);
     }
 
-    public void withoutAvatar() {
-        showAvatar = false;
-    }
-
     @Override
     protected void convert(BaseViewHolder helper, Diary item) {
         ImageView avatarView = helper.getView(R.id.avatar);
         helper.addOnClickListener(R.id.avatar).addOnClickListener(R.id.attachPicture);
 
+        TextView date = helper.getView(R.id.diaryDate);
         if (item.getUser() == null) {
             //没有user对象，则是获取的自己的日记
-            showAvatar = false;
+            Log.d(TAG, "convert: getUser() == null" + item.getNotebookSubject());
+            date.setVisibility(View.VISIBLE);
             avatarView.setVisibility(View.GONE);
-            TextView textView = helper.getView(R.id.diaryDate);
-            textView.setVisibility(View.VISIBLE);
-            textView.setText(DateUtil.getDisplayDay(item.getCreated()));
+            date.setText(DateUtil.getDisplayDay(item.getCreated()));
 
         } else {
             //其他用户，需要显示名字和头像
-            //没有user对象，则是获取的自己的日记
+            date.setVisibility(View.GONE);
+            avatarView.setVisibility(View.VISIBLE);
+
             helper.setText(R.id.userName, item.getUser().getName());
             String avatar = item.getUser().getAvatarUrl();
-
-            Glide.with(helper.itemView.getContext()).load(avatar)
-                    .bitmapTransform(new CropCircleTransformation(context))
-                    .into(avatarView);
+            Imager.loadAvatar(helper.itemView.getContext(), avatar, avatarView);
         }
 
         TextView count = helper.getView(R.id.commentsCount);
@@ -67,7 +57,7 @@ public class DiaryListAdapter extends BaseQuickAdapter<Diary, BaseViewHolder> {
             count.setVisibility(View.VISIBLE);
 
         } else {
-//            count.setVisibility(View.GONE);
+            count.setVisibility(View.GONE);
         }
 
         //日记本名字、内容、时间，必填

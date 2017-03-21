@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.AppBarLayout;
 import android.support.v4.app.Fragment;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.transition.Fade;
 import android.transition.Transition;
@@ -30,7 +31,7 @@ import rx.subscriptions.CompositeSubscription;
  * BaseFragment helps onCreateView, and initViews(when root is null), init data on Activity Created.
  */
 public abstract class BaseFragment extends Fragment {
-
+    private static final String TAG = "BaseFragment";
     public CompositeSubscription compositeSubscription = new CompositeSubscription();
     public Subscription subscription;
     protected View rootView;
@@ -61,10 +62,12 @@ public abstract class BaseFragment extends Fragment {
 
     @TargetApi(Build.VERSION_CODES.LOLLIPOP)
     protected void setAnimations() {
-        setEnterTransition(initTransitions());
-        setExitTransition(initTransitions());
-        setAllowEnterTransitionOverlap(isTransitionAllowOverlap());
-        setAllowReturnTransitionOverlap(isTransitionAllowOverlap());
+//        setEnterTransition(initTransitions());
+//        setExitTransition(initTransitions());
+//        setReturnTransition(initTransitions());
+//        setReenterTransition(initTransitions());
+//        setAllowEnterTransitionOverlap(isTransitionAllowOverlap());
+//        setAllowReturnTransitionOverlap(isTransitionAllowOverlap());
         postponeEnterTransition();
     }
 
@@ -95,6 +98,9 @@ public abstract class BaseFragment extends Fragment {
 
     @Override
     public void onDestroyView() {
+        if (compositeSubscription.hasSubscriptions()) {
+            compositeSubscription.clear();
+        }
         super.onDestroyView();
     }
 
@@ -102,10 +108,9 @@ public abstract class BaseFragment extends Fragment {
     public void onDestroy() {
         super.onDestroy();
 //        App.getWatcher(getActivity()).watch(this);
-        if (compositeSubscription.hasSubscriptions()) {
-            compositeSubscription.unsubscribe();
-        }
+
     }
+
 
     protected abstract int initLayoutId();
 
@@ -117,12 +122,26 @@ public abstract class BaseFragment extends Fragment {
 
     public void initAppBar() {
         toolbar = (Toolbar) getView().findViewById(R.id.toolbar);
-        if (activity != null && null != toolbar) {
-            activity.setSupportActionBar(toolbar);
-            activity.getSupportActionBar().setDisplayHomeAsUpEnabled(needNavigation());
-            toolbar.setNavigationOnClickListener(v -> activity.onBackPressed());
+        if (getActivity() != null && null != toolbar) {
+            ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
+            ((AppCompatActivity) getActivity()).getSupportActionBar().setDisplayHomeAsUpEnabled(needNavigation());
+            toolbar.setNavigationOnClickListener(v -> getActivity().onBackPressed());
         }
+        toggleBottomBar();
+    }
 
+    public void toggleBottomBar() {
+        if (activity != null) {
+            if (getStackCount() == 0) {
+                activity.showBottomBar();
+            } else {
+                activity.hideBottomBar();
+            }
+        }
+    }
+
+    public int getStackCount() {
+        return getActivity().getSupportFragmentManager().getBackStackEntryCount();
     }
 
     protected boolean needNavigation() {
@@ -155,9 +174,29 @@ public abstract class BaseFragment extends Fragment {
     }
 
     public void goProfile(int userId) {
-        log("gogogo " + userId);
         Fragment f = ProfileFragment.newInstance(userId);
-        activity.controller.pushFragment(f);
+        add(f);
+    }
+
+
+    public void add(Fragment f) {
+        getActivity().getSupportFragmentManager().beginTransaction()
+                .setCustomAnimations(android.R.anim.slide_in_left, android.R.anim.slide_out_right
+                        , android.R.anim.slide_in_left, android.R.anim.slide_out_right)
+                .hide(this)
+                .add(R.id.container, f)
+                .addToBackStack("")
+                .commit();
+    }
+
+    public void replace(Fragment f) {
+        getActivity().getSupportFragmentManager().beginTransaction()
+                .setCustomAnimations(android.R.anim.slide_in_left, android.R.anim.slide_out_right
+                        , android.R.anim.slide_in_left, android.R.anim.slide_out_right)
+                .replace(R.id.container, f)
+                .addToBackStack("")
+                .commit();
+
     }
 
     public void setScrollFlag(boolean scrollable) {
@@ -167,13 +206,25 @@ public abstract class BaseFragment extends Fragment {
                 | AppBarLayout.LayoutParams.SCROLL_FLAG_ENTER_ALWAYS : 0);
     }
 
+    @Override
+    public void onHiddenChanged(boolean hidden) {
+        super.onHiddenChanged(hidden);
+        toggleBottomBar();
+    }
+
+    @Override
+    public void setUserVisibleHint(boolean isVisibleToUser) {
+        super.setUserVisibleHint(isVisibleToUser);
+        Log.d(TAG, "setUserVisibleHint: " + isVisibleToUser + " " + getClass().getName());
+    }
+
     public void finishFragment() {
         if (activity != null) {
             activity.controller.popFragment();
         }
     }
 
-    public void addFragment(Fragment f) {
+    public void pushFragment(Fragment f) {
         if (activity != null) {
             activity.controller.pushFragment(f);
         }

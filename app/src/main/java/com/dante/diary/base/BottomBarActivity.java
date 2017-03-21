@@ -1,30 +1,21 @@
 package com.dante.diary.base;
 
-import android.content.Intent;
+import android.animation.Animator;
+import android.animation.AnimatorListenerAdapter;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v4.app.ActivityCompat;
-import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
-import android.support.v4.view.ViewCompat;
-import android.view.View;
-import android.view.animation.AccelerateInterpolator;
-import android.view.animation.DecelerateInterpolator;
-import android.widget.FrameLayout;
 
 import com.dante.diary.R;
-import com.dante.diary.detail.ViewerActivity;
-import com.dante.diary.follow.FollowFragment;
-import com.dante.diary.login.LoginFragment;
+import com.dante.diary.follow.TabsFragment;
 import com.dante.diary.main.MainDiaryFragment;
 import com.dante.diary.profile.ProfileFragment;
+import com.dante.diary.utils.SpUtil;
 import com.ncapdevi.fragnav.FragNavController;
 import com.roughike.bottombar.BottomBar;
 
 import butterknife.BindView;
-
-import static com.dante.diary.base.App.context;
 
 public class BottomBarActivity extends BaseActivity implements FragNavController.RootFragmentListener {
     private final int MAIN = FragNavController.TAB1;
@@ -35,8 +26,9 @@ public class BottomBarActivity extends BaseActivity implements FragNavController
     public FragNavController controller;
     @BindView(R.id.bottomBar)
     public BottomBar bottomBar;
-    @BindView(R.id.container)
-    FrameLayout container;
+//    @BindView(R.id.container)
+//    FrameLayout container;
+
 
     @Override
     protected void initViews(@Nullable Bundle savedInstanceState) {
@@ -48,11 +40,37 @@ public class BottomBarActivity extends BaseActivity implements FragNavController
     }
 
     public void hideBottomBar() {
-        bottomBar.animate().translationY(bottomBar.getHeight()).setInterpolator(new AccelerateInterpolator()).start();
+        bottomBar.animate().translationY(bottomBar.getHeight())
+                .start();
+    }
+
+    public void hideBottomBar(AnimatorListenerAdapter listenerAdapter) {
+        bottomBar.animate().translationY(bottomBar.getHeight())
+                .setDuration(300)
+                .setListener(new AnimatorListenerAdapter() {
+                    @Override
+                    public void onAnimationEnd(Animator animation) {
+                        listenerAdapter.onAnimationEnd(animation);
+                    }
+                })
+                .start();
+    }
+
+    public void showBottomBar(AnimatorListenerAdapter listenerAdapter) {
+        bottomBar.animate().translationY(0)
+                .setDuration(300)
+                .setListener(new AnimatorListenerAdapter() {
+                    @Override
+                    public void onAnimationEnd(Animator animation) {
+                        listenerAdapter.onAnimationEnd(animation);
+                    }
+                })
+                .start();
     }
 
     public void showBottomBar() {
-        bottomBar.animate().translationY(0).setInterpolator(new DecelerateInterpolator()).start();
+        bottomBar.animate().translationY(0)
+                .start();
     }
 
     private void initBottomBar() {
@@ -82,8 +100,8 @@ public class BottomBarActivity extends BaseActivity implements FragNavController
 
     private void scrollToTop() {
         Fragment fragment = controller.getCurrentFrag();
-        if (fragment instanceof MainDiaryFragment) {
-            ((MainDiaryFragment) fragment).getRecyclerView().smoothScrollToPosition(0);
+        if (fragment instanceof RecyclerFragment) {
+            ((RecyclerFragment) fragment).scrollToTop();
         }
     }
 
@@ -94,25 +112,19 @@ public class BottomBarActivity extends BaseActivity implements FragNavController
 
     @Override
     public Fragment getRootFragment(int index) {
+
         switch (index) {
             case MAIN:
                 return MainDiaryFragment.newInstance(index);
             case FOLLOWING:
-                return FollowFragment.newInstance();
+                return TabsFragment.newInstance(new String[]{getString(R.string.my_following_diary), getString(R.string.my_following)});
             case NOTIFICATION:
-                return new ProfileFragment();
+                return TabsFragment.newInstance(new String[]{getString(R.string.my_notifications), getString(R.string.my_followers)});
             case ME:
-                return new LoginFragment();
+                int id = SpUtil.getInt(Constants.ID);
+                return ProfileFragment.newInstance(id);
+//                return new LoginFragment();
         }
         throw new IllegalStateException("Need to send an index that we know");
-    }
-
-    public void startViewer(View view, String url) {
-        ViewCompat.setTransitionName(view, url);
-        Intent intent = new Intent(context, ViewerActivity.class);
-        intent.putExtra(Constants.URL, url);
-        ActivityOptionsCompat options = ActivityOptionsCompat
-                .makeSceneTransitionAnimation(this, view, url);
-        ActivityCompat.startActivity(this, intent, options.toBundle());
     }
 }

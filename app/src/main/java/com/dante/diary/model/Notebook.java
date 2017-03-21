@@ -27,6 +27,7 @@ public class Notebook extends RealmObject{
 
     @PrimaryKey
     private int id;
+
     @SerializedName("user_id")
     private int userId;
     private String subject;

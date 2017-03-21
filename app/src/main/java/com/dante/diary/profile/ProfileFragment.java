@@ -6,10 +6,12 @@ import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
+import android.text.TextUtils;
+import android.transition.Explode;
+import android.transition.Transition;
 import android.view.LayoutInflater;
+import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
@@ -20,21 +22,28 @@ import com.dante.diary.R;
 import com.dante.diary.base.BaseFragment;
 import com.dante.diary.base.Constants;
 import com.dante.diary.base.RecyclerFragment;
+import com.dante.diary.base.TabPagerAdapter;
 import com.dante.diary.login.LoginManager;
 import com.dante.diary.model.DataBase;
 import com.dante.diary.model.User;
+import com.dante.diary.utils.DateUtil;
+import com.dante.diary.utils.StateButton;
 import com.dante.diary.utils.UiUtils;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
+import jp.wasabeef.glide.transformations.RoundedCornersTransformation;
 import rx.Subscriber;
 
 /**
  * A simple {@link Fragment} subclass.
  */
 public class ProfileFragment extends BaseFragment {
+    private static final String TAG = "ProfileFragment";
+
     @BindView(R.id.avatar)
     ImageView avatar;
     @BindView(R.id.followers)
@@ -52,15 +61,22 @@ public class ProfileFragment extends BaseFragment {
     ViewPager pager;
     @BindView(R.id.intro)
     TextView intro;
-    @BindView(R.id.follow)
-    FloatingActionButton follow;
+
 
     String[] titles;
+    @BindView(R.id.created)
+    TextView created;
+    @BindView(R.id.follow)
+    FloatingActionButton fab;
+    @BindView(R.id.followState)
+    StateButton followState;
 
     private int id;
     private User user;
     private List<RecyclerFragment> fragments = new ArrayList<>();
     private TabPagerAdapter adapter;
+    private boolean hasFollow;
+    private boolean isOther;
 
     public static ProfileFragment newInstance(int userId) {
         ProfileFragment fragment = new ProfileFragment();
@@ -76,8 +92,8 @@ public class ProfileFragment extends BaseFragment {
     }
 
     @Override
-    protected void setAnimations() {
-        log("setAnimations empty");
+    protected Transition initTransitions() {
+        return new Explode();
     }
 
     @Override
@@ -89,6 +105,7 @@ public class ProfileFragment extends BaseFragment {
     protected void initViews() {
         if (getArguments() != null) {
             id = getArguments().getInt(Constants.ID);
+            log("gogo" + id);
 //            if (id == SpUtil.getInt(Constants.ID)) {
 //                //是登录用户
 //                user = DataBase.findUser(realm, id);
@@ -98,29 +115,85 @@ public class ProfileFragment extends BaseFragment {
 //                }
 //            }
             //其他用户
+            isOther = true;
             fetch();
+            fab.setOnClickListener(v -> follow());
         }
+
+    }
+
+    private void follow() {
+        subscription = LoginManager.getApi().follow(id)
+                .compose(applySchedulers())
+                .subscribe(responseBodyResponse -> {
+                    changeFollowState(true);
+                    try {
+                        log("" + responseBodyResponse.body().string());
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                });
+        compositeSubscription.add(subscription);
+    }
+
+    private void unFollow() {
+        subscription = LoginManager.getApi().unfollow(id)
+                .compose(applySchedulers())
+                .subscribe(responseBodyResponse -> {
+                    changeFollowState(false);
+                    UiUtils.showSnack(rootView, getString(R.string.unfollow_success));
+
+                    try {
+                        log("" + responseBodyResponse.body().string());
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                });
+        compositeSubscription.add(subscription);
+    }
+
+    private void changeFollowState(boolean hasFollow) {
+        if (hasFollow) {
+            fab.hide();
+            followState.setText("已关注");
+            followState.setVisibility(View.VISIBLE);
+            followState.setOnClickListener(v -> unFollow());
+        } else {
+            followState.setText("关注");
+            followState.setOnClickListener(v -> follow());
+        }
+
     }
 
     private void loadProfile() {
         Glide.with(this)
                 .load(user.getAvatarUrl())
-                .crossFade(600)
+                .bitmapTransform(new RoundedCornersTransformation(getContext(), 5, 0))
                 .into(avatar);
 
         toolbarLayout.setTitle(user.getName());
         intro.setText(user.getIntro());
+        created.setText(String.format("%s 加入胶囊",
+                DateUtil.getDisplayDay(user.getCreated()))
+        );
 
-        initTabs();
+        if (!hasFollow) {
+            fab.show();
+        }
+
+        startPostponedEnterTransition();
     }
 
     private void fetch() {
-        LoginManager.getApi().getProfile(id)
+        subscription = LoginManager.getApi().getProfile(id)
                 .compose(applySchedulers())
                 .subscribe(new Subscriber<User>() {
                     @Override
                     public void onCompleted() {
-                        loadProfile();
+                        if (isOther) {
+                            checkFollowState();
+                        }
+                        initTabs();
                     }
 
                     @Override
@@ -136,7 +209,29 @@ public class ProfileFragment extends BaseFragment {
                     }
                 });
 
+        compositeSubscription.add(subscription);
+    }
 
+    private void checkFollowState() {
+        subscription = LoginManager.getApi().hasfollow(id)
+                .compose(applySchedulers())
+                .subscribe(responseBodyResponse -> {
+                    try {
+                        String result = responseBodyResponse.body().string();
+                        hasFollow = !TextUtils.isEmpty(result);
+                        changeFollowState(hasFollow);
+                        loadProfile();
+
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }, throwable -> {
+                    fab.show();
+                    changeFollowState(false);
+                    loadProfile();
+                    throwable.printStackTrace();
+                });
+        compositeSubscription.add(subscription);
     }
 
     private void initTabs() {
@@ -160,18 +255,20 @@ public class ProfileFragment extends BaseFragment {
 
             @Override
             public void onTabReselected(TabLayout.Tab tab) {
-                fragments.get(tab.getPosition())
-                        .getRecyclerView()
-                        .smoothScrollToPosition(0);
+                fragments.get(tab.getPosition()).scrollToTop();
             }
         });
         setupTabsIcon();
     }
 
     private void setupTabsIcon() {
-        TextView icon = (TextView) LayoutInflater.from(activity).inflate(R.layout.tab_icon_diary, (ViewGroup) rootView, false);
+        TextView icon = (TextView) LayoutInflater.from(getActivity()).inflate(R.layout.tab_icon_0, (ViewGroup) rootView, false);
+        icon.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_format_list_bulleted_white_24dp, 0, 0, 0);
+        icon.setText(titles[0]);
         tabs.getTabAt(0).setCustomView(icon);
-        TextView icon2 = (TextView) LayoutInflater.from(activity).inflate(R.layout.tab_icon_notebook, (ViewGroup) rootView, false);
+        TextView icon2 = (TextView) LayoutInflater.from(getActivity()).inflate(R.layout.tab_icon_1, (ViewGroup) rootView, false);
+        icon2.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_collections_bookmark_white_24dp, 0, 0, 0);
+        icon2.setText(titles[1]);
         tabs.getTabAt(1).setCustomView(icon2);
     }
 
@@ -184,37 +281,13 @@ public class ProfileFragment extends BaseFragment {
 
     @Override
     protected void initData() {
-        activity.hideBottomBar();
+
+
     }
 
-
-    public class TabPagerAdapter extends FragmentPagerAdapter {
-        private List<RecyclerFragment> fragments;
-        private String[] titles;
-
-        TabPagerAdapter(FragmentManager fm) {
-            super(fm);
-        }
-
-        void setFragments(List<RecyclerFragment> fragments, String[] titles) {
-            this.fragments = fragments;
-            this.titles = titles;
-        }
-
-        @Override
-        public int getCount() {
-            return fragments.size();
-        }
-
-        @Override
-        public Fragment getItem(int position) {
-            return fragments.get(position);
-        }
-
-        @Override
-        public CharSequence getPageTitle(int position) {
-            return titles[position];
-        }
-
+    @Override
+    public void onDestroyView() {
+        fab.hide();
+        super.onDestroyView();
     }
 }

@@ -29,7 +29,7 @@ public class LoginManager {
 
     }
 
-    public static Observable<TimeApi.Result<List<Diary>>> login() {
+    public static Observable<TimeApi.DiariesResult<List<Diary>>> login() {
         return api.allTodayDiaries(1, 20);
     }
 
@@ -49,6 +49,10 @@ public class LoginManager {
     public static Observable<User> login(String name, String password) {
         api = NetService.getTimeApi(name, password);
         return api.getMyProfile();
+    }
+
+    public static boolean isMe(int userId) {
+        return userId > 0 && userId == SpUtil.getInt(Constants.ID);
     }
 
 }

@@ -1,10 +1,16 @@
 package com.dante.diary.profile;
 
+import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v4.app.Fragment;
+import android.support.v4.view.ViewCompat;
 import android.support.v7.widget.StaggeredGridLayoutManager;
-import android.util.Log;
+import android.view.MenuInflater;
 import android.view.View;
+import android.view.ViewGroup;
+import android.widget.PopupMenu;
 import android.widget.TextView;
 
 import com.chad.library.adapter.base.BaseQuickAdapter;
@@ -15,6 +21,7 @@ import com.dante.diary.base.RecyclerFragment;
 import com.dante.diary.login.LoginManager;
 import com.dante.diary.model.DataBase;
 import com.dante.diary.model.Notebook;
+import com.dante.diary.notebook.CreateNotebookActivity;
 import com.dante.diary.utils.UiUtils;
 
 import butterknife.BindView;
@@ -56,14 +63,45 @@ public class NoteBookListFragment extends RecyclerFragment {
             public void onSimpleItemClick(BaseQuickAdapter baseQuickAdapter, View view, int i) {
                 onNotebookClicked(view, i);
             }
+
+            @Override
+            public void onItemChildClick(BaseQuickAdapter adapter, View view, int position) {
+                int id = view.getId();
+                if (id == R.id.more) {
+                    moreClicked(view, position);
+                }
+
+            }
         });
 
+    }
+
+    @Override
+    protected boolean hasFab() {
+        return true;
+    }
+
+    private void moreClicked(View view, int position) {
+        PopupMenu popup = new PopupMenu(getContext(), view);
+        MenuInflater inflater = popup.getMenuInflater();
+        inflater.inflate(R.menu.menu_more, popup.getMenu());
+        popup.setOnMenuItemClickListener(item -> {
+            switch (item.getItemId()) {
+                case R.id.action_edit:
+                    showNotebookEditDialog(view, position);
+                    break;
+                default:
+                    break;
+            }
+            return false;
+        });
+        popup.show();
     }
 
     private void onNotebookClicked(View view, int index) {
         int userId = adapter.getItem(index).getId();
         Fragment f = DiaryListFragment.newInstance(userId, adapter.getItem(index).getSubject());
-        activity.controller.pushFragment(f);
+        add(f);
     }
 
     @Override
@@ -77,12 +115,16 @@ public class NoteBookListFragment extends RecyclerFragment {
 
         notebooks = DataBase.findNotebooks(realm, userId);
         adapter.setNewData(notebooks);
-        if (notebooks.isEmpty()) {
-            fetch();
-        }
     }
 
-    private void fetch() {
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        fetch();
+    }
+
+    protected void fetch() {
         changeRefresh(true);
 
         subscription = LoginManager.getApi()
@@ -90,11 +132,10 @@ public class NoteBookListFragment extends RecyclerFragment {
                 .compose(applySchedulers())
                 .subscribe(notebooks -> {
                     if (page <= 1 && notebooks.isEmpty()) {
+                        stateText.setText(R.string.no_notebook);
                         stateText.setVisibility(View.VISIBLE);
-                        Log.d(TAG, "call: notebooks are empty");
                     } else {
                         adapter.notifyItemRangeChanged(0, notebooks.size());
-                        Log.d(TAG, "call: setNewData");
                     }
                     DataBase.save(realm, notebooks);
                     changeRefresh(false);
@@ -104,5 +145,21 @@ public class NoteBookListFragment extends RecyclerFragment {
     @Override
     public void onRefresh() {
         fetch();
+    }
+
+
+    private void showNotebookEditDialog(View view, int position) {
+        ViewGroup parent = (ViewGroup) view.getParent().getParent();
+        View cover = parent.findViewById(R.id.cover);
+        int id = adapter.getItem(position).getId();
+
+        ViewCompat.setTransitionName(cover, String.valueOf(id));
+        Intent intent = new Intent(getContext().getApplicationContext(), CreateNotebookActivity.class);
+        intent.putExtra(Constants.ID, id);
+        ActivityOptionsCompat options = ActivityOptionsCompat
+                .makeSceneTransitionAnimation(getActivity(), cover, String.valueOf(id));
+        ActivityCompat.startActivity(getContext(), intent, options.toBundle());
+
+
     }
 }

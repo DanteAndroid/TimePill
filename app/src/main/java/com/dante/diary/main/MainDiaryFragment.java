@@ -1,12 +1,10 @@
 package com.dante.diary.main;
 
 
+import android.content.Intent;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.transition.Fade;
-import android.util.Log;
 import android.view.View;
 import android.widget.ProgressBar;
 
@@ -20,12 +18,13 @@ import com.dante.diary.R;
 import com.dante.diary.base.BaseActivity;
 import com.dante.diary.base.Constants;
 import com.dante.diary.base.RecyclerFragment;
-import com.dante.diary.detail.DiaryDetailFragment;
+import com.dante.diary.detail.DiariesViewerActivity;
 import com.dante.diary.login.LoginManager;
 import com.dante.diary.model.DataBase;
 import com.dante.diary.model.Diary;
 import com.dante.diary.utils.ImageProgresser;
 import com.dante.diary.utils.SpUtil;
+import com.dante.diary.utils.TransitionHelper;
 import com.dante.diary.utils.UiUtils;
 import com.dante.diary.utils.WrapContentLinearLayoutManager;
 import com.yqritc.recyclerviewflexibledivider.HorizontalDividerItemDecoration;
@@ -41,12 +40,12 @@ import rx.functions.Func1;
 public class MainDiaryFragment extends RecyclerFragment {
     private static final String TAG = "MainDiaryFragment";
     private static final String INDEX = "INDEX";
+    private static final int SMOOTH_SCROLL_POSITION = 40;
     String url;
     boolean isFetching;
     String title;
     int page = 1;
     BaseActivity context;
-    LinearLayoutManager layoutManager;
     DiaryListAdapter adapter;
     RealmResults<Diary> diaries;
     List<Diary> diaryList;
@@ -66,22 +65,18 @@ public class MainDiaryFragment extends RecyclerFragment {
         return fragment;
     }
 
-    public RecyclerView getRecyclerView() {
-        return recyclerView;
-    }
-
     @Override
     protected int initLayoutId() {
-        return R.layout.fragment_diary_main;
+        return R.layout.fragment_diary_list;
     }
 
-    @Override
-    protected void setAnimations() {
-        setReturnTransition(new Fade(Fade.IN));
-        setEnterTransition(new Fade(Fade.IN));
-//        setAllowEnterTransitionOverlap(false);
-//        setAllowReturnTransitionOverlap(false);
-    }
+//    @Override
+//    protected void setAnimations() {
+//        setReturnTransition(initTransitions());
+//        setReenterTransition(new Slide(Gravity.RIGHT));
+//        setEnterTransition(new Slide(Gravity.RIGHT));
+//        setExitTransition(initTransitions());
+//    }
 
     @Override
     protected void initViews() {
@@ -91,29 +86,25 @@ public class MainDiaryFragment extends RecyclerFragment {
         recyclerView.setLayoutManager(layoutManager);
 
         adapter = new DiaryListAdapter(null);
-//        adapter.openLoadAnimation(BaseQuickAdapter.SLIDEIN_RIGHT);
         recyclerView.setAdapter(adapter);
         recyclerView.addItemDecoration(new HorizontalDividerItemDecoration.Builder(context)
                 .size(2)
                 .margin(48)
                 .build());
-//        RecyclerView.ItemAnimator animator = recyclerView.getItemAnimator();
-//        if (animator instanceof SimpleItemAnimator) {
-//            ((SimpleItemAnimator) animator).setSupportsChangeAnimations(false);
-//        }
         recyclerView.addOnItemTouchListener(new OnItemClickListener() {
             @Override
             public void onSimpleItemClick(BaseQuickAdapter baseQuickAdapter, View view, int i) {
-                int diaryId = adapter.getItem(i).getId();
-                Fragment f = DiaryDetailFragment.newInstance(diaryId);
-                activity.controller.pushFragment(f);
+                Intent intent = new Intent(context.getApplicationContext(), DiariesViewerActivity.class);
+                intent.putExtra(Constants.POSITION, i);
+                startActivity(intent);
             }
 
             @Override
-            public void onItemChildClick(BaseQuickAdapter adapter, View view, int i) {
+            public void onItemChildClick(BaseQuickAdapter baseQuickAdapter, View view, int i) {
                 int id = view.getId();
                 if (id == R.id.avatar) {
-                    onAvatarClicked(view, i);
+                    goProfile(adapter.getItem(i).getUserId());
+
                 } else if (id == R.id.attachPicture) {
                     onPictureClicked(view, i);
                 }
@@ -121,6 +112,11 @@ public class MainDiaryFragment extends RecyclerFragment {
             }
         });
 
+    }
+
+    @Override
+    protected boolean hasFab() {
+        return true;
     }
 
     private void onPictureClicked(View view, int i) {
@@ -138,16 +134,12 @@ public class MainDiaryFragment extends RecyclerFragment {
             @Override
             public boolean onResourceReady(GlideDrawable resource, String model, Target<GlideDrawable> target, boolean isFromMemoryCache, boolean isFirstResource) {
                 progressBar.setVisibility(View.GONE);
-                activity.startViewer(view, url);
+                TransitionHelper.startViewer(activity, view, url);
                 return false;
             }
         }).preload();
     }
 
-
-    private void onAvatarClicked(View view, int i) {
-        goProfile(adapter.getItem(i).getUserId());
-    }
 
     @Override
     protected boolean needNavigation() {
@@ -156,21 +148,27 @@ public class MainDiaryFragment extends RecyclerFragment {
 
     @Override
     protected void initData() {
-        activity.showBottomBar();
+        toolbar.setVisibility(View.VISIBLE);
         toolbar.setTitle(getString(R.string.app_name));
         toolbar.setNavigationIcon(R.mipmap.ic_launcher);
+        toolbar.setOnClickListener(v -> {
+            if (((LinearLayoutManager) layoutManager).findLastVisibleItemPosition() > SMOOTH_SCROLL_POSITION) {
+                recyclerView.scrollToPosition(0);
+            } else {
+                recyclerView.smoothScrollToPosition(0);
+            }
+
+        });
 
         diaries = DataBase.allDiaries(realm, "");
-        diaryList = realm.copyFromRealm(diaries);
-
         adapter.setNewData(diaries);
 
-        Log.d(TAG, "fetch: ");
         if (LoginManager.getApi() == null) {
             UiUtils.showSnack(getView(), "您还未登陆");
             return;
         }
 
+        adapter.setEnableLoadMore(true);
         adapter.setOnLoadMoreListener(() -> {
             page = SpUtil.getInt(Constants.PAGE, 1);
             log("load more ", page);
@@ -178,12 +176,10 @@ public class MainDiaryFragment extends RecyclerFragment {
             fetch();
         });
 
-        changeState(true);
         fetch();
     }
 
-    private void fetch() {
-
+    protected void fetch() {
         subscription = LoginManager.getApi()
                 .allTodayDiaries(page, 5)
                 .compose(applySchedulers())
@@ -201,35 +197,44 @@ public class MainDiaryFragment extends RecyclerFragment {
 
                     @Override
                     public void onStart() {
+                        changeState(true);
                         oldSize = diaries.size();
                     }
 
                     @Override
                     public void onCompleted() {
-                        diaries = DataBase.allDiaries(realm, "");
+                        diaries = DataBase.findTodayDiaries(realm);
+
                         newSize = diaries.size();
                         log(" old--" + oldSize + " new--" + newSize);
                         if (newSize > oldSize) {
-                            SpUtil.save(Constants.PAGE, page);
+                            int add = newSize - oldSize;
                             if (page == 1) {
-                                log("", " insert " + (newSize - oldSize));
-                                adapter.notifyItemRangeInserted(0, newSize - oldSize);
-                                recyclerView.smoothScrollToPosition(0);
+                                log("", " insert " + add);
+                                adapter.notifyItemRangeInserted(0, add);
+                                if (add > 30) {
+                                    recyclerView.scrollToPosition(0);
+                                } else {
+                                    recyclerView.smoothScrollToPosition(0);
+                                }
+//                                String msg = String.format(getString(R.string.x_diaries_updated), add);
+//                                UiUtils.showSnack(activity.bottomBar, msg,
+//                                        R.string.view, v -> recyclerView.smoothScrollToPosition(0));
 
                             } else {
                                 adapter.notifyItemRangeChanged(oldSize, newSize);
                             }
-                            adapter.loadMoreComplete();
                         } else {
-                            adapter.loadMoreEnd();
-
+                            page++;
                         }
-                        changeRefresh(false);
+                        adapter.loadMoreComplete();
+                        SpUtil.save(Constants.PAGE, page);
+                        changeState(false);
                     }
 
                     @Override
                     public void onError(Throwable e) {
-                        changeRefresh(false);
+                        changeState(false);
                         e.printStackTrace();
                     }
 
@@ -238,29 +243,28 @@ public class MainDiaryFragment extends RecyclerFragment {
                         DataBase.save(realm, diary);
                     }
                 });
+        compositeSubscription.add(subscription);
     }
 
     @Override
     public void onRefresh() {
+        if (adapter.isLoading() || isFetching) {
+            UiUtils.showSnack(rootView, R.string.is_loading);
+            return;
+        }
         page = 1;
         fetch();
-        if (adapter.isLoading()) {
-            changeRefresh(false);
-            UiUtils.showSnack(rootView, R.string.is_loading);
-        }
     }
 
-    //改变是否在加载数据的状态
     public void changeState(boolean fetching) {
         isFetching = fetching;
         changeRefresh(isFetching);
     }
 
+
     @Override
-    public void onStop() {
-        super.onStop();
-        changeState(false);
+    public void onDestroy() {
+        DataBase.clearAllDiaries();
+        super.onDestroy();
     }
-
-
 }

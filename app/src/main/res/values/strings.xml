@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">时光日记</string>
+    <string name="app_name">TimePill</string>
     <string name="test_diary">
         你必须实现onCreate方法来处理应用的一些基本启动逻辑，它只在activity的整个生命周期中执行一次。比如，定义UI，初始化一些类级别的变量。onCreate执行后，onStart和onResume会立刻紧接着被执行，然后activity会停留在onResume，直到发生改变状态的事件，比如接电话，或者跳到别的activity、屏幕关闭。
         相比于生命周期的第一个回调onCreate，最后一个被调用的是onDestroy。系统调用它作为你activity实例被完全从内存中移除的标志。大部分app
@@ -22,7 +22,7 @@
     <string name="reply_to_xxx">回复 %s 的评论：</string>
     <string name="no_text_entered">O__O … 您还没说话呢</string>
     <string name="speak_more">多说点什么吧~</string>
-    <string name="total_comments">共 %s 条评论</string>
+    <string name="total_comments">共 %d 条评论</string>
     <string name="xxx_copied">\"%s\" 已复制</string>
     <string name="picture_load_fail">图片太神秘了，无法加载</string>
     <string name="save_img_success">图片已保存</string>
@@ -39,10 +39,38 @@
         <item>举报</item>
         <item>删除回复</item>
     </string-array>
-    <string name="title_activity_viewer">ViewerActivity</string>
+
     <string name="action_settings">Settings</string>
     <string name="timepill_url">http://www.timepill.net/</string>
-    <string name="reply_to_diary">回复此日记...</string>
+    <string name="reply_to_diary">回复此日记…</string>
     <string name="my_diary">我的日记</string>
     <string name="my_notebook">日记本</string>
+    <string name="login_failed">登录失败，请稍后再试</string>
+    <string name="my_following_diary">关注日记</string>
+    <string name="my_following">关注的人</string>
+
+    <string name="cant_get_following">无法获取您关注的用户</string>
+    <string name="no_today_diary">没有最新日记</string>
+    <string name="no_notebook">没有公开日记本</string>
+    <string name="follow_success">关注成功~</string>
+    <string name="unfollow_success">已取消关注</string>
+    <string name="title_activity_main2">Main2Activity</string>
+    <string name="x_diaries_updated">更新了 %d 条日记</string>
+    <string name="view">查看</string>
+    <string name="my_notifications">通知</string>
+    <string name="my_followers">关注我的用户</string>
+    <string name="cant_get_notifications">无法获取最近的通知~</string>
+    <string name="cant_connect_net">无法连接网络</string>
+    <string name="no_new_notification">没有新消息</string>
+    <string name="edit">编辑</string>
+    <string name="privacy_me_only">仅自己可见</string>
+    <string name="privacy_public">大家可见</string>
+    <string name="privacy_property">可见性</string>
+    <string name="create_notebook">创建日记本</string>
+    <string name="expire_time">过期时间：%s</string>
+    <string name="fail_to_create_notebook">创建日记本失败</string>
+    <string name="edit_notebook">编辑日记本</string>
+    <string name="update_success">更新成功</string>
+    <string name="create_notebook_success">日记本 %s 创建成功</string>
+    <string name="update_failed">更新失败</string>
 </resources>

@@ -95,13 +95,12 @@ public class DataBase {
         return realm.where(User.class).equalTo(Constants.ID, id).findFirst();
     }
 
-    //// TODO: 17/3/9
-    public static RealmResults<Diary> findMyDiaries(Realm realm, int id) {
+    public static RealmResults<Diary> findTodayDiaries(Realm realm) {
         realm = initRealm(realm);
-        Date date = new Date();
-
-        DateUtil.getDisplayTime(date);
-        return realm.where(Diary.class).equalTo(Constants.ID, id).findAll();
+        Date today = new Date();
+        return realm.where(Diary.class)
+                .between("created", DateUtil.getStartOfDate(today), DateUtil.getEndOfDate(today))
+                .findAllSorted("created", Sort.DESCENDING);
     }
 
     public static RealmResults<Notebook> findNotebooks(Realm realm, int userId) {
@@ -125,5 +124,11 @@ public class DataBase {
         realm = initRealm(realm);
 
         return realm.where(Comment.class).equalTo("dairyId", diaryId).findAll();
+    }
+
+    public static Notebook findNotebook(Realm realm, int notebookId) {
+        realm = initRealm(realm);
+        return realm.where(Notebook.class).equalTo(Constants.ID, notebookId).findFirst();
+
     }
 }

@@ -10,6 +10,8 @@ import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.target.SimpleTarget;
 import com.dante.diary.R;
 
+import jp.wasabeef.glide.transformations.CropCircleTransformation;
+
 import static com.dante.diary.base.App.context;
 
 /**
@@ -45,6 +47,7 @@ public class Imager {
     public static void load(final android.support.v4.app.Fragment fragment, String url, ImageView target) {
         Glide.with(fragment)
                 .load(url)
+                .crossFade()
                 .error(R.drawable.error_holder)
                 .into(target);
     }
@@ -61,6 +64,12 @@ public class Imager {
                 .load(url)
                 .animate(animationId)
                 .into(view);
+    }
+
+    public static void loadAvatar(Context context, String url, ImageView avatarView) {
+        Glide.with(context).load(url)
+                .bitmapTransform(new CropCircleTransformation(context))
+                .into(avatarView);
     }
 
 }

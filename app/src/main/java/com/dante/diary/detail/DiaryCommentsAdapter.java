@@ -1,6 +1,6 @@
+
 package com.dante.diary.detail;
 
-import android.util.Log;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -65,7 +65,6 @@ public class DiaryCommentsAdapter extends BaseQuickAdapter<Comment, BaseViewHold
                     .pressedTextColor(R.color.btg_global_text_blue)
                     .onClick((charSequence, range, o) -> {
                         if (listener != null) {
-                            Log.i(TAG, "convert: click");
                             listener.onItemClick(helper.getAdapterPosition());
                         }
                     });

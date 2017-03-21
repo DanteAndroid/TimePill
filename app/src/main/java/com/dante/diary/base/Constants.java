@@ -23,4 +23,10 @@ public class Constants {
     public static final String PASSWORD = "pwd";
     public static final String USER_ID = "user_id";
     public static final String CONTENT = "content";
+
+    public static final String SUBJECT = "subject";
+    public static final String DESCRIPTION = "description";
+    public static final String PRIVACY = "privacy";
+    public static final String EXPIRED = "expired";
+    public static final String CREATED = "created";
 }

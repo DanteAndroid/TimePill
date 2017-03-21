@@ -2,7 +2,6 @@ package com.dante.diary.main;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.util.Log;
 
 import com.dante.diary.base.BottomBarActivity;
 
@@ -24,16 +23,20 @@ public class MainActivity extends BottomBarActivity {
 
     }
 
-    @Override
-    public void onBackPressed() {
-        Log.d(TAG, "onBackPressed: " + controller.getSize());
-        if (controller.isRootFragment()) {
-            super.onBackPressed();
-        } else if (getSupportFragmentManager().getBackStackEntryCount() > 0) {
-            getSupportFragmentManager().popBackStack();
-        } else {
-            controller.popFragment();
-        }
-
-    }
+//    @Override
+//    public void onBackPressed() {
+//        Log.d(TAG, "onBackPressed: " + controller.getSize());
+//        if (controller.isRootFragment()) {
+//            Log.d(TAG, "onBackPressed: "+"isRoot");
+//            super.onBackPressed();
+//        } else if (getSupportFragmentManager().getBackStackEntryCount() > 0) {
+//            Log.d(TAG, "onBackPressed: "+"popBackStack");
+//            getSupportFragmentManager().popBackStack();
+//
+//        } else {
+//            Log.d(TAG, "onBackPressed: "+"popBackStack");
+//            controller.popFragment();
+//        }
+//
+//    }
 }

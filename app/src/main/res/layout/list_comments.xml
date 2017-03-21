@@ -7,7 +7,6 @@
               android:layout_margin="@dimen/activity_horizontal_margin"
               android:orientation="vertical"
               tools:showIn="@layout/refresh_coordinator">
-
     <View
         android:id="@+id/divider"
         android:layout_width="match_parent"
@@ -24,7 +23,7 @@
         android:gravity="center"
         android:minHeight="68dp"
         android:text="该日记没有评论。"
-        android:textColor="@color/medium_grey"
+        android:textColor="@color/mediumGrey"
         android:visibility="gone"
         tools:visibility="visible"/>
 

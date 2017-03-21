@@ -15,3 +15,19 @@
 #-keepclassmembers class fqcn.of.javascript.interfaces.for.webview {
 #   public *;
 #}
+  -dontwarn com.dante.diary.main.**
+  -keep class com.dante.diary.main.MainDiaryFragment { *; }
+  -keep class android.support.v7.widget.ShareActionProvider { *; }
+  -keep class com.dante.diary.net.** { *; }
+  -keep class com.dante.diary.model.** { *; }
+  -dontwarn com.roughike.bottombar.**
+
+## bugtags
+  -keepattributes LineNumberTable,SourceFile
+  -keep class com.bugtags.library.** {*;}
+  -dontwarn com.bugtags.library.**
+  -keep class io.bugtags.** {*;}
+  -dontwarn io.bugtags.**
+  -dontwarn org.apache.http.**
+  -dontwarn android.net.http.AndroidHttpClient
+  # End Bugtags

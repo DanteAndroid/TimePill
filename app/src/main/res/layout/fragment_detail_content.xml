@@ -1,8 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.v4.widget.NestedScrollView
     xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
-    android:layout_height="match_parent" tools:showIn="@layout/refresh_coordinator">
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:showIn="@layout/refresh_coordinator">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -37,7 +39,6 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_toRightOf="@+id/myAvatar"
-                android:clickable="true"
                 android:textColor="@color/secondText"
                 android:textSize="14sp"
                 tools:text="DanteId"/>
@@ -59,6 +60,7 @@
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/myName"
                 android:layout_marginTop="8dp"
+                android:textSize="16sp"
                 android:layout_toRightOf="@+id/myAvatar"
                 android:lineSpacingMultiplier="1.2"
                 android:textColor="@color/primaryText"
@@ -70,14 +72,13 @@
                 android:layout_height="wrap_content"
                 android:layout_alignStart="@+id/content"
                 android:layout_below="@+id/content"
-                android:layout_marginTop="8dp"
+                android:layout_marginTop="6dp"
 
                 android:visibility="gone"
                 tools:src="@mipmap/ic_launcher"
                 tools:visibility="visible"/>
 
         </RelativeLayout>
-
         <include layout="@layout/list_comments"/>
 
     </LinearLayout>

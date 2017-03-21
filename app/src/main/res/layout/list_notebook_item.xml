@@ -6,7 +6,7 @@
                                     android:layout_width="match_parent"
                                     android:layout_height="wrap_content"
                                     android:layout_margin="6dp"
-                                    android:foreground="?attr/selectableItemBackgroundBorderless"
+                                    android:background="?android:attr/selectableItemBackground"
                                     android:visibility="visible"
                                     app:cardCornerRadius="3dp">
 
@@ -20,25 +20,41 @@
             android:minHeight="100dp"
             android:scaleType="centerCrop"
             tools:src="@mipmap/ic_launcher"/>
-        <TextView
-            android:id="@+id/notebookSubject"
-            android:layout_width="wrap_content"
-            android:layout_height="48dp"
-            android:layout_gravity="center"
-            android:drawableLeft="@drawable/ic_book_black_18dp"
-            android:drawablePadding="3dp"
-            android:gravity="center"
-            android:textColor="@color/primaryText"
-            android:textSize="16sp"
-            android:visibility="visible"
-            tools:text="This is a test post title, may be long (28P)"/>
+
+        <LinearLayout android:layout_width="match_parent"
+                      android:layout_height="wrap_content">
+            <TextView
+                android:layout_weight="1"
+                android:id="@+id/notebookSubject"
+                android:layout_width="0dp"
+                android:layout_height="48dp"
+                android:layout_gravity="center"
+                android:drawablePadding="3dp"
+                android:gravity="center"
+                android:textColor="@color/primaryText"
+                android:textSize="16sp"
+                android:visibility="visible"
+                tools:text="This is a test post title, may be long (28P)"/>
+
+            <ImageView
+                android:id="@+id/more"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:src="@drawable/ic_menu_moreoverflow"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:visibility="gone"
+                android:layout_marginRight="@dimen/activity_horizontal_margin"
+                android:layout_gravity="end"/>
+        </LinearLayout>
+
+
         <TextView
             android:id="@+id/expireState"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center"
             android:text="已过期"
-            android:textColor="@color/medium_grey"
+            android:textColor="@color/mediumGrey"
             android:visibility="visible"/>
         <TextView
             android:id="@+id/createdToExpired"
@@ -47,7 +63,7 @@
             android:gravity="center"
             android:paddingBottom="5dp"
             android:paddingTop="2dp"
-            android:text="2016-3-16 ~ 2017-3-9"
+            tools:text="2016-3-16 ~ 2017-3-9"
             android:visibility="visible"/>
 
     </LinearLayout>

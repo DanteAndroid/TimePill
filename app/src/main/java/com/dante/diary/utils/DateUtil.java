@@ -1,6 +1,9 @@
 package com.dante.diary.utils;
 
-import java.text.ParseException;
+import android.util.Log;
+
+import com.blankj.utilcode.utils.TimeUtils;
+
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
@@ -10,20 +13,8 @@ import java.util.Locale;
  * deals with string work like copy, parse.
  */
 public class DateUtil {
-
     public static final String LAST_DATE = "lastDate";
-
-    /**
-     * Parse"yyyyMMdd" to "yyyy-MM-dd"
-     *
-     * @param date "yyyyMMdd" String date
-     * @return "yyyy-MM-dd" for display
-     */
-    public static String getDisplayTime(String date) {
-        Date d = parseStandardDate(date);
-        return getDisplayTime(d);
-
-    }
+    private static final String TAG = "DateUtil";
 
     /**
      * Get date String to display
@@ -35,39 +26,12 @@ public class DateUtil {
         SimpleDateFormat formatter = new SimpleDateFormat("hh:mm:ss", Locale.getDefault());
         return formatter.format(date);
     }
+
     public static String getDisplayDay(Date date) {
         SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
         return formatter.format(date);
     }
 
-    /**
-     * Parse Date to String
-     *
-     * @param date Date object
-     * @return "yyyyMMdd" String
-     */
-    public static String parseStandardDate(Date date) {
-        SimpleDateFormat formatter = new SimpleDateFormat("yyyyMMdd", Locale.getDefault());
-        formatter.setLenient(false);
-        return formatter.format(date);
-    }
-
-    /**
-     * Parse "yyyyMMdd" to Date
-     *
-     * @param date "yyyyMMdd" String
-     * @return Date object
-     */
-    public static Date parseStandardDate(String date) {
-        SimpleDateFormat formatter = new SimpleDateFormat("yyyyMMdd", Locale.getDefault());
-        formatter.setLenient(false);
-        try {
-            return formatter.parse(date);
-        } catch (ParseException e) {
-            e.printStackTrace();
-            return new Date();
-        }
-    }
 
     public static Date lastDay(Date date) {
         Calendar c = Calendar.getInstance();
@@ -77,9 +41,26 @@ public class DateUtil {
         return c.getTime();
     }
 
-    public static String lastDay(String date) {
-        Date d = DateUtil.parseStandardDate(date);
-        return parseStandardDate(lastDay(d));
+    public static Date getStartOfDate(Date date) {
+        String day = getDisplayDay(date);
+        String zeroTime = day.concat(" 00:00:00");
+        Log.d(TAG, "getZeroOfDate: " + zeroTime);
+        return TimeUtils.string2Date(zeroTime);
+    }
+
+    public static Date getEndOfDate(Date date) {
+        String day = getDisplayDay(date);
+        String zeroTime = day.concat(" 23:59:59");
+        Log.d(TAG, "getEndOfDate: " + zeroTime);
+        return TimeUtils.string2Date(zeroTime);
+    }
+
+    public static Date nextMonthDateOfToday() {
+        Date today= new Date();
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(today);
+        calendar.add(Calendar.MONTH, 1);
+        return calendar.getTime();
     }
 
 }

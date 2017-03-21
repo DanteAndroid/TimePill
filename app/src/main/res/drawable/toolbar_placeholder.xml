@@ -5,7 +5,7 @@
     <!-- background -->
     <item>
         <shape>
-            <solid android:color="@color/white"/>
+            <solid android:color="@color/whiteBackground"/>
         </shape>
     </item>
     <!-- fake toolbar (56+40dp + 24 dp ) -->
