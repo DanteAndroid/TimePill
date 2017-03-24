@@ -3,9 +3,7 @@ package com.dante.diary.follow;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
-import android.transition.Slide;
 import android.util.Log;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
 import android.widget.TextView;
@@ -70,7 +68,7 @@ public class TabsFragment extends BaseFragment {
     @Override
     protected void initData() {
         Log.d("test", "initData: ");
-        activity.showBottomBar();
+        barActivity.showBottomBar();
     }
 
     private void initTabs() {

@@ -6,10 +6,12 @@ import android.support.annotation.CallSuper;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.animation.AccelerateInterpolator;
 import android.view.animation.DecelerateInterpolator;
 
 import com.dante.diary.R;
+import com.dante.diary.model.DataBase;
 
 import butterknife.ButterKnife;
 import io.realm.Realm;
@@ -19,7 +21,7 @@ import io.realm.Realm;
  */
 public abstract class BaseActivity extends AppCompatActivity {
     private static final String TAG = "BaseActivity";
-    public Realm realm;
+    public DataBase base;
     public Toolbar toolbar;
     private boolean isShowToolbar = true;
     private ProgressDialog dialog;
@@ -41,7 +43,7 @@ public abstract class BaseActivity extends AppCompatActivity {
     }
 
     private void initSDK() {
-        realm = Realm.getDefaultInstance();
+        base = DataBase.getInstance();
     }
 
 
@@ -83,8 +85,9 @@ public abstract class BaseActivity extends AppCompatActivity {
 
     @Override
     protected void onDestroy() {
+        Log.i(TAG, "onDestroy: getGlobalInstanceCount "+ Realm.getGlobalInstanceCount(base.realm.getConfiguration()));
         super.onDestroy();
-        realm.close();
+        base.close();
     }
 
     public void setToolbarTitle(String title) {

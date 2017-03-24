@@ -4,9 +4,11 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:showIn="@layout/refresh_coordinator">
+    tools:showIn="@layout/fragment_diary_detail">
 
     <LinearLayout
+        android:clickable="true"
+        android:focusableInTouchMode="true"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical">
@@ -60,10 +62,11 @@
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/myName"
                 android:layout_marginTop="8dp"
-                android:textSize="16sp"
                 android:layout_toRightOf="@+id/myAvatar"
+                android:autoLink="all"
                 android:lineSpacingMultiplier="1.2"
                 android:textColor="@color/primaryText"
+                android:textSize="16sp"
                 tools:text="@string/test_diary"/>
 
             <ImageView
@@ -73,7 +76,9 @@
                 android:layout_alignStart="@+id/content"
                 android:layout_below="@+id/content"
                 android:layout_marginTop="6dp"
-
+                android:adjustViewBounds="true"
+                android:maxHeight="240dp"
+                android:minHeight="180dp"
                 android:visibility="gone"
                 tools:src="@mipmap/ic_launcher"
                 tools:visibility="visible"/>

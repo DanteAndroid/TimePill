@@ -1,7 +1,9 @@
-package com.dante.diary.notebook;
+package com.dante.diary.create;
 
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.CollapsingToolbarLayout;
@@ -26,18 +28,20 @@ import com.bumptech.glide.request.target.SimpleTarget;
 import com.dante.diary.R;
 import com.dante.diary.base.BaseActivity;
 import com.dante.diary.base.Constants;
+import com.dante.diary.custom.PickPictureActivity;
 import com.dante.diary.login.LoginManager;
-import com.dante.diary.model.DataBase;
 import com.dante.diary.model.Notebook;
+import com.dante.diary.net.NetService;
+import com.dante.diary.utils.BitmapUtil;
 import com.dante.diary.utils.DateUtil;
 import com.dante.diary.utils.UiUtils;
 
+import java.io.File;
 import java.util.HashMap;
 
 import butterknife.BindView;
-import butterknife.ButterKnife;
+import rx.Observable;
 import rx.android.schedulers.AndroidSchedulers;
-import rx.functions.Action1;
 import rx.schedulers.Schedulers;
 
 public class CreateNotebookActivity extends BaseActivity implements View.OnClickListener {
@@ -67,12 +71,14 @@ public class CreateNotebookActivity extends BaseActivity implements View.OnClick
     int notebookId;
     @BindView(R.id.notebookCover)
     ImageView notebookCover;
-    @BindView(R.id.calendarScrollView)
+//    @BindView(R.id.calendarScrollView)
     ScrollView calendarScrollView;
     @BindView(R.id.toolbar_layout)
     CollapsingToolbarLayout toolbarLayout;
     private boolean isEditMode;
     private Notebook notebook;
+    private File coverFile;
+    private String expireDate;
 
     @Override
     protected int initLayoutId() {
@@ -86,7 +92,7 @@ public class CreateNotebookActivity extends BaseActivity implements View.OnClick
 //        getWindow().setEnterTransition(null);
         if (getIntent() != null) {
             notebookId = getIntent().getIntExtra(Constants.ID, 0);
-            notebook = DataBase.findNotebook(realm, notebookId);
+            notebook = base.findNotebook(notebookId);
             isEditMode = notebookId > 0;
         }
         toolbar.setNavigationOnClickListener(v -> onBackPressed());
@@ -102,6 +108,8 @@ public class CreateNotebookActivity extends BaseActivity implements View.OnClick
     }
 
     private void initCover() {
+        notebookCover.setOnClickListener(v -> startActivityForResult(new Intent(getApplicationContext(), PickPictureActivity.class), 1));
+
         if (isEditMode) {
             ViewCompat.setTransitionName(notebookCover, String.valueOf(notebookId));
             Log.d(TAG, "initCover: " + notebookId);
@@ -127,15 +135,58 @@ public class CreateNotebookActivity extends BaseActivity implements View.OnClick
 
     }
 
+    private void setNoteBookCover() {
+        if (notebookId <= 0) {
+            return;
+        }
+        if (coverFile == null || !coverFile.exists()) {
+            return;
+        }
+
+        LoginManager.getApi().setNotebookCover(notebookId, NetService.createMultiPart("cover", coverFile))
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(notebook1 -> UiUtils.showSnack(notebookCover, getString(R.string.cover_upload_success)),
+                        throwable -> UiUtils.showSnack(notebookCover, getString(R.string.cover_upload_failed)));
+
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == 1) {
+
+            if (resultCode == RESULT_OK) {
+                Uri uri = data.getData();
+                notebookCover.setImageURI(uri);
+                String path = BitmapUtil.getPath(uri);
+                if (path == null) {
+                    path = data.getStringExtra("path");
+                }
+                coverFile = new File(path);
+                setNoteBookCover();
+
+            } else if (resultCode == PickPictureActivity.RESULT_FAILED) {
+                UiUtils.showSnack(notebookCover, getString(R.string.fail_read_pictures));
+            } else if (resultCode == RESULT_CANCELED) {
+                UiUtils.showSnack(notebookCover, getString(R.string.action_canceled));
+            }
+
+        }
+    }
+
     private void initCalendar() {
-        String expireDate = DateUtil.getDisplayDay(DateUtil.nextMonthDateOfToday());
+        expireDate = DateUtil.getDisplayDay(DateUtil.nextMonthDateOfToday());
         expire.setText(String.format(getString(R.string.expire_time),
                 isEditMode ? notebook.getExpired() : expireDate));
         if (isEditMode) {
             calendarScrollView.setVisibility(View.GONE);
         } else {
-            expireCalendar.setOnDateChangeListener((view, year, month, dayOfMonth) ->
-                    expire.setText(String.format(getString(R.string.expire_time), year + "-" + month + "-" + dayOfMonth)));
+            expireCalendar.setOnDateChangeListener((view, year, month, dayOfMonth) -> {
+                expireDate = year + "-" + month + "-" + dayOfMonth;
+                expire.setText(String.format(getString(R.string.expire_time), expireDate));
+            });
+
             expireCalendar.setDate(DateUtil.nextMonthDateOfToday().getTime(), true, true);
         }
     }
@@ -158,11 +209,15 @@ public class CreateNotebookActivity extends BaseActivity implements View.OnClick
 
             @Override
             public void afterTextChanged(Editable s) {
-                if (s.toString().replace(" ", "").length() <= 0) {
+                String result=s.toString().replace(" ", "");
+                if (result.length() <= 0) {
                     subjectWrapper.setError("标题不能为空");
-                } else {
+                } else if (result.length()>20){
+                    subjectWrapper.setError("标题有点长哦");
+                } else{
                     subjectWrapper.setError(null);
                     notebookSubject = s.toString();
+                    fab.show();
                 }
             }
         });
@@ -177,26 +232,26 @@ public class CreateNotebookActivity extends BaseActivity implements View.OnClick
             data.put(Constants.DESCRIPTION, description);
         }
         data.put(Constants.PRIVACY, isPrivate ? PRIVACY_PRIVATE : PRIVACY_PUBLIC);
-        data.put(Constants.EXPIRED, expire);
+        data.put(Constants.EXPIRED, expireDate);
 
-        LoginManager.getApi()
-                .updateNotebook(notebookId, data)
-                .subscribeOn(Schedulers.io())
+        source(data).subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Action1<Notebook>() {
-                    @Override
-                    public void call(Notebook notebook) {
-                        if (isEditMode) {
-                            UiUtils.showSnack(fab, R.string.update_success);
-                        } else {
-                            String s = String.format(getString(R.string.create_notebook_success), notebookSubject);
-                            UiUtils.showSnack(fab, s);
-                        }
-                        supportFinishAfterTransition();
+                .subscribe(n -> {
+                    if (isEditMode) {
+                        UiUtils.showSnack(fab, R.string.update_success);
+                    } else {
+                        notebook = n;
+                        notebookId = n.getId();
+                        setNoteBookCover();
+                        String s = String.format(getString(R.string.create_notebook_success), notebookSubject);
+                        UiUtils.showSnack(fab, s);
                     }
+
+                    supportFinishAfterTransition();
+
                 }, throwable -> {
                     if (isEditMode) {
-                        UiUtils.showSnack(fab, R.string.update_failed);
+                        UiUtils.showSnack(fab, String.format(getString(R.string.update_failed) + " %s", throwable.getMessage()));
                     } else {
                         UiUtils.showSnack(fab, getString(R.string.fail_to_create_notebook));
                     }
@@ -205,10 +260,12 @@ public class CreateNotebookActivity extends BaseActivity implements View.OnClick
     }
 
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        // TODO: add setContentView(...) invocation
-        ButterKnife.bind(this);
+    public Observable<Notebook> source(HashMap<String, Object> data) {
+        if (isEditMode) {
+            return LoginManager.getApi()
+                    .updateNotebook(notebookId, data);
+        }
+        return LoginManager.getApi()
+                .createNotebook(data);
     }
 }

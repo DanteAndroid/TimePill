@@ -24,7 +24,6 @@ import com.dante.diary.base.Constants;
 import com.dante.diary.base.RecyclerFragment;
 import com.dante.diary.base.TabPagerAdapter;
 import com.dante.diary.login.LoginManager;
-import com.dante.diary.model.DataBase;
 import com.dante.diary.model.User;
 import com.dante.diary.utils.DateUtil;
 import com.dante.diary.utils.StateButton;
@@ -87,6 +86,15 @@ public class ProfileFragment extends BaseFragment {
     }
 
     @Override
+    protected void setAnimations() {
+        super.setAnimations();
+        id = getArguments().getInt(Constants.ID);
+        if (!LoginManager.isMe(id)) {
+            setEnterTransition(initTransitions());
+        }
+    }
+
+    @Override
     protected boolean needNavigation() {
         return false;
     }
@@ -104,17 +112,6 @@ public class ProfileFragment extends BaseFragment {
     @Override
     protected void initViews() {
         if (getArguments() != null) {
-            id = getArguments().getInt(Constants.ID);
-            log("gogo" + id);
-//            if (id == SpUtil.getInt(Constants.ID)) {
-//                //是登录用户
-//                user = DataBase.findUser(realm, id);
-//                if (user != null) {
-//                    loadProfile();
-//                    return;
-//                }
-//            }
-            //其他用户
             isOther = true;
             fetch();
             fab.setOnClickListener(v -> follow());
@@ -177,7 +174,7 @@ public class ProfileFragment extends BaseFragment {
                 DateUtil.getDisplayDay(user.getCreated()))
         );
 
-        if (!hasFollow) {
+        if (!hasFollow && !LoginManager.isMe(id)) {
             fab.show();
         }
 
@@ -205,7 +202,7 @@ public class ProfileFragment extends BaseFragment {
                     public void onNext(User t) {
                         id = t.getId();
                         user = t;
-                        DataBase.save(realm, t);
+                        base.save(t);
                     }
                 });
 

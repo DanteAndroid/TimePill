@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
-      xmlns:dante="http://schemas.android.com/apk/res-auto">
-    <item android:id="@+id/menu_item_share"
-          android:title="@string/share_to"
-          dante:actionProviderClass="android.support.v7.widget.ShareActionProvider"
-          dante:showAsAction="ifRoom"/>
+      xmlns:app="http://schemas.android.com/apk/res-auto">
+    <item
+        android:id="@+id/menu_item_share"
+        app:showAsAction="always"
+        android:title="@string/share_to"
+        app:actionProviderClass="android.support.v7.widget.ShareActionProvider" />
 
 </menu>

@@ -73,4 +73,15 @@
     <string name="update_success">更新成功</string>
     <string name="create_notebook_success">日记本 %s 创建成功</string>
     <string name="update_failed">更新失败</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="content_saved_as_draft">内容已存为草稿</string>
+    <string name="unable_upload_picture">如果您拒绝权限，临时图片无法创建，也就无法上传</string>
+    <string name="fail_read_pictures">读取图片失败</string>
+    <string name="action_canceled">操作已取消</string>
+    <string name="cover_upload_failed">封面图上传失败</string>
+    <string name="cover_upload_success">封面图上传成功</string>
+    <string name="create_diary">写日记</string>
+    <string name="title_activity_create_diary">CreateDiaryActivity</string>
 </resources>

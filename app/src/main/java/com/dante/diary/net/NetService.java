@@ -1,12 +1,18 @@
 package com.dante.diary.net;
 
 import android.text.TextUtils;
+import android.util.Log;
 
 import com.dante.diary.BuildConfig;
 import com.dante.diary.utils.AuthenticationInterceptor;
 
+import java.io.File;
+
 import okhttp3.Credentials;
+import okhttp3.MediaType;
+import okhttp3.MultipartBody;
 import okhttp3.OkHttpClient;
+import okhttp3.RequestBody;
 import okhttp3.logging.HttpLoggingInterceptor;
 import retrofit2.Retrofit;
 import retrofit2.adapter.rxjava.RxJavaCallAdapterFactory;
@@ -53,7 +59,7 @@ public class NetService {
             //debug 模式开启log
             HttpLoggingInterceptor logging = new HttpLoggingInterceptor();
             logging.setLevel(BuildConfig.DEBUG ?
-                    HttpLoggingInterceptor.Level.BODY : HttpLoggingInterceptor.Level.NONE);
+                    HttpLoggingInterceptor.Level.BASIC : HttpLoggingInterceptor.Level.NONE);
             httpClient.addInterceptor(logging);
 
             if (!httpClient.interceptors().contains(interceptor)) {
@@ -72,6 +78,15 @@ public class NetService {
             api = createService(TimeApi.class, name, password);
         }
         return api;
+    }
+
+    public static MultipartBody.Part createMultiPart(String name, File file) {
+        Log.d("test", "createMultiPart: " + file);
+        RequestBody requestFile =
+                RequestBody.create(MediaType.parse("image/*"),
+                        file);
+
+        return MultipartBody.Part.createFormData(name, file.getName(), requestFile);
     }
 
 

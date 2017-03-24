@@ -17,10 +17,10 @@ import android.view.ViewGroup;
 
 import com.dante.diary.BuildConfig;
 import com.dante.diary.R;
+import com.dante.diary.model.DataBase;
 import com.dante.diary.profile.ProfileFragment;
 
 import butterknife.ButterKnife;
-import io.realm.Realm;
 import rx.Observable;
 import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
@@ -35,9 +35,9 @@ public abstract class BaseFragment extends Fragment {
     public CompositeSubscription compositeSubscription = new CompositeSubscription();
     public Subscription subscription;
     protected View rootView;
-    protected Realm realm;
+    protected DataBase base;
     protected Toolbar toolbar;
-    protected BottomBarActivity activity;
+    protected BottomBarActivity barActivity;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -90,7 +90,7 @@ public abstract class BaseFragment extends Fragment {
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         if (getActivity() instanceof BottomBarActivity) {
-            activity = (BottomBarActivity) getActivity();
+            barActivity = (BottomBarActivity) getActivity();
         }
         initAppBar();
         initData();
@@ -116,8 +116,7 @@ public abstract class BaseFragment extends Fragment {
 
     protected void onCreateView() {
         ButterKnife.bind(this, rootView);
-        realm = ((BaseActivity) getActivity()).realm;
-        toolbar = ((BaseActivity) getActivity()).toolbar;
+        base = ((BaseActivity) getActivity()).base;
     }
 
     public void initAppBar() {
@@ -131,11 +130,11 @@ public abstract class BaseFragment extends Fragment {
     }
 
     public void toggleBottomBar() {
-        if (activity != null) {
+        if (barActivity != null) {
             if (getStackCount() == 0) {
-                activity.showBottomBar();
+                barActivity.showBottomBar();
             } else {
-                activity.hideBottomBar();
+                barActivity.hideBottomBar();
             }
         }
     }
@@ -158,15 +157,23 @@ public abstract class BaseFragment extends Fragment {
                 .distinct();
     }
 
+    @Override
+    public void onHiddenChanged(boolean hidden) {
+        super.onHiddenChanged(hidden);
+        if (!hidden) {
+            onAppear();
+        }
+    }
+
+    protected void onAppear() {
+        toggleBottomBar();
+        //do when fragment is visible
+    }
 
     public void log(String key, String content) {
         if (BuildConfig.DEBUG && getUserVisibleHint()) {
             Log.d(getClass().getSimpleName(), key + "  " + content);
         }
-    }
-
-    public void log(String key, int content) {
-        log(key, String.valueOf(content));
     }
 
     public void log(String key) {
@@ -175,14 +182,24 @@ public abstract class BaseFragment extends Fragment {
 
     public void goProfile(int userId) {
         Fragment f = ProfileFragment.newInstance(userId);
-        add(f);
+        addNoAnimation(f);
     }
 
 
     public void add(Fragment f) {
         getActivity().getSupportFragmentManager().beginTransaction()
-                .setCustomAnimations(android.R.anim.slide_in_left, android.R.anim.slide_out_right
-                        , android.R.anim.slide_in_left, android.R.anim.slide_out_right)
+                .setCustomAnimations(R.anim.slide_in_right, android.R.anim.fade_out
+                        , android.R.anim.fade_in, android.R.anim.slide_out_right)
+                .hide(this)
+                .add(R.id.container, f)
+                .addToBackStack("")
+                .commit();
+    }
+
+    public void addNoAnimation(Fragment f) {
+        getActivity().getSupportFragmentManager().beginTransaction()
+                .setCustomAnimations(android.R.anim.fade_in, android.R.anim.fade_out
+                        , android.R.anim.fade_in, android.R.anim.fade_out)
                 .hide(this)
                 .add(R.id.container, f)
                 .addToBackStack("")
@@ -199,34 +216,26 @@ public abstract class BaseFragment extends Fragment {
 
     }
 
-    public void setScrollFlag(boolean scrollable) {
+    public void setToolbarScrollFlag(boolean scrollable) {
         AppBarLayout.LayoutParams params =
                 (AppBarLayout.LayoutParams) toolbar.getLayoutParams();
         params.setScrollFlags(scrollable ? AppBarLayout.LayoutParams.SCROLL_FLAG_SCROLL
                 | AppBarLayout.LayoutParams.SCROLL_FLAG_ENTER_ALWAYS : 0);
     }
 
-    @Override
-    public void onHiddenChanged(boolean hidden) {
-        super.onHiddenChanged(hidden);
-        toggleBottomBar();
-    }
-
-    @Override
-    public void setUserVisibleHint(boolean isVisibleToUser) {
-        super.setUserVisibleHint(isVisibleToUser);
-        Log.d(TAG, "setUserVisibleHint: " + isVisibleToUser + " " + getClass().getName());
-    }
-
     public void finishFragment() {
-        if (activity != null) {
-            activity.controller.popFragment();
+        if (barActivity != null) {
+            barActivity.controller.popFragment();
         }
     }
 
+    public void startTransition() {
+        getActivity().supportStartPostponedEnterTransition();
+    }
+
     public void pushFragment(Fragment f) {
-        if (activity != null) {
-            activity.controller.pushFragment(f);
+        if (barActivity != null) {
+            barActivity.controller.pushFragment(f);
         }
     }
 }

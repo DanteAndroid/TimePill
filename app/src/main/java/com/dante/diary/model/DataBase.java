@@ -1,8 +1,6 @@
 package com.dante.diary.model;
 
 
-import android.support.annotation.Nullable;
-
 import com.dante.diary.base.Constants;
 import com.dante.diary.utils.DateUtil;
 
@@ -18,6 +16,17 @@ import io.realm.Sort;
  * Deals with cache, data
  */
 public class DataBase {
+
+    public Realm realm;
+
+    private DataBase(Realm realm) {
+        this.realm = realm;
+    }
+
+    public static DataBase getInstance() {
+        return new DataBase(Realm.getDefaultInstance());
+    }
+
     private static Realm initRealm(Realm realm) {
         if (realm == null || realm.isClosed()) {
             realm = Realm.getDefaultInstance();
@@ -25,110 +34,89 @@ public class DataBase {
         return realm;
     }
 
-    public static <T extends RealmObject> void save(Realm realm, List<T> realmObjects) {
-        realm = initRealm(realm);
-        realm.beginTransaction();
-        realm.copyToRealmOrUpdate(realmObjects);
-        realm.commitTransaction();
+    public Diary getById(int id) {
+        return getById(id, Diary.class);
     }
 
-    public static <T extends RealmObject> T getById(Realm realm, int id, Class<T> realmObjectClass) {
-        realm = initRealm(realm);
-        return realm.where(realmObjectClass).equalTo(Constants.ID, id).findFirst();
-    }
-
-    private static <T extends RealmObject> RealmResults<T> findAll(Realm realm, Class<T> realmObjectClass) {
+    private <T extends RealmObject> RealmResults<T> findAll(Class<T> realmObjectClass) {
         realm = initRealm(realm);
         return realm.where(realmObjectClass).findAll();
     }
 
-    public static void save(Realm realm, RealmObject realmObject) {
-        if (realmObject == null) {
-            return;
-        }
-        realm = initRealm(realm);
+    public void save(RealmObject realmObject) {
         realm.beginTransaction();
         realm.copyToRealmOrUpdate(realmObject);
         realm.commitTransaction();
     }
 
-
-    public static Diary getById(Realm realm, int id) {
-        return getById(realm, id, Diary.class);
+    public boolean hasDiary(String url) {
+        return getByUrl(url) != null;
     }
 
-    public static boolean hasDiary(@Nullable Realm realm, String url) {
-        return getByUrl(realm, url) != null;
-    }
-
-
-    public static Diary getByUrl(Realm realm, String url) {
-        realm = initRealm(realm);
+    public Diary getByUrl(String url) {
         return realm.where(Diary.class).equalTo(Constants.URL, url).findFirst();
     }
 
-    public static RealmResults<Diary> allDiaries(Realm realm, String type) {
-        realm = initRealm(realm);
-//        if (Constants.FAVORITE.equals(type)) {
-//            return findFavoriteDiaries(realm);
-//        }
-        return realm.where(Diary.class)
-                .findAllSorted("created", Sort.DESCENDING);
-    }
 
-    public static RealmResults<Diary> findFavoriteDiaries(Realm realm) {
-        realm = initRealm(realm);
+
+    public RealmResults<Diary> findFavoriteDiaries() {
         return realm.where(Diary.class)
                 .equalTo("isLiked", true)
                 .findAll();
     }
 
-    public static void clearAllDiaries() {
-        Realm realm = Realm.getDefaultInstance();
+    public void clearAllDiaries() {
         realm.beginTransaction();
         realm.delete(Diary.class);
         realm.commitTransaction();
     }
 
-    public static User findUser(Realm realm, int id) {
-        realm = initRealm(realm);
+    public User findUser(int id) {
         return realm.where(User.class).equalTo(Constants.ID, id).findFirst();
     }
 
-    public static RealmResults<Diary> findTodayDiaries(Realm realm) {
-        realm = initRealm(realm);
+    public RealmResults<Diary> findTodayDiaries() {
         Date today = new Date();
         return realm.where(Diary.class)
                 .between("created", DateUtil.getStartOfDate(today), DateUtil.getEndOfDate(today))
+                .isNotNull("user")
                 .findAllSorted("created", Sort.DESCENDING);
     }
 
-    public static RealmResults<Notebook> findNotebooks(Realm realm, int userId) {
-        realm = initRealm(realm);
-
+    public RealmResults<Notebook> findNotebooks(int userId) {
         return realm.where(Notebook.class).equalTo("userId", userId).findAll();
     }
 
-    public static RealmResults<Diary> findDiariesOfNotebook(Realm realm, int notebookId) {
-        realm = initRealm(realm);
+    public RealmResults<Diary> findDiariesOfNotebook(int notebookId) {
         return realm.where(Diary.class).equalTo("notebookId", notebookId).findAll();
     }
 
-    public static Diary findDiary(Realm realm, int diaryId) {
-        realm = initRealm(realm);
-
+    public Diary findDiary(int diaryId) {
         return realm.where(Diary.class).equalTo(Constants.ID, diaryId).findFirst();
     }
 
-    public static List<Comment> findComments(Realm realm, int diaryId) {
-        realm = initRealm(realm);
-
+    public List<Comment> findComments(int diaryId) {
         return realm.where(Comment.class).equalTo("dairyId", diaryId).findAll();
     }
 
-    public static Notebook findNotebook(Realm realm, int notebookId) {
-        realm = initRealm(realm);
+    public Notebook findNotebook(int notebookId) {
         return realm.where(Notebook.class).equalTo(Constants.ID, notebookId).findFirst();
 
+    }
+
+    public <T extends RealmObject> T getById(int id, Class<T> realmObjectClass) {
+        realm = initRealm(realm);
+        return realm.where(realmObjectClass).equalTo(Constants.ID, id).findFirst();
+    }
+
+    public <T extends RealmObject> void save(List<T> realmObjects) {
+        realm.beginTransaction();
+        realm.copyToRealmOrUpdate(realmObjects);
+        realm.commitTransaction();
+    }
+
+    public void close() {
+        realm.removeAllChangeListeners();
+        realm.close();
     }
 }

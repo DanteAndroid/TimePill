@@ -10,7 +10,6 @@ import com.blankj.utilcode.utils.KeyboardUtils;
 import com.dante.diary.R;
 import com.dante.diary.base.BaseFragment;
 import com.dante.diary.base.Constants;
-import com.dante.diary.model.DataBase;
 import com.dante.diary.model.User;
 import com.dante.diary.profile.ProfileFragment;
 import com.dante.diary.utils.SpUtil;
@@ -49,7 +48,6 @@ public class LoginFragment extends BaseFragment {
     @Override
     protected void initViews() {
 
-
         ((DefaultLoginView) login.getLoginView()).setListener((loginUser, loginPass) -> {
             Editable userName = loginUser.getEditText().getText();
             Editable password = loginPass.getEditText().getText();
@@ -71,12 +69,7 @@ public class LoginFragment extends BaseFragment {
     }
 
     private void goUserProfile() {
-        activity.getSupportFragmentManager()
-                .beginTransaction()
-                .replace(R.id.container, ProfileFragment.newInstance(id))
-                .commit();
-
-//        activity.controller.replaceFragment(ProfileFragment.newInstance(id));
+        barActivity.controller.replaceFragment(ProfileFragment.newInstance(id));
     }
 
     private void login() {
@@ -84,7 +77,7 @@ public class LoginFragment extends BaseFragment {
             UiUtils.showSnack(getView(), "用户名或密码不能为空哦");
             return;
         }
-        KeyboardUtils.hideSoftInput(activity);
+        KeyboardUtils.hideSoftInput(barActivity);
 
         LoginManager.login(name, psw)
                 .compose(applySchedulers())
@@ -104,7 +97,7 @@ public class LoginFragment extends BaseFragment {
                         Log.d(TAG, "onNext: " + user.toString());
                         id = user.getId();
                         Log.d(TAG, "onNext: id " + id);
-                        DataBase.save(realm, user);
+                        base.save(user);
                         saveUserAccount();
                     }
                 });

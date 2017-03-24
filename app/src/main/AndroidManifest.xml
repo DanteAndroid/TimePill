@@ -2,6 +2,8 @@
 <manifest package="com.dante.diary"
           xmlns:android="http://schemas.android.com/apk/res/android">
 
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
+
     <application
         android:name=".base.App"
         android:allowBackup="true"
@@ -19,10 +21,23 @@
             </intent-filter>
         </activity>
         <activity android:name=".base.BottomBarActivity"/>
-        <activity android:name=".detail.ViewerActivity"
-                  android:theme="@style/ViewerTheme.TransNav"/>
-        <activity android:name=".detail.DiariesViewerActivity"/>
-        <activity android:name=".notebook.CreateNotebookActivity"/>
+        <activity
+            android:name=".detail.ViewerActivity"
+            android:theme="@style/ViewerTheme.TransNav"/>
+        <activity
+            android:name=".detail.DiariesViewerActivity"
+            android:windowSoftInputMode="adjustResize"/>
+        <activity android:name=".create.CreateNotebookActivity"
+                  android:windowSoftInputMode="stateVisible|adjustPan"/>
+        <activity android:name=".TransitionActivity">
+        </activity>
+        <activity android:name=".custom.PickPictureActivity">
+        </activity>
+        <activity
+            android:name=".create.CreateDiaryActivity"
+            android:theme="@style/AppTheme.NoActionBar"
+            android:windowSoftInputMode="stateVisible|adjustPan">
+        </activity>
     </application>
 
 </manifest>

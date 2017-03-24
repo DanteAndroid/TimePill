@@ -10,6 +10,7 @@ import com.chad.library.adapter.base.listener.OnItemClickListener;
 import com.dante.diary.R;
 import com.dante.diary.base.RecyclerFragment;
 import com.dante.diary.detail.DiaryDetailFragment;
+import com.dante.diary.interfaces.IOnItemClickListener;
 import com.dante.diary.login.LoginManager;
 import com.dante.diary.model.TipResult;
 import com.dante.diary.utils.UiUtils;
@@ -21,7 +22,7 @@ import java.util.List;
  * Created by yons on 17/3/17.
  */
 
-public class NotificationListFragment extends RecyclerFragment implements com.dante.diary.interfaces.OnItemClickListener {
+public class NotificationListFragment extends RecyclerFragment implements IOnItemClickListener {
 
     private LinearLayoutManager layoutManager;
     private NotificationListAdapter adapter;
@@ -33,7 +34,7 @@ public class NotificationListFragment extends RecyclerFragment implements com.da
         super.initViews();
         adapter = new NotificationListAdapter(null, this);
         adapter.setEmptyView(R.layout.empty_notification, (ViewGroup) rootView);
-        layoutManager = new LinearLayoutManager(activity);
+        layoutManager = new LinearLayoutManager(barActivity);
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setAdapter(adapter);
 

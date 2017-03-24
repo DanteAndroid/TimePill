@@ -3,8 +3,10 @@ package com.dante.diary.main;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.design.widget.CoordinatorLayout;
 import android.support.v7.widget.LinearLayoutManager;
-import android.transition.Fade;
+import android.support.v7.widget.RecyclerView;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.ProgressBar;
 
@@ -18,9 +20,10 @@ import com.dante.diary.R;
 import com.dante.diary.base.BaseActivity;
 import com.dante.diary.base.Constants;
 import com.dante.diary.base.RecyclerFragment;
+import com.dante.diary.create.CreateDiaryActivity;
+import com.dante.diary.create.CreateNotebookActivity;
 import com.dante.diary.detail.DiariesViewerActivity;
 import com.dante.diary.login.LoginManager;
-import com.dante.diary.model.DataBase;
 import com.dante.diary.model.Diary;
 import com.dante.diary.utils.ImageProgresser;
 import com.dante.diary.utils.SpUtil;
@@ -31,13 +34,19 @@ import com.yqritc.recyclerviewflexibledivider.HorizontalDividerItemDecoration;
 
 import java.util.List;
 
+import butterknife.BindView;
+import io.github.yavski.fabspeeddial.FabSpeedDial;
+import io.github.yavski.fabspeeddial.SimpleMenuListenerAdapter;
+import io.realm.OrderedCollectionChangeSet;
+import io.realm.OrderedRealmCollectionChangeListener;
 import io.realm.RealmResults;
 import rx.Observable;
 import rx.Subscriber;
 import rx.functions.Func1;
+import top.wefor.circularanim.CircularAnim;
 
 
-public class MainDiaryFragment extends RecyclerFragment {
+public class MainDiaryFragment extends RecyclerFragment implements OrderedRealmCollectionChangeListener<RealmResults<Diary>> {
     private static final String TAG = "MainDiaryFragment";
     private static final String INDEX = "INDEX";
     private static final int SMOOTH_SCROLL_POSITION = 40;
@@ -49,9 +58,16 @@ public class MainDiaryFragment extends RecyclerFragment {
     DiaryListAdapter adapter;
     RealmResults<Diary> diaries;
     List<Diary> diaryList;
+    @BindView(R.id.fabMenu)
+    FabSpeedDial fabMenu;
+
 
     private String mParam1;
     private String mParam2;
+    private int old;
+    private int size;
+    private View createView;
+    private Intent intent;
 
     public MainDiaryFragment() {
         // Required empty public constructor
@@ -67,7 +83,7 @@ public class MainDiaryFragment extends RecyclerFragment {
 
     @Override
     protected int initLayoutId() {
-        return R.layout.fragment_diary_list;
+        return R.layout.fragment_diary_main;
     }
 
 //    @Override
@@ -88,15 +104,13 @@ public class MainDiaryFragment extends RecyclerFragment {
         adapter = new DiaryListAdapter(null);
         recyclerView.setAdapter(adapter);
         recyclerView.addItemDecoration(new HorizontalDividerItemDecoration.Builder(context)
+                .colorResId(R.color.divider)
                 .size(2)
-                .margin(48)
                 .build());
         recyclerView.addOnItemTouchListener(new OnItemClickListener() {
             @Override
             public void onSimpleItemClick(BaseQuickAdapter baseQuickAdapter, View view, int i) {
-                Intent intent = new Intent(context.getApplicationContext(), DiariesViewerActivity.class);
-                intent.putExtra(Constants.POSITION, i);
-                startActivity(intent);
+                goDetailActivity(view, i);
             }
 
             @Override
@@ -111,7 +125,54 @@ public class MainDiaryFragment extends RecyclerFragment {
 
             }
         });
+        initFab();
+    }
 
+    private void initFab() {
+        fabMenu.setVisibility(View.VISIBLE);
+        fabMenu.setMenuListener(new SimpleMenuListenerAdapter() {
+            @Override
+            public boolean onMenuItemSelected(MenuItem menuItem) {
+                int id = menuItem.getItemId();
+                View view = fabMenu.getChildAt(1);
+                intent = null;
+                if (id == R.id.action_create_diary) {
+                    intent = new Intent(getContext(), CreateDiaryActivity.class);
+                } else if (id == R.id.action_create_notebook) {
+                    intent = new Intent(getContext(), CreateNotebookActivity.class);
+                }
+                CircularAnim.fullActivity(getActivity(), view)
+                        .colorOrImageRes(R.color.colorAccent)
+                        .duration(500)
+                        .go(new CircularAnim.OnAnimationEndListener() {
+                            @Override
+                            public void onAnimationEnd() {
+                                startActivity(intent);
+                            }
+                        });
+                return true;
+            }
+        });
+        recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+                if (dy > 30) {
+                    CoordinatorLayout.LayoutParams layoutParams = (CoordinatorLayout.LayoutParams) fabMenu.getLayoutParams();
+                    int fab_bottomMargin = layoutParams.bottomMargin;
+                    fabMenu.animate().translationY(fabMenu.getHeight() + fab_bottomMargin).setDuration(400).start();
+                } else if (dy < -60) {
+                    fabMenu.animate().translationY(0).setDuration(400).start();
+                }
+            }
+        });
+
+    }
+
+    @SuppressWarnings("unchecked")
+    private void goDetailActivity(View view, int i) {
+        Intent intent = new Intent(context.getApplicationContext(), DiariesViewerActivity.class);
+        intent.putExtra(Constants.POSITION, i);
+        startActivity(intent);
     }
 
     @Override
@@ -120,7 +181,6 @@ public class MainDiaryFragment extends RecyclerFragment {
     }
 
     private void onPictureClicked(View view, int i) {
-        setExitTransition(new Fade());
 
         final ProgressBar progressBar = ImageProgresser.attachProgress(view);
         String url = adapter.getItem(i).getPhotoUrl();
@@ -134,7 +194,7 @@ public class MainDiaryFragment extends RecyclerFragment {
             @Override
             public boolean onResourceReady(GlideDrawable resource, String model, Target<GlideDrawable> target, boolean isFromMemoryCache, boolean isFirstResource) {
                 progressBar.setVisibility(View.GONE);
-                TransitionHelper.startViewer(activity, view, url);
+                TransitionHelper.startViewer(barActivity, view, url);
                 return false;
             }
         }).preload();
@@ -160,7 +220,8 @@ public class MainDiaryFragment extends RecyclerFragment {
 
         });
 
-        diaries = DataBase.allDiaries(realm, "");
+        diaries = base.findTodayDiaries();
+        diaries.addChangeListener(this);
         adapter.setNewData(diaries);
 
         if (LoginManager.getApi() == null) {
@@ -168,13 +229,13 @@ public class MainDiaryFragment extends RecyclerFragment {
             return;
         }
 
-        adapter.setEnableLoadMore(true);
         adapter.setOnLoadMoreListener(() -> {
             page = SpUtil.getInt(Constants.PAGE, 1);
-            log("load more ", page);
+            log("load more " + page);
             page++;
             fetch();
-        });
+        }, recyclerView);
+        adapter.disableLoadMoreIfNotFullPage();
 
         fetch();
     }
@@ -192,41 +253,15 @@ public class MainDiaryFragment extends RecyclerFragment {
                 })
                 .distinct()
                 .subscribe(new Subscriber<Diary>() {
-                    int oldSize;
-                    int newSize;
 
                     @Override
                     public void onStart() {
                         changeState(true);
-                        oldSize = diaries.size();
+                        old = diaries.size();
                     }
 
                     @Override
                     public void onCompleted() {
-                        diaries = DataBase.findTodayDiaries(realm);
-
-                        newSize = diaries.size();
-                        log(" old--" + oldSize + " new--" + newSize);
-                        if (newSize > oldSize) {
-                            int add = newSize - oldSize;
-                            if (page == 1) {
-                                log("", " insert " + add);
-                                adapter.notifyItemRangeInserted(0, add);
-                                if (add > 30) {
-                                    recyclerView.scrollToPosition(0);
-                                } else {
-                                    recyclerView.smoothScrollToPosition(0);
-                                }
-//                                String msg = String.format(getString(R.string.x_diaries_updated), add);
-//                                UiUtils.showSnack(activity.bottomBar, msg,
-//                                        R.string.view, v -> recyclerView.smoothScrollToPosition(0));
-
-                            } else {
-                                adapter.notifyItemRangeChanged(oldSize, newSize);
-                            }
-                        } else {
-                            page++;
-                        }
                         adapter.loadMoreComplete();
                         SpUtil.save(Constants.PAGE, page);
                         changeState(false);
@@ -234,13 +269,14 @@ public class MainDiaryFragment extends RecyclerFragment {
 
                     @Override
                     public void onError(Throwable e) {
+                        adapter.loadMoreFail();
                         changeState(false);
                         e.printStackTrace();
                     }
 
                     @Override
                     public void onNext(Diary diary) {
-                        DataBase.save(realm, diary);
+                        base.save(diary);
                     }
                 });
         compositeSubscription.add(subscription);
@@ -264,7 +300,61 @@ public class MainDiaryFragment extends RecyclerFragment {
 
     @Override
     public void onDestroy() {
-        DataBase.clearAllDiaries();
+        base.clearAllDiaries();
         super.onDestroy();
     }
+
+//    @Override
+//    public void onChange(RealmResults<Diary> diaries) {
+//        size = diaries.size();
+//        int add = size - old;
+//        log("old--" + old + " new--" + size);
+//        if (page > 1) {
+//            log("from" + old + ", " + add + " added");
+//            adapter.notifyItemRangeInserted(old, add);
+//        } else {
+//            log(add + " added");
+//            adapter.notifyItemRangeInserted(0, add);
+//            if (add > 30) {
+//                recyclerView.scrollToPosition(0);
+//            } else {
+//                recyclerView.smoothScrollToPosition(0);
+//            }
+//        }
+//        old = size;
+//    }
+
+    @Override
+    public void onChange(RealmResults<Diary> collection, OrderedCollectionChangeSet changeSet) {
+        // `null`  means the async query returns the first time.
+        if (changeSet == null) {
+            adapter.notifyDataSetChanged();
+            return;
+        }
+        // For deletions, the adapter has to be notified in reverse order.
+        OrderedCollectionChangeSet.Range[] deletions = changeSet.getDeletionRanges();
+        for (int i = deletions.length - 1; i >= 0; i--) {
+            OrderedCollectionChangeSet.Range range = deletions[i];
+            adapter.notifyItemRangeRemoved(range.startIndex, range.length);
+        }
+
+        OrderedCollectionChangeSet.Range[] insertions = changeSet.getInsertionRanges();
+        for (OrderedCollectionChangeSet.Range range : insertions) {
+            adapter.notifyItemRangeInserted(range.startIndex, range.length);
+
+            if (page == 1) {
+                if (range.length > 20) {
+                    recyclerView.scrollToPosition(0);
+                } else {
+                    recyclerView.smoothScrollToPosition(0);
+                }
+            }
+        }
+
+        OrderedCollectionChangeSet.Range[] modifications = changeSet.getChangeRanges();
+        for (OrderedCollectionChangeSet.Range range : modifications) {
+            adapter.notifyItemRangeChanged(range.startIndex, range.length);
+        }
+    }
+
 }

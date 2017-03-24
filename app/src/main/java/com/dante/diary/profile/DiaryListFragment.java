@@ -17,7 +17,6 @@ import com.dante.diary.detail.DiariesViewerActivity;
 import com.dante.diary.detail.DiaryDetailFragment;
 import com.dante.diary.login.LoginManager;
 import com.dante.diary.main.DiaryListAdapter;
-import com.dante.diary.model.DataBase;
 import com.dante.diary.model.Diary;
 import com.dante.diary.utils.SpUtil;
 
@@ -57,7 +56,7 @@ public class DiaryListFragment extends RecyclerFragment {
 
     @Override
     protected int initLayoutId() {
-        return R.layout.fragment_diary_list;
+        return R.layout.fragment_diary_main;
     }
 
 
@@ -65,7 +64,7 @@ public class DiaryListFragment extends RecyclerFragment {
     protected void initViews() {
         super.initViews();
         adapter = new DiaryListAdapter(null);
-        layoutManager = new LinearLayoutManager(activity);
+        layoutManager = new LinearLayoutManager(barActivity);
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setAdapter(adapter);
 
@@ -100,12 +99,13 @@ public class DiaryListFragment extends RecyclerFragment {
         if (isFromNotebook) {
             Intent intent = new Intent(getContext().getApplicationContext(), DiariesViewerActivity.class);
             intent.putExtra(Constants.POSITION, i);
-            intent.putExtra("notebookId", adapter.getItem(i).getNotebookId());
+            intent.putExtra(Constants.NOTEBOOK_ID, adapter.getItem(i).getNotebookId());
             startActivity(intent);
+
         } else {
             int diaryId = adapter.getItem(i).getId();
             Fragment f = DiaryDetailFragment.newInstance(diaryId);
-            replace(f);
+            add(f);
         }
     }
 
@@ -137,7 +137,7 @@ public class DiaryListFragment extends RecyclerFragment {
                 .compose(applySchedulers())
                 .subscribe(diaries -> {
                     if (isFromNotebook) {
-                        DataBase.save(realm, diaries);
+                        base.save(diaries);
                     }
 
                     if (page <= 1 && diaries.isEmpty()) {
@@ -158,7 +158,7 @@ public class DiaryListFragment extends RecyclerFragment {
                 return LoginManager.getApi().getFollowingDiaries().map(listResult -> listResult.diaries);
             }
             //notebook的日记返回格式跟全站的不太一样，需要留意
-            List<Diary> diaries = DataBase.findDiariesOfNotebook(realm, id);
+            List<Diary> diaries = base.findDiariesOfNotebook(id);
             if (diaries.isEmpty()) {
                 return LoginManager.getApi().getDiariesOfNotebook(id, page)
                         .map(listItemResult -> listItemResult.items);

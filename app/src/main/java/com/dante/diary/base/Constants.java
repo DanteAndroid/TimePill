@@ -29,4 +29,5 @@ public class Constants {
     public static final String PRIVACY = "privacy";
     public static final String EXPIRED = "expired";
     public static final String CREATED = "created";
+    public static final String NOTEBOOK_ID = "notebookId";
 }

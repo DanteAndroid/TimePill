@@ -9,8 +9,8 @@ import android.support.v4.app.FragmentTransaction;
 
 import com.dante.diary.R;
 import com.dante.diary.follow.TabsFragment;
+import com.dante.diary.login.LoginFragment;
 import com.dante.diary.main.MainDiaryFragment;
-import com.dante.diary.profile.ProfileFragment;
 import com.dante.diary.utils.SpUtil;
 import com.ncapdevi.fragnav.FragNavController;
 import com.roughike.bottombar.BottomBar;
@@ -34,13 +34,14 @@ public class BottomBarActivity extends BaseActivity implements FragNavController
     protected void initViews(@Nullable Bundle savedInstanceState) {
         super.initViews(savedInstanceState);
         controller = new FragNavController(savedInstanceState, getSupportFragmentManager(), R.id.container, this, 4, MAIN);
-        controller.setTransitionMode(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
+        controller.setTransitionMode(FragmentTransaction.TRANSIT_ENTER_MASK);
         initBottomBar();
 
     }
 
     public void hideBottomBar() {
         bottomBar.animate().translationY(bottomBar.getHeight())
+                .setDuration(300)
                 .start();
     }
 
@@ -70,6 +71,7 @@ public class BottomBarActivity extends BaseActivity implements FragNavController
 
     public void showBottomBar() {
         bottomBar.animate().translationY(0)
+                .setDuration(300)
                 .start();
     }
 
@@ -122,8 +124,8 @@ public class BottomBarActivity extends BaseActivity implements FragNavController
                 return TabsFragment.newInstance(new String[]{getString(R.string.my_notifications), getString(R.string.my_followers)});
             case ME:
                 int id = SpUtil.getInt(Constants.ID);
-                return ProfileFragment.newInstance(id);
-//                return new LoginFragment();
+//                return ProfileFragment.newInstance(id);
+                return new LoginFragment();
         }
         throw new IllegalStateException("Need to send an index that we know");
     }

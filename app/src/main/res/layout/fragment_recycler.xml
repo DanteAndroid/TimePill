@@ -1,18 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.design.widget.CoordinatorLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:background="@color/whiteBackground">
+    android:background="@color/whiteBackground"
+    app:layout_behavior="@string/appbar_scrolling_view_behavior">
     <!-- framelayout 是解决swipeRefresh造成fragment overlap的bug-->
 
     <android.support.v4.widget.SwipeRefreshLayout
-        app:layout_behavior="@string/appbar_scrolling_view_behavior"
         android:id="@+id/swipe_refresh"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
         <android.support.v7.widget.RecyclerView
             android:id="@+id/list"
@@ -32,15 +33,21 @@
         android:text="空空如也"
         android:visibility="gone"/>
 
-    <android.support.design.widget.FloatingActionButton
-        android:id="@+id/fab"
+
+    <io.github.yavski.fabspeeddial.FabSpeedDial
+        android:id="@+id/fabMenu"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="bottom|right"
-        android:layout_marginBottom="72dp"
-        android:layout_marginEnd="@dimen/fab_margin"
-        android:src="@drawable/ic_favorite_white_24dp"
-        android:visibility="invisible"
-    />
+        android:layout_gravity="bottom|end"
+        android:layout_marginBottom="56dp"
+        android:visibility="gone"
+        app:fabGravity="bottom_end"
+        app:fabMenu="@menu/fab_menu"
+        app:layout_behavior="com.dante.diary.custom.FABScrollBehavior"
+        app:miniFabBackgroundTint="?attr/colorAccent"
+        app:miniFabDrawableTint="@color/white"
+        app:miniFabTitleBackgroundTint="@color/colorAccent"
+        app:miniFabTitleTextColor="@color/white"/>
+
 
 </android.support.design.widget.CoordinatorLayout>

@@ -5,7 +5,7 @@ import android.widget.TextView;
 import com.chad.library.adapter.base.BaseMultiItemQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
 import com.dante.diary.R;
-import com.dante.diary.interfaces.OnItemClickListener;
+import com.dante.diary.interfaces.IOnItemClickListener;
 import com.dante.diary.model.TipResult;
 import com.jaychang.st.SimpleText;
 
@@ -18,7 +18,7 @@ import java.util.List;
 public class NotificationListAdapter extends BaseMultiItemQuickAdapter<TipResult, BaseViewHolder> {
 
 
-    private OnItemClickListener listener;
+    private IOnItemClickListener listener;
 
     public NotificationListAdapter(List<TipResult> data) {
         super(data);
@@ -26,7 +26,7 @@ public class NotificationListAdapter extends BaseMultiItemQuickAdapter<TipResult
         addItemType(TipResult.TYPE_FOLLOW, R.layout.notification_follow);
     }
 
-    public NotificationListAdapter(List<TipResult> data, OnItemClickListener listener) {
+    public NotificationListAdapter(List<TipResult> data, IOnItemClickListener listener) {
         super(data);
         addItemType(TipResult.TYPE_COMMENT, R.layout.notification_comment);
         addItemType(TipResult.TYPE_FOLLOW, R.layout.notification_follow);

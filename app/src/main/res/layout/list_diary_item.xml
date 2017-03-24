@@ -3,7 +3,6 @@
               xmlns:tools="http://schemas.android.com/tools"
               android:layout_width="wrap_content"
               android:layout_height="wrap_content"
-              android:layout_marginBottom="8dp"
               android:background="?attr/selectableItemBackground"
               android:orientation="vertical">
 
@@ -61,12 +60,11 @@
                 android:layout_marginTop="6dp"
                 android:gravity="center"
                 android:textSize="14sp"
-                tools:text="This is diary title"/>
+                tools:text="《This is diary title》"/>
             <TextView
                 android:id="@+id/commentsCount"
                 android:layout_width="wrap_content"
                 android:layout_height="22dp"
-                android:layout_alignBaseline="@+id/notebookSubject"
                 android:layout_alignParentRight="true"
                 android:layout_below="@+id/time"
                 android:layout_marginLeft="6dp"
@@ -100,7 +98,7 @@
                 android:ellipsize="end"
                 android:lineSpacingMultiplier="1.3"
                 android:maxHeight="128dp"
-                android:maxLines="6"
+                android:maxLines="5"
                 android:textColor="@color/secondText"
                 tools:text="@string/test_diary"/>
 

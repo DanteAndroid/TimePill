@@ -27,12 +27,11 @@
                 android:layout_weight="1"
                 android:id="@+id/notebookSubject"
                 android:layout_width="0dp"
-                android:layout_height="48dp"
+                android:layout_height="36dp"
                 android:layout_gravity="center"
                 android:drawablePadding="3dp"
                 android:gravity="center"
                 android:textColor="@color/primaryText"
-                android:textSize="16sp"
                 android:visibility="visible"
                 tools:text="This is a test post title, may be long (28P)"/>
 

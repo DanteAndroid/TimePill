@@ -1,10 +1,13 @@
 package com.dante.diary.detail;
 
 
+import android.animation.Animator;
+import android.animation.AnimatorListenerAdapter;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.TextInputEditText;
 import android.support.design.widget.TextInputLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.MenuItemCompat;
@@ -22,12 +25,15 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.blankj.utilcode.utils.ClipboardUtils;
 import com.blankj.utilcode.utils.IntentUtils;
+import com.blankj.utilcode.utils.KeyboardUtils;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.resource.drawable.GlideDrawable;
 import com.bumptech.glide.request.RequestListener;
@@ -37,9 +43,11 @@ import com.chad.library.adapter.base.listener.OnItemClickListener;
 import com.dante.diary.R;
 import com.dante.diary.base.BaseFragment;
 import com.dante.diary.base.Constants;
+import com.dante.diary.custom.BottomCommentFragment;
+import com.dante.diary.custom.RevealHelper;
+import com.dante.diary.interfaces.IOnItemClickListener;
 import com.dante.diary.login.LoginManager;
 import com.dante.diary.model.Comment;
-import com.dante.diary.model.DataBase;
 import com.dante.diary.model.Diary;
 import com.dante.diary.net.TimeApi;
 import com.dante.diary.utils.DateUtil;
@@ -59,12 +67,11 @@ import java.util.List;
 
 import butterknife.BindView;
 import jp.wasabeef.glide.transformations.RoundedCornersTransformation;
-import me.shaohui.bottomdialog.BottomDialog;
 
 /**
  * A simple {@link Fragment} subclass.
  */
-public class DiaryDetailFragment extends BaseFragment implements SwipeRefreshLayout.OnRefreshListener, com.dante.diary.interfaces.OnItemClickListener {
+public class DiaryDetailFragment extends BaseFragment implements SwipeRefreshLayout.OnRefreshListener, IOnItemClickListener {
 
     public static final String COMMENT_ID = "commentId";
     private static final String TAG = "DiaryDetailFragment";
@@ -97,10 +104,18 @@ public class DiaryDetailFragment extends BaseFragment implements SwipeRefreshLay
     FloatingActionButton fab;
     @BindView(R.id.divider)
     View divider;
+    @BindView(R.id.reveal)
+    LinearLayout reveal;
+    @BindView(R.id.commentEt)
+    TextInputEditText commentEt;
+    @BindView(R.id.commentTextInputLayout)
+    TextInputLayout commentTextInputLayout;
+    @BindView(R.id.commit)
+    ImageButton commit;
     private ShareActionProvider mShareActionProvider;
     private int diaryId;
     private String commentTemp;
-    private BottomDialog commentDialog;
+    private BottomCommentFragment commentFragment;
     private long start;
 
     public DiaryDetailFragment() {
@@ -127,7 +142,7 @@ public class DiaryDetailFragment extends BaseFragment implements SwipeRefreshLay
 
     @Override
     protected int initLayoutId() {
-        return R.layout.refresh_coordinator;
+        return R.layout.fragment_diary_detail;
     }
 
 
@@ -217,40 +232,37 @@ public class DiaryDetailFragment extends BaseFragment implements SwipeRefreshLay
 
     @Override
     protected void initData() {
-        setScrollFlag(false);
-
+        setToolbarScrollFlag(false);
+        //本来 onCreateOptionsMenu 已填充了分享Menu，但是却遇到了一个诡异的bug
+        // 就是当前的fragment不显示分享menu（左右滑动发现其他fragment都有分享按钮）。所以只好用这个work-around
+        toolbar.inflateMenu(R.menu.share_menu);
         fetch();
+
     }
 
     @Override
-    public void onHiddenChanged(boolean hidden) {
-        super.onHiddenChanged(hidden);
+    protected void onAppear() {
+        super.onAppear();
         fetch();
     }
 
-    private void comment() {
-        commentDialog = BottomDialog.create(getActivity().getSupportFragmentManager())
-                .setLayoutRes(R.layout.write_comment)
-                .setViewListener(v -> {
-                    EditText editText = (EditText) v.findViewById(R.id.commentEt);
-                    cacheComment(editText);
-
-
-                    v.findViewById(R.id.commit).setOnClickListener(v1 -> {
-                        if (editText.getText() == null || editText.getText().toString().trim().isEmpty()) {
-                            UiUtils.showSnack(v, R.string.no_text_entered);
-                        } else {
-                            String comment = editText.getText().toString();
-                            post(comment, 0);
-                        }
-                    });
-                });
-        commentDialog.show();
-
-    }
+//    private void comment() {
+//        commentFragment = BottomCommentFragment.create(R.layout.comment_layout).with(this)
+//                .bindView(v -> {
+//
+//                    EditText editText = (EditText) v.findViewById(commentEt);
+//                    View commit = v.findViewById(R.id.commit);
+//
+//
+//                })
+//                .listenDismiss(dialog -> {
+//
+//                });
+////        commentFragment.show();
+//
+//    }
 
     private void cacheComment(EditText editText) {
-
         if (!TextUtils.isEmpty(commentTemp)) {
             editText.append(commentTemp);
         }
@@ -274,13 +286,14 @@ public class DiaryDetailFragment extends BaseFragment implements SwipeRefreshLay
     }
 
     private void comment(int recipientId, String userName) {
-        commentDialog = BottomDialog.create(getActivity().getSupportFragmentManager())
-                .setLayoutRes(R.layout.write_comment)
-                .setViewListener(v -> {
+        commentFragment = BottomCommentFragment.create(R.layout.comment_layout)
+                .with(this)
+                .bindView(v -> {
                     TextInputLayout textInputLayout = (TextInputLayout) v.findViewById(R.id.commentTextInputLayout);
                     EditText editText = textInputLayout.getEditText();
                     textInputLayout.setHint(String.format(getString(R.string.reply_to_xxx), userName));
                     cacheComment(editText);
+
                     if (editText != null) {
                         InputMethodManager imm = (InputMethodManager) getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
                         imm.showSoftInput(editText, InputMethodManager.SHOW_IMPLICIT);
@@ -298,8 +311,14 @@ public class DiaryDetailFragment extends BaseFragment implements SwipeRefreshLay
                             }
                         }
                     });
+                }).listenDismiss(dialog -> {
+                    if (!TextUtils.isEmpty(commentTemp)) {
+                        UiUtils.showSnack(rootView, getString(R.string.content_saved_as_draft));
+                    }
+
                 });
-        commentDialog.show();
+        commentFragment.show();
+
     }
 
     private void post(String comment, int recipientId) {
@@ -315,7 +334,6 @@ public class DiaryDetailFragment extends BaseFragment implements SwipeRefreshLay
                     swipeRefresh.setRefreshing(false);
                     adapter.addData(0, myComment);
                     fetch();
-                    commentDialog.dismiss();
                     commentTemp = null;
 
                 }, throwable -> {
@@ -338,6 +356,7 @@ public class DiaryDetailFragment extends BaseFragment implements SwipeRefreshLay
                 .subscribe(comments -> {
                     swipeRefresh.setRefreshing(false);
                     inflate(comments);
+                    setShareIntent(diary.getContent());
 
                 }, throwable -> {
                     swipeRefresh.setRefreshing(false);
@@ -354,9 +373,7 @@ public class DiaryDetailFragment extends BaseFragment implements SwipeRefreshLay
     }
 
     private void inflateDiary() {
-//        setShareIntent(diary.getContent());
         toolbar.setTitle(diary.getNotebookSubject());
-
 
         Imager.load(this, diary.getUser().getAvatarUrl(), myAvatar);
         myAvatar.setOnClickListener(v -> goProfile(diary.getUserId()));
@@ -410,14 +427,49 @@ public class DiaryDetailFragment extends BaseFragment implements SwipeRefreshLay
 
     private void initFab() {
         fab.show();
-        fab.setOnClickListener(v -> comment());
+//        fab.setOnClickListener(v -> comment());
+        RevealHelper helper = RevealHelper.with(getActivity()).reveal(reveal)
+                .revealDuration(300)
+                .buttonTransitionDuration(200)
+                .button(fab)
+                .onRevealEnd(new AnimatorListenerAdapter() {
+                    @Override
+                    public void onAnimationEnd(Animator animation) {
+                        KeyboardUtils.showSoftInput(commentEt);
+                        cacheComment(commentEt);
+                        commit.setOnClickListener(view -> {
+                            if (commentEt.getText() == null || commentEt.getText().toString().trim().isEmpty()) {
+                                UiUtils.showSnack(view, R.string.no_text_entered);
+                            } else {
+                                String comment = commentEt.getText().toString();
+                                post(comment, 0);
+                            }
+                        });
+                    }
+                })
+                .build();
+
+        commentEt.setOnFocusChangeListener((v, hasFocus) -> {
+            Log.d(TAG, "onFocusChange: " + hasFocus);
+            if (!hasFocus) {
+                InputMethodManager imm =  (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+                imm.hideSoftInputFromWindow(v.getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
+                helper.unreveal();
+                if (!TextUtils.isEmpty(commentTemp)) {
+                    UiUtils.showSnack(rootView, getString(R.string.content_saved_as_draft));
+                }
+            }
+        });
+
     }
+
 
     private void inflate(List<Comment> comments) {
         inflateDiary();
         initFab();
         inflateComments(comments);
-        startPostponedEnterTransition();
+        startTransition();
+
 
         goCertainComment(comments);
     }
@@ -427,7 +479,7 @@ public class DiaryDetailFragment extends BaseFragment implements SwipeRefreshLay
         if (commentId > 0) {
             for (Comment c : comments) {
                 if (c.getId() == commentId) {
-                    commentsRecycler.scrollToPosition(comments.indexOf(c));
+                    commentsRecycler.smoothScrollToPosition(comments.indexOf(c));
                     log("goCertainComment index" + comments.indexOf(c));
                 }
             }
@@ -466,25 +518,26 @@ public class DiaryDetailFragment extends BaseFragment implements SwipeRefreshLay
 
     private void setShareIntent(String shareText) {
         if (mShareActionProvider != null) {
+            if (TextUtils.isEmpty(shareText)) {
+                diary = base.findDiary(diaryId);
+                if (diary != null) shareText = diary.getContent();
+            }
             Log.d(TAG, "setShareIntent: " + shareText);
-            mShareActionProvider.setShareIntent(IntentUtils.getShareTextIntent(Share.appendUrl(shareText)));
+            mShareActionProvider.setShareIntent(
+                    IntentUtils.getShareTextIntent(Share.appendUrl(shareText)));
         }
     }
+
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         getActivity().getMenuInflater().inflate(R.menu.share_menu, menu);
         MenuItem item = menu.findItem(R.id.menu_item_share);
         mShareActionProvider = (ShareActionProvider) MenuItemCompat.getActionProvider(item);
-        if (diary == null) {
-            diary = DataBase.findDiary(realm, diaryId);
-        }
-        ;
-        if (diary != null) {
-            Log.d(TAG, "onCreateOptionsMenu: ");
-            setShareIntent(diary.getContent());
-        }
+        setShareIntent(null);
     }
+
+
 }
 
 

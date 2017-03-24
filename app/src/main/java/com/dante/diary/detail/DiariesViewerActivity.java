@@ -11,9 +11,9 @@ import android.widget.FrameLayout;
 import com.dante.diary.R;
 import com.dante.diary.base.BaseActivity;
 import com.dante.diary.base.Constants;
-import com.dante.diary.model.DataBase;
 import com.dante.diary.model.Diary;
 import com.dante.diary.utils.SpUtil;
+import com.dante.diary.utils.TransitionHelper;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -40,7 +40,6 @@ public class DiariesViewerActivity extends BaseActivity {
         super.onPause();
     }
 
-
     @Override
     protected int initLayoutId() {
         return R.layout.activity_diaries_viewer;
@@ -49,18 +48,19 @@ public class DiariesViewerActivity extends BaseActivity {
 
     @Override
     protected void initViews(@Nullable Bundle savedInstanceState) {
+//        supportPostponeEnterTransition();
         super.initViews(savedInstanceState);
+
         position = getIntent().getIntExtra(Constants.POSITION, 0);
         notebookId = getIntent().getIntExtra("notebookId", 0);
-
         currentPosition = position;
-
+        TransitionHelper.adjustTransition(this);
         List<Fragment> fragments = new ArrayList<>();
         if (notebookId > 0) {
-            diaries = DataBase.findDiariesOfNotebook(realm, notebookId);
+            diaries = base.findDiariesOfNotebook(notebookId);
 
         } else {
-            diaries = DataBase.findTodayDiaries(realm);
+            diaries = base.findTodayDiaries();
         }
         for (int i = 0; i < diaries.size(); i++) {
             fragments.add(DiaryDetailFragment.newInstance(diaries.get(i).getId()));

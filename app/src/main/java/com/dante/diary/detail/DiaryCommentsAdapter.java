@@ -8,7 +8,7 @@ import com.bumptech.glide.Glide;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
 import com.dante.diary.R;
-import com.dante.diary.interfaces.OnItemClickListener;
+import com.dante.diary.interfaces.IOnItemClickListener;
 import com.dante.diary.model.Comment;
 import com.dante.diary.utils.TimeUtil;
 import com.jaychang.st.SimpleText;
@@ -34,13 +34,13 @@ public class DiaryCommentsAdapter extends BaseQuickAdapter<Comment, BaseViewHold
     TextView time;
     @BindView(R.id.content)
     TextView content;
-    private OnItemClickListener listener;
+    private IOnItemClickListener listener;
 
     public DiaryCommentsAdapter(List<Comment> data) {
         super(R.layout.list_comment_item, data);
     }
 
-    public DiaryCommentsAdapter(List<Comment> data, OnItemClickListener l) {
+    public DiaryCommentsAdapter(List<Comment> data, IOnItemClickListener l) {
         super(R.layout.list_comment_item, data);
         listener = l;
     }

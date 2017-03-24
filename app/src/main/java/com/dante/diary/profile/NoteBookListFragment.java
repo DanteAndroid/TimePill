@@ -19,9 +19,8 @@ import com.dante.diary.R;
 import com.dante.diary.base.Constants;
 import com.dante.diary.base.RecyclerFragment;
 import com.dante.diary.login.LoginManager;
-import com.dante.diary.model.DataBase;
 import com.dante.diary.model.Notebook;
-import com.dante.diary.notebook.CreateNotebookActivity;
+import com.dante.diary.create.CreateNotebookActivity;
 import com.dante.diary.utils.UiUtils;
 
 import butterknife.BindView;
@@ -113,7 +112,7 @@ public class NoteBookListFragment extends RecyclerFragment {
             return;
         }
 
-        notebooks = DataBase.findNotebooks(realm, userId);
+        notebooks = base.findNotebooks(userId);
         adapter.setNewData(notebooks);
     }
 
@@ -137,7 +136,7 @@ public class NoteBookListFragment extends RecyclerFragment {
                     } else {
                         adapter.notifyItemRangeChanged(0, notebooks.size());
                     }
-                    DataBase.save(realm, notebooks);
+                    base.save(notebooks);
                     changeRefresh(false);
                 }, Throwable::printStackTrace);
     }

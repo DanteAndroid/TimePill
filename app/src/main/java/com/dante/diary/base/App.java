@@ -7,7 +7,6 @@ import android.content.Context;
 import com.blankj.utilcode.utils.Utils;
 import com.bugtags.library.Bugtags;
 import com.dante.diary.BuildConfig;
-import com.squareup.leakcanary.RefWatcher;
 
 import io.realm.Realm;
 
@@ -17,12 +16,12 @@ import io.realm.Realm;
 public class App extends Application {
     @SuppressLint("StaticFieldLeak")
     public static Context context;
-    private RefWatcher refWatcher;
+//    private RefWatcher refWatcher;
 
-    public static RefWatcher getWatcher(Context context) {
-        App application = (App) context.getApplicationContext();
-        return application.refWatcher;
-    }
+//    public static RefWatcher getWatcher(Context context) {
+//        App application = (App) context.getApplicationContext();
+//        return application.refWatcher;
+//    }
 
     @Override
     public void onCreate() {

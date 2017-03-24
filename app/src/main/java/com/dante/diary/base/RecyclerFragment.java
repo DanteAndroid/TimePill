@@ -1,8 +1,6 @@
 package com.dante.diary.base;
 
 
-import android.animation.Animator;
-import android.animation.AnimatorListenerAdapter;
 import android.support.annotation.CallSuper;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.content.res.ResourcesCompat;
@@ -56,31 +54,18 @@ public abstract class RecyclerFragment extends BaseFragment implements SwipeRefr
                 getColor(R.color.colorPrimaryDark), getColor(R.color.colorAccent));
         swipeRefresh.setOnRefreshListener(this);
         recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+
             @Override
             public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
                 if (dy > 30) {
-                    if (activity != null) {
-                        activity.hideBottomBar(new AnimatorListenerAdapter() {
-                            @Override
-                            public void onAnimationEnd(Animator animation) {
-                                if (fab != null && fab.isShown()) {
-                                    fab.postDelayed(() -> fab.hide(), 200);
-                                }
-                            }
-                        });
+                    if (barActivity != null) {
+                        barActivity.hideBottomBar();
                     }
 
                 }
                 if (dy < -60) {
                     if (getStackCount() == 0) {
-                        activity.showBottomBar(new AnimatorListenerAdapter() {
-                            @Override
-                            public void onAnimationEnd(Animator animation) {
-                                if (fab != null && !fab.isShown() && hasFab()) {
-                                    fab.postDelayed(() -> fab.show(), 200);
-                                }
-                            }
-                        });
+                        barActivity.showBottomBar();
                     }
                 }
             }

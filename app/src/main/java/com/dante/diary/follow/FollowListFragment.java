@@ -44,7 +44,7 @@ public class FollowListFragment extends RecyclerFragment {
         super.initViews();
         adapter = new FollowListAdapter(null);
         adapter.setEmptyView(R.layout.empty_following, (ViewGroup) rootView);
-        layoutManager = new LinearLayoutManager(activity);
+        layoutManager = new LinearLayoutManager(barActivity);
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setAdapter(adapter);
 

@@ -13,6 +13,7 @@
     <style name="AppTheme.NoActionBar">
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
+
         <!--<item name="android:windowBackground">@drawable/window_background</item>-->
     </style>
 
@@ -40,5 +41,17 @@
         <item name="android:windowEnterAnimation">@android:anim/slide_in_left</item>
         <item name="android:windowExitAnimation">@android:anim/slide_out_right</item>
     </style>
+    <style name="BottomAnimationStyle">
+        <item name="android:windowEnterAnimation">@anim/slide_in_from_bottom</item>
+        <item name="android:windowExitAnimation">@anim/slide_out_from_bottom</item>
+    </style>
+
+    <style name="BottomSheetDialog" parent="@android:style/Theme.DeviceDefault.Dialog">
+        <item name="android:windowAnimationStyle">@style/BottomAnimationStyle</item>
+        <item name="android:windowSoftInputMode">stateAlwaysVisible|adjustPan</item>
+    </style>
+    <style name="AppTheme.NoActionBar.AppBarOverlay"
+           parent="ThemeOverlay.AppCompat.Dark.ActionBar"/>
+    <style name="AppTheme.NoActionBar.PopupOverlay" parent="ThemeOverlay.AppCompat.Light"/>
 
 </resources>

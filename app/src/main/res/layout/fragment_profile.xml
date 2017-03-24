@@ -7,7 +7,7 @@
     android:fitsSystemWindows="false">
 
     <android.support.design.widget.AppBarLayout
-        android:id="@+id/app_bar"
+        android:id="@+id/appBar"
         android:layout_width="match_parent"
         android:layout_height="@dimen/app_bar_large"
         android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
@@ -53,6 +53,6 @@
         android:layout_marginBottom="72dp"
         android:layout_marginRight="@dimen/fab_margin"
         android:src="@drawable/ic_favorite_white_24dp"
-        android:visibility="invisible"/>
+        android:visibility="gone"/>
 
 </android.support.design.widget.CoordinatorLayout>
