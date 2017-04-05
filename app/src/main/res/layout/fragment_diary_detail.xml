@@ -1,6 +1,7 @@
 <android.support.design.widget.CoordinatorLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:background="@color/whiteBackground"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
@@ -20,6 +21,7 @@
             android:minHeight="48dp"
             app:layout_scrollFlags="scroll|enterAlwaysCollapsed"
             app:popupTheme="@style/AppTheme.PopupOverlay"/>
+
     </android.support.design.widget.AppBarLayout>
 
     <android.support.v4.widget.SwipeRefreshLayout
@@ -27,10 +29,9 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:layout_behavior="@string/appbar_scrolling_view_behavior">
+
         <include layout="@layout/fragment_detail_content"/>
     </android.support.v4.widget.SwipeRefreshLayout>
-
-    <include layout="@layout/comment_layout"/>
 
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/fab"
@@ -38,8 +39,8 @@
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|right"
         android:layout_margin="@dimen/fab_margin"
-        app:backgroundTint="@color/colorPrimary"
+        app:backgroundTint="@color/colorAccent"
         android:src="@drawable/comment"
-        android:visibility="visible"
+        android:visibility="invisible"
     />
 </android.support.design.widget.CoordinatorLayout>

@@ -3,14 +3,15 @@ package com.dante.diary.profile;
 import android.content.Context;
 import android.support.v4.content.ContextCompat;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
 import com.dante.diary.R;
 import com.dante.diary.login.LoginManager;
 import com.dante.diary.model.Notebook;
-import com.dante.diary.utils.Imager;
 
 import java.util.List;
 
@@ -29,7 +30,10 @@ class NotebookListAdapter extends BaseQuickAdapter<Notebook, BaseViewHolder> {
     protected void convert(BaseViewHolder helper, Notebook item) {
         Context context = helper.itemView.getContext();
         helper.addOnClickListener(R.id.more);
-        Imager.load(context, item.getCoverUrl(), helper.getView(R.id.cover));
+        Glide.with(context)
+                .load(item.getCoverUrl())
+                .placeholder(R.drawable.default_cover)
+                .into((ImageView) helper.getView(R.id.cover));
         if (LoginManager.isMe(item.getUserId())) {
             helper.getView(R.id.more).setVisibility(View.VISIBLE);
         }
@@ -37,7 +41,7 @@ class NotebookListAdapter extends BaseQuickAdapter<Notebook, BaseViewHolder> {
                 .setText(R.id.createdToExpired, String.format("%s ~ %s", item.getCreated(), item.getExpired()));
 
         TextView expireState = helper.getView(R.id.expireState);
-        if (item.isIsExpired()) {
+        if (item.isExpired()) {
             expireState.setText("已过期");
             expireState.setTextColor(ContextCompat.getColor(context, R.color.mediumGrey));
         } else {

@@ -6,7 +6,6 @@ import android.support.annotation.CallSuper;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.animation.AccelerateInterpolator;
 import android.view.animation.DecelerateInterpolator;
 
@@ -14,7 +13,9 @@ import com.dante.diary.R;
 import com.dante.diary.model.DataBase;
 
 import butterknife.ButterKnife;
-import io.realm.Realm;
+import rx.Observable;
+import rx.android.schedulers.AndroidSchedulers;
+import rx.schedulers.Schedulers;
 
 /**
  * BaseActivity includes a base layoutId, init its toolbar (if the layout has one)
@@ -54,6 +55,9 @@ public abstract class BaseActivity extends AppCompatActivity {
         }
         if (getSupportActionBar() != null) {
             getSupportActionBar().setDisplayHomeAsUpEnabled(needNavigation());
+            if (needNavigation() && toolbar != null) {
+                toolbar.setNavigationOnClickListener(v -> onBackPressed());
+            }
         }
     }
 
@@ -85,7 +89,6 @@ public abstract class BaseActivity extends AppCompatActivity {
 
     @Override
     protected void onDestroy() {
-        Log.i(TAG, "onDestroy: getGlobalInstanceCount "+ Realm.getGlobalInstanceCount(base.realm.getConfiguration()));
         super.onDestroy();
         base.close();
     }
@@ -94,6 +97,12 @@ public abstract class BaseActivity extends AppCompatActivity {
         if (toolbar != null) {
             toolbar.setTitle(title);
         }
+    }
+
+    public <T> Observable.Transformer<T, T> applySchedulers() {
+        return observable -> observable.subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .distinct();
     }
 
     public void showProgress() {

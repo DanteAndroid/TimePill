@@ -3,6 +3,7 @@ package com.dante.diary.custom;
 import android.Manifest;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
@@ -26,9 +27,18 @@ public class PickPictureActivity extends AppCompatActivity {
     public static final int REQUEST_PICK_PICTURE = 100;
     public static final int RESULT_FAILED = 1;
     public static final float SCALE_RATIO = 0.8f;
+
     private static final String TAG = "PickPictureActivity";
-    private File photo;
-    private String uploadUrl;
+    private static File photo;
+    private static Uri photoUri;
+
+    public static Uri getPhotoUri() {
+        return photoUri;
+    }
+
+    public static File getPhotoi() {
+        return photo;
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,12 +53,11 @@ public class PickPictureActivity extends AppCompatActivity {
         startActivityForResult(intent, REQUEST_PICK_PICTURE);
     }
 
-
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        Log.d(TAG, "onActivityResult: ");
         if (resultCode == RESULT_OK) {
-            Log.d(TAG, "onActivityResult: request");
+            photoUri = data.getData();
+
             RxPermissions permissions = new RxPermissions(this);
             permissions.request(Manifest.permission.WRITE_EXTERNAL_STORAGE)
                     .subscribeOn(Schedulers.io())
@@ -66,7 +75,6 @@ public class PickPictureActivity extends AppCompatActivity {
     }
 
     private void saveToFile(Intent data) {
-
         photo = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES), "temp.jpg");
         if (photo.exists()) {
             photo.delete();
@@ -95,7 +103,6 @@ public class PickPictureActivity extends AppCompatActivity {
             handleResult(RESULT_FAILED);
             e.printStackTrace();
         }
-
         Log.i(TAG, "saveToFile: path " + photo.getPath());
         data.putExtra("path", photo.getAbsolutePath());
         setResult(RESULT_OK, data);
@@ -106,6 +113,5 @@ public class PickPictureActivity extends AppCompatActivity {
         setResult(result);
         finish();
     }
-
 
 }

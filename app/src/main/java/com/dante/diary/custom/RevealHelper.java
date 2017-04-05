@@ -8,7 +8,6 @@ import android.os.Build;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewAnimationUtils;
-import android.view.ViewTreeObserver;
 import android.view.animation.DecelerateInterpolator;
 
 import static android.view.ViewAnimationUtils.createCircularReveal;
@@ -66,44 +65,57 @@ public class RevealHelper {
         if (revealView == null) {
             throw new NullPointerException("Reveal view cannot be null, call reveal(View) first");
         }
-        revealView.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
-            @Override
-            public void onGlobalLayout() {
-                revealX = revealView.getWidth() / 2;
-                revealY = revealView.getHeight() / 2;
-                Log.d(TAG, "onGlobalLayout: " + revealX);
-                hypotenuse = (int) Math.hypot(revealX, revealY);
-                revealView.getViewTreeObserver().removeOnGlobalLayoutListener(this);
-            }
-        });
+//        revealView.getViewTreeObserver().addOnPreDrawListener(new ViewTreeObserver.OnPreDrawListener() {
+//            @Override
+//            public boolean onPreDraw() {
+//                computeLayout();
+//                revealView.getViewTreeObserver().removeOnPreDrawListener(this);
+//                return false;
+//            }
+//        });
         if (startButton == null) {
             //if no button, just reveal the revealView from center
             revealFromCenter();
-            return this;
         }
-
-        startButton.setOnClickListener(view -> {
-            Log.d(TAG, " OnClickListener: animate");
-
+        if (startButton != null) {
+            startButton.setOnClickListener(view -> {
+                Log.d(TAG, " OnClickListener: animate");
      /*
      MARGIN = 16dp
      FAB_BUTTON_RADIUS = 28 dp
      */
-            startButton.animate()
-                    .translationX(-(revealX - (16 + 28) * pixelDensity))
-                    .translationY(-(revealY - (16 + 28) * pixelDensity))
+                startButton.animate()
+                        .translationX(-(revealX - (16 + 28) * pixelDensity))
+                        .translationY(-(revealY - (16 + 28) * pixelDensity))
 //                        .setInterpolator(new DecelerateInterpolator())
-                    .setDuration(fabTransitionDuration > 0 ? fabTransitionDuration : BUTTON_TRANSITION_DURATION)
-                    .setListener(new AnimatorListenerAdapter() {
-                        @Override
-                        public void onAnimationEnd(Animator animation) {
-                            revealFromCenter();
-                        }
-                    });
+                        .setDuration(fabTransitionDuration > 0 ? fabTransitionDuration : BUTTON_TRANSITION_DURATION)
+                        .setListener(new AnimatorListenerAdapter() {
+                            @Override
+                            public void onAnimationEnd(Animator animation) {
+                                revealFromCenter();
+                            }
+                        });
 
-        });
+            });
+        }
+
         return this;
     }
+
+    private void computeLayout() {
+        revealView.post(new Runnable() {
+            @Override
+            public void run() {
+                revealX = revealView.getWidth() / 2;
+                revealY = revealView.getHeight() / 2;
+                Log.d(TAG, "computeLayout: " + revealX);
+                hypotenuse = (int) Math.hypot(revealX, revealY);
+                revealFromCenter();
+            }
+        });
+
+    }
+
 
     public RevealHelper onRevealEnd(Animator.AnimatorListener onRevealEnd) {
         this.onRevealEnd = onRevealEnd;
@@ -123,6 +135,10 @@ public class RevealHelper {
     @TargetApi(Build.VERSION_CODES.LOLLIPOP)
     public void revealFromCenter() {
         Log.d(TAG, "revealFromCenter: " + revealX);
+        if (revealX==0){
+            computeLayout();
+            return;
+        }
         Animator reveal = createCircularReveal(revealView, revealX, revealY, 28 * pixelDensity, hypotenuse);
         reveal.setDuration(duration > 0 ? duration : REVEAL_DURATION)
                 .addListener(new AnimatorListenerAdapter() {
@@ -130,12 +146,13 @@ public class RevealHelper {
                     public void onAnimationEnd(Animator animation) {
                         View.OnClickListener onClickListener = v -> unreveal();
                         revealView.setOnClickListener(onClickListener);
+                        revealView.setVisibility(View.VISIBLE);
+                        Log.d(TAG, "onAnimationEnd: ");
                         if (onRevealEnd != null) {
                             onRevealEnd.onAnimationEnd(animation);
                         }
                     }
                 });
-        revealView.setVisibility(View.VISIBLE);
 
         if (startButton != null) {
             startButton.setVisibility(View.GONE);

@@ -1,5 +1,7 @@
 package com.dante.diary.net;
 
+import android.support.annotation.Nullable;
+
 import com.dante.diary.model.Comment;
 import com.dante.diary.model.Diary;
 import com.dante.diary.model.Notebook;
@@ -10,9 +12,11 @@ import java.util.List;
 import java.util.Map;
 
 import okhttp3.MultipartBody;
+import okhttp3.RequestBody;
 import okhttp3.ResponseBody;
 import retrofit2.Response;
 import retrofit2.http.DELETE;
+import retrofit2.http.Field;
 import retrofit2.http.FieldMap;
 import retrofit2.http.FormUrlEncoded;
 import retrofit2.http.GET;
@@ -82,6 +86,7 @@ public interface TimeApi {
     @FormUrlEncoded
     @PUT("notebooks/{id}")
     Observable<Notebook> updateNotebook(@Path("id") int notebookId, @FieldMap Map<String, Object> data);
+
     @FormUrlEncoded
     @POST("notebooks")
     Observable<Notebook> createNotebook(@FieldMap Map<String, Object> data);
@@ -90,12 +95,33 @@ public interface TimeApi {
     @POST("notebooks/{id}/cover")
     Observable<Notebook> setNotebookCover(@Path("id") int notebookId, @Part MultipartBody.Part file);
 
+    @Multipart
+    @POST("notebooks/{book_id}/diaries")
+    Observable<Diary> createDiary(@Path("book_id") int notebookId, @Part("content") RequestBody content, @Nullable @Part MultipartBody.Part file);
+
+    @DELETE("diaries/{id}")
+    Observable<Response<ResponseBody>> deleteDiary(@Path("id") int diaryId);
+
+    @FormUrlEncoded
+    @PUT("diaries/{id}")
+    Observable<Diary> updateDiary(@Path("id") int diaryId, @Field("content") String content, @Field("notebook_id") int notebookId);
+
     @GET("tip")
     Observable<List<TipResult>> getTips();
 
     @POST("tip/read/{ids}")
     Observable<Response<ResponseBody>> tipsRead(@Path("ids") String ids);
 
+    @FormUrlEncoded
+    @POST("users")
+    Observable<Response<ResponseBody>> register(@Field("email") String email, @Field("name") String nickName, @Field("password") String password);
+
+    @FormUrlEncoded
+    @PUT("users")
+    Observable<User> updateUserInfo(@Nullable @Field("name") String name, @Field("intro") String intro);
+    @Multipart
+    @POST("users/icon")
+    Observable<User> setUserIcon(@Part MultipartBody.Part file);
 
     class DiariesResult<T> {
         public int count;

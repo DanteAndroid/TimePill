@@ -1,9 +1,11 @@
 package com.dante.diary.notification;
 
+import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.listener.OnItemClickListener;
@@ -27,7 +29,6 @@ public class NotificationListFragment extends RecyclerFragment implements IOnIte
     private LinearLayoutManager layoutManager;
     private NotificationListAdapter adapter;
     private String data;
-    private int type;
 
     @Override
     protected void initViews() {
@@ -62,6 +63,7 @@ public class NotificationListFragment extends RecyclerFragment implements IOnIte
         });
         fab.setImageResource(R.drawable.ic_done_all_white_36dp);
         fab.setOnClickListener(v -> readAllDone());
+        new Handler().postDelayed(() -> fab.show(), 300);
     }
 
     @Override
@@ -97,13 +99,12 @@ public class NotificationListFragment extends RecyclerFragment implements IOnIte
         for (TipResult r : results) {
             ids.append(r.id).append(",");
         }
-        log(" ids: " + ids.toString());
 
         LoginManager.getApi()
                 .tipsRead(ids.toString())
                 .compose(applySchedulers())
                 .subscribe(responseBodyResponse -> {
-                    UiUtils.showSnack(rootView, "已全部标为已读");
+                    UiUtils.showSnack(rootView, getString(R.string.all_marked_readed));
                     fab.hide();
 
                     try {
@@ -143,6 +144,9 @@ public class NotificationListFragment extends RecyclerFragment implements IOnIte
     }
 
     private void onNotificationClicked(View view, int i) {
+        TextView n = (TextView) view.findViewById(R.id.notification);
+        n.setTextColor(getColor(R.color.mediumGrey));
+
         TipResult notification = adapter.getItem(i);
         int type = adapter.getItem(i).getItemType();
         if (type == TipResult.TYPE_FOLLOW) {

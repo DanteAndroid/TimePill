@@ -10,7 +10,7 @@ import com.chad.library.adapter.base.BaseViewHolder;
 import com.dante.diary.R;
 import com.dante.diary.interfaces.IOnItemClickListener;
 import com.dante.diary.model.Comment;
-import com.dante.diary.utils.TimeUtil;
+import com.dante.diary.utils.DateUtil;
 import com.jaychang.st.SimpleText;
 
 import java.util.List;
@@ -73,7 +73,7 @@ public class DiaryCommentsAdapter extends BaseQuickAdapter<Comment, BaseViewHold
         }
 
         helper.setText(R.id.commentName, item.getUser().getName())
-                .setText(R.id.commentTime, TimeUtil.getTimeText(item.getCreated()));
+                .setText(R.id.commentTime, DateUtil.getTimeText(item.getCreated()));
 
         //评论用户的头像
         Glide.with(helper.itemView.getContext())

@@ -18,9 +18,9 @@ import com.chad.library.adapter.base.listener.OnItemClickListener;
 import com.dante.diary.R;
 import com.dante.diary.base.Constants;
 import com.dante.diary.base.RecyclerFragment;
+import com.dante.diary.create.EditNotebookActivity;
 import com.dante.diary.login.LoginManager;
 import com.dante.diary.model.Notebook;
-import com.dante.diary.create.CreateNotebookActivity;
 import com.dante.diary.utils.UiUtils;
 
 import butterknife.BindView;
@@ -153,7 +153,7 @@ public class NoteBookListFragment extends RecyclerFragment {
         int id = adapter.getItem(position).getId();
 
         ViewCompat.setTransitionName(cover, String.valueOf(id));
-        Intent intent = new Intent(getContext().getApplicationContext(), CreateNotebookActivity.class);
+        Intent intent = new Intent(getContext().getApplicationContext(), EditNotebookActivity.class);
         intent.putExtra(Constants.ID, id);
         ActivityOptionsCompat options = ActivityOptionsCompat
                 .makeSceneTransitionAnimation(getActivity(), cover, String.valueOf(id));

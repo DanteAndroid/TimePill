@@ -35,9 +35,17 @@ public class NetService {
                     .addConverterFactory(GsonConverterFactory.create(GsonConfig.gson));
 
     private static TimeApi api;
+    private static TimeApi registerApi;
 
 
     private static <T> T createService(Class<T> serviceClass) {
+        return createService(serviceClass, null, null);
+    }
+    public static <T> T createServiceWithBaseUrl(Class<T> serviceClass, String baseUrl) {
+        builder = new Retrofit.Builder()
+                        .baseUrl(baseUrl)
+                        .addCallAdapterFactory(RxJavaCallAdapterFactory.create())
+                        .addConverterFactory(GsonConverterFactory.create(GsonConfig.gson));
         return createService(serviceClass, null, null);
     }
 
@@ -47,7 +55,7 @@ public class NetService {
             String authToken = Credentials.basic(username, password);
             return createService(serviceClass, authToken);
         }
-        return createService(serviceClass, null, null);
+        return createService(serviceClass, null);
     }
 
     private static <T> T createService(
@@ -55,21 +63,20 @@ public class NetService {
         if (!TextUtils.isEmpty(authToken)) {
             AuthenticationInterceptor interceptor =
                     new AuthenticationInterceptor(authToken);
-
-            //debug 模式开启log
-            HttpLoggingInterceptor logging = new HttpLoggingInterceptor();
-            logging.setLevel(BuildConfig.DEBUG ?
-                    HttpLoggingInterceptor.Level.BASIC : HttpLoggingInterceptor.Level.NONE);
-            httpClient.addInterceptor(logging);
-
             if (!httpClient.interceptors().contains(interceptor)) {
-                HttpsUtils.SSLParams sslParams = HttpsUtils.getSslSocketFactory(null, null, null);
-                httpClient.sslSocketFactory(sslParams.sSLSocketFactory, sslParams.trustManager);
                 httpClient.addInterceptor(interceptor);
-                builder.client(httpClient.build());
-                retrofit = builder.build();
             }
         }
+
+        //debug 模式开启log
+        HttpLoggingInterceptor logging = new HttpLoggingInterceptor();
+        logging.setLevel(BuildConfig.DEBUG ?
+                HttpLoggingInterceptor.Level.BODY : HttpLoggingInterceptor.Level.NONE);
+        httpClient.addInterceptor(logging);
+        HttpsUtils.SSLParams sslParams = HttpsUtils.getSslSocketFactory(null, null, null);
+        httpClient.sslSocketFactory(sslParams.sSLSocketFactory, sslParams.trustManager);
+        builder.client(httpClient.build());
+        retrofit = builder.build();
         return retrofit.create(serviceClass);
     }
 
@@ -82,12 +89,21 @@ public class NetService {
 
     public static MultipartBody.Part createMultiPart(String name, File file) {
         Log.d("test", "createMultiPart: " + file);
-        RequestBody requestFile =
-                RequestBody.create(MediaType.parse("image/*"),
-                        file);
+        RequestBody requestFile = RequestBody.create(MediaType.parse("image/*"),
+                file);
 
         return MultipartBody.Part.createFormData(name, file.getName(), requestFile);
     }
 
 
+    public static RequestBody getRequestBody(String s) {
+        return RequestBody.create(MediaType.parse("text/plain"), s);
+    }
+
+    public static TimeApi getRegisterApi() {
+        if (registerApi == null) {
+            registerApi = createService(TimeApi.class);
+        }
+        return registerApi;
+    }
 }

@@ -14,11 +14,6 @@
         <activity
             android:name=".main.MainActivity"
             android:alwaysRetainTaskState="true">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN"/>
-
-                <category android:name="android.intent.category.LAUNCHER"/>
-            </intent-filter>
         </activity>
         <activity android:name=".base.BottomBarActivity"/>
         <activity
@@ -27,17 +22,38 @@
         <activity
             android:name=".detail.DiariesViewerActivity"
             android:windowSoftInputMode="adjustResize"/>
-        <activity android:name=".create.CreateNotebookActivity"
-                  android:windowSoftInputMode="stateVisible|adjustPan"/>
+        <activity
+            android:name=".create.EditNotebookActivity"
+            android:label="@string/create_notebook"
+            android:windowSoftInputMode="stateVisible|adjustPan"/>
         <activity android:name=".TransitionActivity">
         </activity>
-        <activity android:name=".custom.PickPictureActivity">
+        <activity
+            android:name=".custom.PickPictureActivity"
+            android:label="@string/pick_picture">
         </activity>
         <activity
-            android:name=".create.CreateDiaryActivity"
-            android:theme="@style/AppTheme.NoActionBar"
-            android:windowSoftInputMode="stateVisible|adjustPan">
+            android:name=".create.EditDiaryActivity"
+            android:label="@string/create_diary"
+            android:windowSoftInputMode="adjustResize">
         </activity>
+        <activity
+            android:name=".setting.SettingActivity"
+            android:theme="@style/AppTheme"
+            android:label="@string/action_settings"/>
+        <activity
+            android:name=".login.LoginActivity"
+            android:theme="@style/AppTheme.NoActionBar.Placeholder"
+            android:windowSoftInputMode="stateHidden|adjustPan">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN"/>
+
+                <category android:name="android.intent.category.LAUNCHER"/>
+            </intent-filter>
+        </activity>
+        <activity
+            android:name=".about.AboutActivity"
+            android:label="@string/about" />
     </application>
 
 </manifest>

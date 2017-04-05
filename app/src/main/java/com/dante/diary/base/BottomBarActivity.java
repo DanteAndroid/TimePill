@@ -9,8 +9,8 @@ import android.support.v4.app.FragmentTransaction;
 
 import com.dante.diary.R;
 import com.dante.diary.follow.TabsFragment;
-import com.dante.diary.login.LoginFragment;
 import com.dante.diary.main.MainDiaryFragment;
+import com.dante.diary.profile.ProfileFragment;
 import com.dante.diary.utils.SpUtil;
 import com.ncapdevi.fragnav.FragNavController;
 import com.roughike.bottombar.BottomBar;
@@ -34,7 +34,7 @@ public class BottomBarActivity extends BaseActivity implements FragNavController
     protected void initViews(@Nullable Bundle savedInstanceState) {
         super.initViews(savedInstanceState);
         controller = new FragNavController(savedInstanceState, getSupportFragmentManager(), R.id.container, this, 4, MAIN);
-        controller.setTransitionMode(FragmentTransaction.TRANSIT_ENTER_MASK);
+        controller.setTransitionMode(FragmentTransaction.TRANSIT_NONE);
         initBottomBar();
 
     }
@@ -124,8 +124,7 @@ public class BottomBarActivity extends BaseActivity implements FragNavController
                 return TabsFragment.newInstance(new String[]{getString(R.string.my_notifications), getString(R.string.my_followers)});
             case ME:
                 int id = SpUtil.getInt(Constants.ID);
-//                return ProfileFragment.newInstance(id);
-                return new LoginFragment();
+                return ProfileFragment.newInstance(id);
         }
         throw new IllegalStateException("Need to send an index that we know");
     }

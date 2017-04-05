@@ -19,7 +19,7 @@ public class Constants {
     public static final String INFO = "info";
     public static final String FAVORITE = "favorite";
 
-    public static final String NAME = "name";
+    public static final String ACCOUNT = "name";
     public static final String PASSWORD = "pwd";
     public static final String USER_ID = "user_id";
     public static final String CONTENT = "content";

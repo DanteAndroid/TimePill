@@ -6,13 +6,9 @@ import android.app.AlertDialog;
 import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
-import android.os.SystemClock;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewCompat;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
-import android.widget.ImageView;
 
 import com.bumptech.glide.request.animation.GlideAnimation;
 import com.bumptech.glide.request.target.SimpleTarget;
@@ -27,19 +23,20 @@ import com.dante.diary.utils.UiUtils;
 import com.tbruyelle.rxpermissions.RxPermissions;
 
 import butterknife.BindView;
-import butterknife.ButterKnife;
 import rx.Observable;
 import rx.Subscription;
+import uk.co.senab.photoview.PhotoView;
+import uk.co.senab.photoview.PhotoViewAttacher;
 
 import static com.dante.diary.base.App.context;
 
 /**
  * A simple {@link Fragment} subclass.
  */
-public class ViewerFragment extends BaseFragment implements View.OnLongClickListener, View.OnClickListener {
+public class ViewerFragment extends BaseFragment implements View.OnLongClickListener, PhotoViewAttacher.OnPhotoTapListener {
 
     @BindView(R.id.image)
-    ImageView imageView;
+    PhotoView imageView;
     private Bitmap bitmap;
     private String url;
 
@@ -64,8 +61,6 @@ public class ViewerFragment extends BaseFragment implements View.OnLongClickList
 
     @Override
     protected void initViews() {
-//        getActivity().getWindow().
-//                setStatusBarColor(ContextCompat.getColor(context, (android.R.color.transparent)));
         url = getArguments().getString(Constants.URL);
         ViewCompat.setTransitionName(imageView, url);
         load(url);
@@ -73,7 +68,8 @@ public class ViewerFragment extends BaseFragment implements View.OnLongClickList
 
     @Override
     protected void initData() {
-        imageView.setOnClickListener(this);
+        imageView.setScaleLevels(1.0f, 1.5f, 2.1f);
+        imageView.setOnPhotoTapListener(this);
         imageView.setOnLongClickListener(this);
     }
 
@@ -90,7 +86,7 @@ public class ViewerFragment extends BaseFragment implements View.OnLongClickList
             @Override
             public void onResourceReady(Bitmap b, GlideAnimation<? super Bitmap> arg1) {
                 imageView.setImageBitmap(b);
-                getActivity().startPostponedEnterTransition();
+                startTransition();
                 bitmap = b;
             }
         });
@@ -98,8 +94,6 @@ public class ViewerFragment extends BaseFragment implements View.OnLongClickList
 
     @Override
     public boolean onLongClick(View v) {
-        blur(bitmap);
-
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         final String[] items = getResources().getStringArray(R.array.picture_menu);
         builder.setItems(items, (dialog, which) -> {
@@ -159,9 +153,12 @@ public class ViewerFragment extends BaseFragment implements View.OnLongClickList
 
 
     @Override
-    public void onClick(View v) {
+    public void onPhotoTap(View view, float x, float y) {
         getActivity().onBackPressed();
     }
 
-
+    @Override
+    public void onOutsidePhotoTap() {
+        getActivity().onBackPressed();
+    }
 }

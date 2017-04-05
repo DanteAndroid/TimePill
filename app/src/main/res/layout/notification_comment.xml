@@ -2,10 +2,11 @@
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
              android:layout_width="match_parent"
              android:layout_height="wrap_content"
-             android:background="?attr/selectableItemBackground"
+             android:background="@color/btg_global_light_white"
+             android:foreground="?attr/selectableItemBackground"
              android:padding="@dimen/activity_horizontal_margin">
     <TextView
-        android:id="@+id/commentNotification"
+        android:id="@+id/notification"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:textColor="@color/primaryText"

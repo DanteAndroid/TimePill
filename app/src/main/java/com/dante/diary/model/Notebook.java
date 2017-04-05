@@ -108,7 +108,7 @@ public class Notebook extends RealmObject{
         this.cover = cover;
     }
 
-    public boolean isIsExpired() {
+    public boolean isExpired() {
         return isExpired;
     }
 

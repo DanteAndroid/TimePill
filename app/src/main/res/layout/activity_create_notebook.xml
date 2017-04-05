@@ -4,39 +4,22 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent" android:background="@color/whiteBackground">
+    android:layout_height="match_parent"
+    android:background="@color/whiteBackground"
+    android:fitsSystemWindows="true">
 
     <android.support.design.widget.AppBarLayout
         android:id="@+id/appBar"
         android:layout_width="match_parent"
-        android:layout_height="180dp"
+        android:layout_height="wrap_content"
         android:theme="@style/AppTheme.AppBarOverlay">
-        <android.support.design.widget.CollapsingToolbarLayout
-            android:id="@+id/toolbar_layout"
+
+        <android.support.v7.widget.Toolbar
+            android:id="@+id/toolbar"
             android:layout_width="match_parent"
-            android:layout_height="180dp"
-            android:fitsSystemWindows="true"
-            android:paddingLeft="@dimen/activity_horizontal_margin"
-            android:paddingRight="@dimen/activity_horizontal_margin"
-            android:paddingTop="@dimen/activity_horizontal_margin"
-            app:contentScrim="?attr/colorPrimary"
-            app:layout_scrollFlags="scroll|exitUntilCollapsed|snap">
-            <ImageView
-                android:id="@+id/notebookCover"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_gravity="center"
-                android:layout_margin="@dimen/activity_horizontal_margin"
-                tools:src="@mipmap/ic_launcher"/>
-
-            <android.support.v7.widget.Toolbar
-                android:id="@+id/toolbar"
-                android:layout_width="match_parent"
-                android:layout_height="?attr/actionBarSize"
-                app:layout_collapseMode="pin"
-                app:popupTheme="@style/ThemeOverlay.AppCompat.Light"/>
-        </android.support.design.widget.CollapsingToolbarLayout>
-
+            android:layout_height="?attr/actionBarSize"
+            app:layout_collapseMode="pin"
+            app:popupTheme="@style/ThemeOverlay.AppCompat.Light"/>
     </android.support.design.widget.AppBarLayout>
 
     <android.support.v4.widget.NestedScrollView
@@ -47,9 +30,15 @@
 
         <LinearLayout
             android:layout_width="match_parent"
-
             android:layout_height="match_parent"
             android:orientation="vertical">
+
+            <ImageView
+                android:id="@+id/notebookCover"
+                android:layout_width="match_parent"
+                android:layout_height="120dp"
+                android:layout_gravity="center_horizontal"
+                tools:src="@mipmap/ic_launcher"/>
 
             <android.support.design.widget.TextInputLayout
                 android:id="@+id/subjectWrapper"
@@ -61,7 +50,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/activity_horizontal_margin"
-                    android:hint="主题"
+                    android:hint="@string/notebook_subject_hint"
                     android:imeOptions="actionNext"
                     android:inputType="text"
                     android:maxLines="1"
@@ -79,47 +68,47 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/activity_horizontal_margin"
-                    android:hint="日记本描述 (可选)"/>
+                    android:hint="@string/notebook_desc_hint"/>
 
             </android.support.design.widget.TextInputLayout>
 
-            <TextView
-                android:id="@+id/expire"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/expire_time"
-                android:textColor="@color/primaryText"
-                android:textSize="16sp"/>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <TextView
+                    android:id="@+id/expire"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="start"
+                    android:layout_weight="1"
+                    android:gravity="start|center_vertical"
+                    android:paddingStart="5dp"
+                    android:text="@string/expire_time"/>
+
+                <Switch
+                    android:id="@+id/privacy"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="end"
+                    android:checked="true"
+                    android:gravity="center"
+                    android:text="@string/privacy_public"
+                    android:textColor="@color/secondText"
+                    android:textOff="@string/privacy_me_only"
+                    android:textOn="@string/privacy_public"/>
+
+            </LinearLayout>
 
             <CalendarView
                 android:id="@+id/expireCalendar"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/activity_horizontal_margin">
             </CalendarView>
 
-            <Switch
-                android:id="@+id/privacy"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_margin="12dp"
-                android:checked="true"
-                android:gravity="center"
-                android:text="@string/privacy_public"
-                android:textOff="@string/privacy_me_only"
-                android:textOn="@string/privacy_public"
-                android:textSize="14sp"/>
         </LinearLayout>
 
     </android.support.v4.widget.NestedScrollView>
 
-    <android.support.design.widget.FloatingActionButton
-        android:id="@+id/fab"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_margin="@dimen/fab_margin"
-        android:src="@drawable/ic_send_white_36px"
-        android:visibility="invisible"
-        app:layout_anchor="@+id/appBar"
-        app:layout_anchorGravity="bottom|end"
-    />
 </android.support.design.widget.CoordinatorLayout>

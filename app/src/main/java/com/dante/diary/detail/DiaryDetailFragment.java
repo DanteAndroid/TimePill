@@ -1,13 +1,13 @@
 package com.dante.diary.detail;
 
 
-import android.animation.Animator;
-import android.animation.AnimatorListenerAdapter;
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.TextInputEditText;
 import android.support.design.widget.TextInputLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.MenuItemCompat;
@@ -18,22 +18,19 @@ import android.support.v7.widget.Toolbar;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
-import android.widget.ImageButton;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.ProgressBar;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.blankj.utilcode.utils.ClipboardUtils;
 import com.blankj.utilcode.utils.IntentUtils;
-import com.blankj.utilcode.utils.KeyboardUtils;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.resource.drawable.GlideDrawable;
 import com.bumptech.glide.request.RequestListener;
@@ -43,8 +40,8 @@ import com.chad.library.adapter.base.listener.OnItemClickListener;
 import com.dante.diary.R;
 import com.dante.diary.base.BaseFragment;
 import com.dante.diary.base.Constants;
+import com.dante.diary.create.EditDiaryActivity;
 import com.dante.diary.custom.BottomCommentFragment;
-import com.dante.diary.custom.RevealHelper;
 import com.dante.diary.interfaces.IOnItemClickListener;
 import com.dante.diary.login.LoginManager;
 import com.dante.diary.model.Comment;
@@ -67,11 +64,14 @@ import java.util.List;
 
 import butterknife.BindView;
 import jp.wasabeef.glide.transformations.RoundedCornersTransformation;
+import rx.functions.Action1;
+
+import static com.dante.diary.R.id.commit;
 
 /**
  * A simple {@link Fragment} subclass.
  */
-public class DiaryDetailFragment extends BaseFragment implements SwipeRefreshLayout.OnRefreshListener, IOnItemClickListener {
+public class DiaryDetailFragment extends BaseFragment implements SwipeRefreshLayout.OnRefreshListener, IOnItemClickListener, View.OnLongClickListener {
 
     public static final String COMMENT_ID = "commentId";
     private static final String TAG = "DiaryDetailFragment";
@@ -104,14 +104,8 @@ public class DiaryDetailFragment extends BaseFragment implements SwipeRefreshLay
     FloatingActionButton fab;
     @BindView(R.id.divider)
     View divider;
-    @BindView(R.id.reveal)
-    LinearLayout reveal;
-    @BindView(R.id.commentEt)
-    TextInputEditText commentEt;
-    @BindView(R.id.commentTextInputLayout)
-    TextInputLayout commentTextInputLayout;
-    @BindView(R.id.commit)
-    ImageButton commit;
+    @BindView(R.id.diary_layout)
+    RelativeLayout diaryLayout;
     private ShareActionProvider mShareActionProvider;
     private int diaryId;
     private String commentTemp;
@@ -145,7 +139,6 @@ public class DiaryDetailFragment extends BaseFragment implements SwipeRefreshLay
         return R.layout.fragment_diary_detail;
     }
 
-
     @Override
     protected void setAnimations() {
 
@@ -153,10 +146,10 @@ public class DiaryDetailFragment extends BaseFragment implements SwipeRefreshLay
 
     @Override
     protected void initViews() {
+        setHasOptionsMenu(true);//填充menu（执行onCreateOptionsMenu）
         if (getArguments() != null) {  //有参数则获取参数id
             diaryId = getArguments().getInt(Constants.ID);
         }
-        setHasOptionsMenu(true);//填充menu（执行onCreateOptionsMenu）
         adapter = new DiaryCommentsAdapter(null, this);
         layoutManager = new WrapContentLinearLayoutManager(getContext());
         commentsRecycler.setLayoutManager(layoutManager);
@@ -235,7 +228,7 @@ public class DiaryDetailFragment extends BaseFragment implements SwipeRefreshLay
         setToolbarScrollFlag(false);
         //本来 onCreateOptionsMenu 已填充了分享Menu，但是却遇到了一个诡异的bug
         // 就是当前的fragment不显示分享menu（左右滑动发现其他fragment都有分享按钮）。所以只好用这个work-around
-        toolbar.inflateMenu(R.menu.share_menu);
+        toolbar.inflateMenu(R.menu.menu_detail);
         fetch();
 
     }
@@ -245,22 +238,6 @@ public class DiaryDetailFragment extends BaseFragment implements SwipeRefreshLay
         super.onAppear();
         fetch();
     }
-
-//    private void comment() {
-//        commentFragment = BottomCommentFragment.create(R.layout.comment_layout).with(this)
-//                .bindView(v -> {
-//
-//                    EditText editText = (EditText) v.findViewById(commentEt);
-//                    View commit = v.findViewById(R.id.commit);
-//
-//
-//                })
-//                .listenDismiss(dialog -> {
-//
-//                });
-////        commentFragment.show();
-//
-//    }
 
     private void cacheComment(EditText editText) {
         if (!TextUtils.isEmpty(commentTemp)) {
@@ -285,6 +262,36 @@ public class DiaryDetailFragment extends BaseFragment implements SwipeRefreshLay
         });
     }
 
+    private void comment() {
+        commentFragment = BottomCommentFragment.create(R.layout.comment_layout)
+                .with(this)
+                .bindView(v -> {
+                    TextInputLayout textInputLayout = (TextInputLayout) v.findViewById(R.id.commentTextInputLayout);
+                    ImageView commit = (ImageView) v.findViewById(R.id.commit);
+                    EditText commentEt = textInputLayout.getEditText();
+                    assert commentEt != null;
+                    cacheComment(commentEt);
+                    commit.setOnClickListener(view -> {
+                        if (commentEt.getText() == null || commentEt.getText().toString().trim().isEmpty()) {
+                            UiUtils.showSnack(view, R.string.no_text_entered);
+                        } else {
+                            String comment = commentEt.getText().toString();
+                            post(comment, 0);
+                        }
+                    });
+//                    new Handler().postDelayed(() -> KeyboardUtils.showSoftInput(commentEt), 400);
+
+                }).listenDismiss(dialog -> {
+                    if (!TextUtils.isEmpty(commentTemp)) {
+                        UiUtils.showSnack(rootView, getString(R.string.content_saved_as_draft));
+                    }
+
+                });
+        commentFragment.show();
+
+    }
+
+
     private void comment(int recipientId, String userName) {
         commentFragment = BottomCommentFragment.create(R.layout.comment_layout)
                 .with(this)
@@ -299,7 +306,7 @@ public class DiaryDetailFragment extends BaseFragment implements SwipeRefreshLay
                         imm.showSoftInput(editText, InputMethodManager.SHOW_IMPLICIT);
                     }
 
-                    v.findViewById(R.id.commit).setOnClickListener(v1 -> {
+                    v.findViewById(commit).setOnClickListener(v1 -> {
                         if (TextChecker.isTextInvalid(editText)) {
                             UiUtils.showSnack(v, getString(R.string.no_text_entered));
                         } else {
@@ -334,13 +341,14 @@ public class DiaryDetailFragment extends BaseFragment implements SwipeRefreshLay
                     swipeRefresh.setRefreshing(false);
                     adapter.addData(0, myComment);
                     fetch();
-                    commentTemp = null;
 
                 }, throwable -> {
                     swipeRefresh.setRefreshing(false);
                     UiUtils.showSnackLong(rootView, R.string.comment_failed);
                     throwable.printStackTrace();
                 });
+        commentTemp = null;
+        commentFragment.dismiss();
     }
 
     private void fetch() {
@@ -357,6 +365,7 @@ public class DiaryDetailFragment extends BaseFragment implements SwipeRefreshLay
                     swipeRefresh.setRefreshing(false);
                     inflate(comments);
                     setShareIntent(diary.getContent());
+                    base.save(diary);
 
                 }, throwable -> {
                     swipeRefresh.setRefreshing(false);
@@ -375,15 +384,14 @@ public class DiaryDetailFragment extends BaseFragment implements SwipeRefreshLay
     private void inflateDiary() {
         toolbar.setTitle(diary.getNotebookSubject());
 
-        Imager.load(this, diary.getUser().getAvatarUrl(), myAvatar);
         myAvatar.setOnClickListener(v -> goProfile(diary.getUserId()));
-
         Glide.with(this).load(diary.getUser().getAvatarUrl())
                 .bitmapTransform(new RoundedCornersTransformation(getContext(), 5, 0))
                 .into(myAvatar);
 
         diaryDate.setText(DateUtil.getDisplayDay(diary.getCreated()));
         content.setText(diary.getContent());
+        diaryLayout.setOnLongClickListener(this);
         //给名字加蓝
         String name = diary.getUser().getName();
         SimpleText sText = SimpleText.create(getContext(), name)
@@ -398,6 +406,7 @@ public class DiaryDetailFragment extends BaseFragment implements SwipeRefreshLay
         time.setText(DateUtil.getDisplayTime(diary.getCreated()));
 
         initPicture();
+
     }
 
     private void initPicture() {
@@ -426,45 +435,18 @@ public class DiaryDetailFragment extends BaseFragment implements SwipeRefreshLay
     }
 
     private void initFab() {
-        fab.show();
-//        fab.setOnClickListener(v -> comment());
-        RevealHelper helper = RevealHelper.with(getActivity()).reveal(reveal)
-                .revealDuration(300)
-                .buttonTransitionDuration(200)
-                .button(fab)
-                .onRevealEnd(new AnimatorListenerAdapter() {
-                    @Override
-                    public void onAnimationEnd(Animator animation) {
-                        KeyboardUtils.showSoftInput(commentEt);
-                        cacheComment(commentEt);
-                        commit.setOnClickListener(view -> {
-                            if (commentEt.getText() == null || commentEt.getText().toString().trim().isEmpty()) {
-                                UiUtils.showSnack(view, R.string.no_text_entered);
-                            } else {
-                                String comment = commentEt.getText().toString();
-                                post(comment, 0);
-                            }
-                        });
-                    }
-                })
-                .build();
+        new Handler().postDelayed(() -> fab.show(), 400);
+        fab.setOnClickListener(v -> comment());
 
-        commentEt.setOnFocusChangeListener((v, hasFocus) -> {
-            Log.d(TAG, "onFocusChange: " + hasFocus);
-            if (!hasFocus) {
-                InputMethodManager imm =  (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
-                imm.hideSoftInputFromWindow(v.getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
-                helper.unreveal();
-                if (!TextUtils.isEmpty(commentTemp)) {
-                    UiUtils.showSnack(rootView, getString(R.string.content_saved_as_draft));
-                }
-            }
-        });
+//                if (!TextUtils.isEmpty(commentTemp)) {
+//                    UiUtils.showSnack(rootView, getString(R.string.content_saved_as_draft));
+
 
     }
 
 
     private void inflate(List<Comment> comments) {
+
         inflateDiary();
         initFab();
         inflateComments(comments);
@@ -522,7 +504,6 @@ public class DiaryDetailFragment extends BaseFragment implements SwipeRefreshLay
                 diary = base.findDiary(diaryId);
                 if (diary != null) shareText = diary.getContent();
             }
-            Log.d(TAG, "setShareIntent: " + shareText);
             mShareActionProvider.setShareIntent(
                     IntentUtils.getShareTextIntent(Share.appendUrl(shareText)));
         }
@@ -530,13 +511,95 @@ public class DiaryDetailFragment extends BaseFragment implements SwipeRefreshLay
 
 
     @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+//        if (id == R.id.action_delete) {
+//            ToastUtils.showShortToast("delete");
+//        }
+
+        return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onPrepareOptionsMenu(Menu menu) {
+//        MenuItem item = menu.findItem(R.id.action_delete);
+//        log("onPrepareOptionsMenu");
+//        if (diary != null && LoginManager.isMe(diary.getUserId())) {
+//            item.setVisible(true);
+//            item.setEnabled(true);
+//            log("onPrepareOptionsMenu enabled " + diary.getUserId());
+//        } else {
+//            item.setVisible(false);
+//            item.setEnabled(false);
+//        }
+    }
+
+    @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        getActivity().getMenuInflater().inflate(R.menu.share_menu, menu);
-        MenuItem item = menu.findItem(R.id.menu_item_share);
+        inflater.inflate(R.menu.menu_detail, menu);
+        MenuItem item = menu.findItem(R.id.action_item_share);
         mShareActionProvider = (ShareActionProvider) MenuItemCompat.getActionProvider(item);
         setShareIntent(null);
     }
 
+
+    @Override
+    public boolean onLongClick(View v) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+        String[] items;
+        if (LoginManager.isMe(diary.getUserId())) {
+            items = getResources().getStringArray(R.array.diary_menu_my);
+        } else {
+            items = new String[]{getString(R.string.copy)};
+        }
+        builder.setItems(items, (dialog, which) -> {
+            if (which == 0) {
+                ClipboardUtils.copyText(diary.getContent());
+                UiUtils.showSnack(content, R.string.content_copied);
+            } else if (which == 1) {
+                editDiary();
+            } else if (which == 2) {
+                deleteDiary();
+
+            }
+        }).show();
+        return true;
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == 0) {
+            if (resultCode == Activity.RESULT_OK) {
+                onRefresh();
+            }
+        }
+    }
+
+    private void editDiary() {
+        Intent intent = new Intent(getContext(), EditDiaryActivity.class);
+        intent.putExtra(Constants.ID, diaryId);
+        startActivityForResult(intent, 0);
+    }
+
+    private void deleteDiary() {
+        LoginManager.getApi().deleteDiary(diaryId)
+                .compose(applySchedulers())
+                .subscribe(responseBodyResponse -> {
+                    UiUtils.showSnack(content, getString(R.string.diary_delete_success));
+                    try {
+                        log("respone" + responseBodyResponse.body().string());
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }, new Action1<Throwable>() {
+                    @Override
+                    public void call(Throwable throwable) {
+                        UiUtils.showSnackLong(content, getString(R.string.diary_delete_failed));
+                        throwable.printStackTrace();
+                    }
+                });
+    }
 
 }
 

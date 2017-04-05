@@ -5,7 +5,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.dante.diary.create.CreateDiaryActivity">
+    android:fitsSystemWindows="true"
+    tools:context="com.dante.diary.create.EditDiaryActivity">
 
     <android.support.design.widget.AppBarLayout
         android:layout_width="match_parent"
@@ -23,12 +24,5 @@
 
     <include layout="@layout/content_create_diary"/>
 
-    <android.support.design.widget.FloatingActionButton
-        android:id="@+id/fab"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="bottom|end"
-        android:layout_margin="@dimen/fab_margin"
-        app:srcCompat="@drawable/ic_send_white_36px"/>
 
 </android.support.design.widget.CoordinatorLayout>

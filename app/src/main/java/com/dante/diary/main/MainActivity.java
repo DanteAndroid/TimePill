@@ -4,13 +4,16 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 
 import com.dante.diary.base.BottomBarActivity;
+import com.dante.diary.custom.Updater;
 
 public class MainActivity extends BottomBarActivity {
     private static final String TAG = "MainActivity";
+    private Updater updater;
 
     @Override
     protected void initViews(@Nullable Bundle savedInstanceState) {
         super.initViews(savedInstanceState);
+        initUpdater();
     }
 
     @Override
@@ -19,10 +22,15 @@ public class MainActivity extends BottomBarActivity {
     }
 
 
-    private void initFab() {
-
+    private void initUpdater() {
+        updater = Updater.getInstance(this);
+        updater.check();
     }
-
+    @Override
+    protected void onDestroy() {
+        updater.release();
+        super.onDestroy();
+    }
 //    @Override
 //    public void onBackPressed() {
 //        Log.d(TAG, "onBackPressed: " + controller.getSize());

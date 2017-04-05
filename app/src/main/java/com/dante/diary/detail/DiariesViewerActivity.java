@@ -6,14 +6,12 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.ViewPager;
-import android.widget.FrameLayout;
 
 import com.dante.diary.R;
 import com.dante.diary.base.BaseActivity;
 import com.dante.diary.base.Constants;
 import com.dante.diary.model.Diary;
 import com.dante.diary.utils.SpUtil;
-import com.dante.diary.utils.TransitionHelper;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -25,8 +23,6 @@ public class DiariesViewerActivity extends BaseActivity {
     private static final String TAG = "DiariesViewerActivity";
     @BindView(R.id.pager)
     ViewPager pager;
-    @BindView(R.id.container)
-    FrameLayout container;
     private int position;
     private int currentPosition;
     private List<Diary> diaries;
@@ -54,7 +50,7 @@ public class DiariesViewerActivity extends BaseActivity {
         position = getIntent().getIntExtra(Constants.POSITION, 0);
         notebookId = getIntent().getIntExtra("notebookId", 0);
         currentPosition = position;
-        TransitionHelper.adjustTransition(this);
+
         List<Fragment> fragments = new ArrayList<>();
         if (notebookId > 0) {
             diaries = base.findDiariesOfNotebook(notebookId);
@@ -109,4 +105,5 @@ public class DiariesViewerActivity extends BaseActivity {
             return fragments.size();
         }
     }
+
 }

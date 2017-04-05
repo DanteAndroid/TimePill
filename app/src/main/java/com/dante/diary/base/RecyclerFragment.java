@@ -1,6 +1,7 @@
 package com.dante.diary.base;
 
 
+import android.os.Handler;
 import android.support.annotation.CallSuper;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.content.res.ResourcesCompat;
@@ -17,14 +18,14 @@ import butterknife.BindView;
  * All fragments have recyclerView & swipeRefresh must implement this.
  */
 public abstract class RecyclerFragment extends BaseFragment implements SwipeRefreshLayout.OnRefreshListener {
-    public static final int SMOOTH_SCROLL_POSITION = 40;
+    public static final int SMOOTH_SCROLL_POSITION = 10;
     private static final String TAG = "RecyclerFragment";
     @BindView(R.id.list)
     public RecyclerView recyclerView;
     @BindView(R.id.swipe_refresh)
     public SwipeRefreshLayout swipeRefresh;
     public RecyclerView.LayoutManager layoutManager;
-    public boolean firstEnter;   //whether is first time to enter fragment
+    public boolean firstEnter = true;   //whether is first time to enter fragment
     @BindView(R.id.fab)
     public FloatingActionButton fab;
 
@@ -57,11 +58,10 @@ public abstract class RecyclerFragment extends BaseFragment implements SwipeRefr
 
             @Override
             public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
-                if (dy > 30) {
+                if (dy > 10) {
                     if (barActivity != null) {
                         barActivity.hideBottomBar();
                     }
-
                 }
                 if (dy < -60) {
                     if (getStackCount() == 0) {
@@ -96,8 +96,9 @@ public abstract class RecyclerFragment extends BaseFragment implements SwipeRefr
     public void changeRefresh(final boolean refreshState) {
         if (null != swipeRefresh) {
             swipeRefresh.setRefreshing(refreshState);
-            if (!refreshState) {
+            if (!refreshState && firstEnter) {
                 startPostponedEnterTransition();
+                firstEnter = false;
             }
         }
     }
@@ -108,11 +109,18 @@ public abstract class RecyclerFragment extends BaseFragment implements SwipeRefr
 
     public void scrollToTop() {
         if (layoutManager instanceof LinearLayoutManager) {
-            if (((LinearLayoutManager) layoutManager).findLastVisibleItemPosition() > SMOOTH_SCROLL_POSITION) {
-                recyclerView.scrollToPosition(0);
-            } else {
-                recyclerView.smoothScrollToPosition(0);
-            }
+            int index = ((LinearLayoutManager) layoutManager).findLastVisibleItemPosition();
+            scrollToTop(index);
+        } else {
+            recyclerView.scrollToPosition(0);
+        }
+    }
+
+    public void scrollToTop(int index) {
+        if (index > SMOOTH_SCROLL_POSITION) {
+            recyclerView.scrollToPosition(0);
+        } else {
+            new Handler().postDelayed(() -> recyclerView.smoothScrollToPosition(0), 200);
         }
     }
 

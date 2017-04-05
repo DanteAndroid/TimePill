@@ -3,40 +3,34 @@
               xmlns:tools="http://schemas.android.com/tools"
               android:layout_width="wrap_content"
               android:layout_height="wrap_content"
-              android:background="?attr/selectableItemBackground"
-              android:orientation="vertical">
+              android:layout_marginBottom="12dp"
+              android:background="@color/btg_global_light_white"
+              android:foreground="?attr/selectableItemBackground"
+              android:orientation="vertical"
+              android:padding="@dimen/activity_horizontal_margin">
 
     <TextView
         android:id="@+id/diaryDate"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/grey"
+        android:layout_marginBottom="5dp"
         android:gravity="center_vertical"
-        android:padding="6dp"
-        android:paddingEnd="@dimen/activity_horizontal_margin"
-        android:paddingStart="@dimen/activity_horizontal_margin"
+        android:padding="5dp"
+        android:textSize="16sp"
         android:visibility="gone"
         tools:text="2015-09-04"
         tools:visibility="visible"/>
-
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:paddingBottom="@dimen/activity_horizontal_margin"
-        android:paddingEnd="@dimen/activity_horizontal_margin"
-        android:paddingStart="@dimen/activity_horizontal_margin"
-        android:paddingTop="@dimen/activity_horizontal_margin">
-        <FrameLayout android:layout_width="wrap_content"
-                     android:layout_height="wrap_content">
-            <ImageView
-                android:id="@+id/avatar"
-                android:layout_width="52dp"
-                android:layout_height="52dp"
-                android:layout_marginRight="12dp"
-                android:foreground="?attr/selectableItemBackground"
-                android:textAppearance="?attr/textAppearanceListItem"
-                tools:src="@mipmap/ic_launcher"/>
-        </FrameLayout>
+        android:layout_height="match_parent">
+        <ImageView
+            android:id="@+id/avatar"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_marginRight="12dp"
+            android:foreground="?attr/selectableItemBackground"
+            android:textAppearance="?attr/textAppearanceListItem"
+            tools:src="@mipmap/ic_launcher"/>
 
         <RelativeLayout
             android:id="@+id/diary_layout"
@@ -102,7 +96,7 @@
                 android:textColor="@color/secondText"
                 tools:text="@string/test_diary"/>
 
-            <ImageView
+            <com.dante.diary.custom.ResizingImageView
                 android:id="@+id/attachPicture"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -110,8 +104,10 @@
                 android:layout_below="@+id/content"
                 android:layout_marginTop="8dp"
                 android:adjustViewBounds="true"
-                android:maxHeight="200dp"
-                android:minHeight="160dp"
+                android:maxHeight="180dp"
+                android:maxWidth="180dp"
+                android:minHeight="60dp"
+                android:minWidth="60dp"
                 android:visibility="gone"
                 tools:src="@mipmap/ic_launcher"
                 tools:visibility="visible"/>

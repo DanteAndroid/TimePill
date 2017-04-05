@@ -41,6 +41,9 @@ public class Imager {
     public static void load(final Context context, String url, ImageView target) {
         Glide.with(context)
                 .load(url)
+                .placeholder(R.drawable.image_place_holder)
+                .animate(R.anim.fade_in)
+                .error(R.drawable.error_holder)
                 .into(target);
     }
 

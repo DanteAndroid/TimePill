@@ -61,15 +61,13 @@ public class ProfileFragment extends BaseFragment {
     @BindView(R.id.intro)
     TextView intro;
 
-
-    String[] titles;
     @BindView(R.id.created)
     TextView created;
     @BindView(R.id.follow)
     FloatingActionButton fab;
     @BindView(R.id.followState)
-    StateButton followState;
-
+    TextView followState;
+    String[] titles;
     private int id;
     private User user;
     private List<RecyclerFragment> fragments = new ArrayList<>();
@@ -113,10 +111,9 @@ public class ProfileFragment extends BaseFragment {
     protected void initViews() {
         if (getArguments() != null) {
             isOther = true;
-            fetch();
             fab.setOnClickListener(v -> follow());
+            initTabs();
         }
-
     }
 
     private void follow() {
@@ -178,6 +175,7 @@ public class ProfileFragment extends BaseFragment {
             fab.show();
         }
 
+        progress.setVisibility(View.GONE);
         startPostponedEnterTransition();
     }
 
@@ -190,7 +188,6 @@ public class ProfileFragment extends BaseFragment {
                         if (isOther) {
                             checkFollowState();
                         }
-                        initTabs();
                     }
 
                     @Override
@@ -278,8 +275,7 @@ public class ProfileFragment extends BaseFragment {
 
     @Override
     protected void initData() {
-
-
+        fetch();
     }
 
     @Override

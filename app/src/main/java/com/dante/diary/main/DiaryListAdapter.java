@@ -1,6 +1,7 @@
 package com.dante.diary.main;
 
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
@@ -9,21 +10,22 @@ import android.widget.TextView;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
 import com.dante.diary.R;
-import com.dante.diary.interfaces.IOnItemClickListener;
 import com.dante.diary.model.Diary;
 import com.dante.diary.utils.DateUtil;
 import com.dante.diary.utils.Imager;
-import com.dante.diary.utils.TimeUtil;
 
+import java.util.Date;
 import java.util.List;
 
 
 public class DiaryListAdapter extends BaseQuickAdapter<Diary, BaseViewHolder> {
-    private IOnItemClickListener listener;
     private String lastDate;
+    private Date oldDate;
+    private boolean isFromNotebook;
 
     public DiaryListAdapter(List<Diary> data) {
         super(R.layout.list_diary_item, data);
+        setHasStableIds(true);
     }
 
     public DiaryListAdapter(int itemLayoutId, List<Diary> data) {
@@ -31,8 +33,22 @@ public class DiaryListAdapter extends BaseQuickAdapter<Diary, BaseViewHolder> {
     }
 
     @Override
+    public long getItemId(int position) {
+        int diaryId = getItem(position).getId();
+        return diaryId > 0 ? diaryId : position;
+    }
+
+    public void setIsFromNotebook(boolean isFromNotebook) {
+        this.isFromNotebook = isFromNotebook;
+    }
+
+    @Override
     protected void convert(BaseViewHolder helper, Diary item) {
         helper.addOnClickListener(R.id.avatar).addOnClickListener(R.id.attachPicture);
+        if (isFromNotebook) {
+            convertFromNotebook(helper, item);
+            return;
+        }
         ImageView attach = helper.getView(R.id.attachPicture);
         TextView count = helper.getView(R.id.commentsCount);
         ImageView avatarView = helper.getView(R.id.avatar);
@@ -50,15 +66,13 @@ public class DiaryListAdapter extends BaseQuickAdapter<Diary, BaseViewHolder> {
 
         RelativeLayout.LayoutParams timeParams = (RelativeLayout.LayoutParams) time.getLayoutParams();
         if (item.getUser() == null) {
+            Log.d(TAG, "convert: 没有user对象，则是获取用户的日记列表");
             //没有user对象，则是获取用户的日记列表
             name.setVisibility(View.GONE);
             String displayDay = DateUtil.getDisplayDay(item.getCreated());
-            if (displayDay.equals(lastDate)) {
-                return;
-            }
-            date.setVisibility(View.VISIBLE);
-            avatarView.setVisibility(View.GONE);
             date.setText(displayDay);
+            date.setVisibility(displayDay.equals(lastDate) ? View.GONE : View.VISIBLE);
+            avatarView.setVisibility(View.GONE);
             lastDate = displayDay;
             timeParams.addRule(RelativeLayout.ALIGN_BASELINE, R.id.notebookSubject);
         } else {
@@ -90,8 +104,26 @@ public class DiaryListAdapter extends BaseQuickAdapter<Diary, BaseViewHolder> {
         helper.setText(R.id.notebookSubject, String.format("《" + "%s" + "》",
                 item.getNotebookSubject()))
                 .setText(R.id.content, item.getContent())
-                .setText(R.id.time, TimeUtil.getTimeText(item.getCreated()));
+                .setText(R.id.time, DateUtil.getTimeText(item.getCreated()));
 
+    }
+
+    private void convertFromNotebook(BaseViewHolder helper, Diary item) {
+        if (item.getCreated() != oldDate) {
+            helper.setText(R.id.dayOfDate, DateUtil.getDisplayDayOfMonth(item.getCreated()))
+                    .setText(R.id.yearOfDate, DateUtil.getDisplayYear(item.getCreated()));
+        }
+        oldDate = item.getCreated();
+        helper.setText(R.id.time, DateUtil.getTimeText(item.getCreated()))
+                .setText(R.id.content, item.getContent());
+
+        TextView count = helper.getView(R.id.commentsCount);
+        if (item.getCommentCount() > 0) {
+            count.setText(String.valueOf(item.getCommentCount()));
+            count.setVisibility(View.VISIBLE);
+        } else {
+            count.setVisibility(View.GONE);
+        }
     }
 
 

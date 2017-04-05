@@ -109,7 +109,7 @@ public class LoginFragment extends BaseFragment {
     }
 
     private void saveUserAccount() {
-        SpUtil.save(Constants.NAME, name);
+        SpUtil.save(Constants.ACCOUNT, name);
         SpUtil.save(Constants.PASSWORD, psw);
         SpUtil.save(Constants.ID, id);
     }
@@ -124,7 +124,7 @@ public class LoginFragment extends BaseFragment {
 
 
     private void initUserAccount() {
-        name = SpUtil.getString(Constants.NAME);
+        name = SpUtil.getString(Constants.ACCOUNT);
         psw = SpUtil.getString(Constants.PASSWORD);
         id = SpUtil.getInt(Constants.ID);
     }

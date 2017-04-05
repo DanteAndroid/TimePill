@@ -11,6 +11,9 @@ import com.jaychang.st.SimpleText;
 
 import java.util.List;
 
+import static com.dante.diary.R.drawable.comment;
+import static com.dante.diary.R.id.follow;
+
 /**
  * Created by yons on 17/3/17.
  */
@@ -36,10 +39,9 @@ public class NotificationListAdapter extends BaseMultiItemQuickAdapter<TipResult
     @Override
     protected void convert(BaseViewHolder helper, TipResult item) {
         helper.addOnClickListener(R.id.done);
+        TextView notification = helper.getView(R.id.notification);
         switch (helper.getItemViewType()) {
             case TipResult.TYPE_COMMENT:
-                TextView comment = helper.getView(R.id.commentNotification);
-
                 String user = item.content.getCommentUser().getName();
                 String content = String.format(" %s 回复了你的日记", user);
                 SimpleText sText = SimpleText.create(helper.itemView.getContext(), content)
@@ -51,18 +53,15 @@ public class NotificationListAdapter extends BaseMultiItemQuickAdapter<TipResult
                                 listener.onItemClick(item.content.getCommentUser().getId());
                             }
                         });
-                sText.linkify(comment);
-                comment.setText(sText);
-                helper.itemView.setOnClickListener(v -> onNotificationClick(comment));
+                sText.linkify(notification);
+                notification.setText(sText);
 
 
                 break;
             case TipResult.TYPE_FOLLOW:
-                TextView follow = helper.getView(R.id.followerNotification);
-
                 String followUser = item.content.getFollowUser().getName();
-                String scontent = String.format(" %s 关注了你", followUser);
-                SimpleText text = SimpleText.create(helper.itemView.getContext(), scontent)
+                String followContent = String.format(" %s 关注了你", followUser);
+                SimpleText text = SimpleText.create(helper.itemView.getContext(), followContent)
                         .first(followUser)
                         .textColor(R.color.btg_global_text_blue)
                         .pressedTextColor(android.R.color.white)
@@ -71,9 +70,8 @@ public class NotificationListAdapter extends BaseMultiItemQuickAdapter<TipResult
                                 listener.onItemClick(item.content.getFollowUser().getId());
                             }
                         });
-                text.linkify(follow);
-                follow.setText(text);
-                helper.itemView.setOnClickListener(v -> onNotificationClick(follow));
+                text.linkify(notification);
+                notification.setText(text);
                 break;
         }
     }

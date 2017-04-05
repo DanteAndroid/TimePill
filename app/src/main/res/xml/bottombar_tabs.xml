@@ -3,18 +3,18 @@
     <tab
         icon="@drawable/home"
         id="@+id/main"
-        title="Today"/>
+        title="最新日记"/>
     <tab
         icon="@drawable/favorite"
         id="@+id/following"
-        title="Following"/>
+        title="关注"/>
     <tab
         icon="@drawable/notifications"
         id="@+id/other"
-        title="other"/>
+        title="通知"/>
     <tab
         icon="@drawable/person"
         id="@+id/me"
-        title="Me"/>
+        title="我的"/>
 
 </tabs>

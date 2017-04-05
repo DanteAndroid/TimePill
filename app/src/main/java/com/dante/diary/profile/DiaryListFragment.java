@@ -6,8 +6,13 @@ import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.text.TextUtils;
 import android.view.View;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.resource.drawable.GlideDrawable;
+import com.bumptech.glide.request.RequestListener;
+import com.bumptech.glide.request.target.Target;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.listener.OnItemClickListener;
 import com.dante.diary.R;
@@ -18,7 +23,9 @@ import com.dante.diary.detail.DiaryDetailFragment;
 import com.dante.diary.login.LoginManager;
 import com.dante.diary.main.DiaryListAdapter;
 import com.dante.diary.model.Diary;
+import com.dante.diary.utils.ImageProgresser;
 import com.dante.diary.utils.SpUtil;
+import com.dante.diary.utils.TransitionHelper;
 
 import java.util.List;
 
@@ -63,7 +70,20 @@ public class DiaryListFragment extends RecyclerFragment {
     @Override
     protected void initViews() {
         super.initViews();
+        if (getArguments() != null) {
+            //有参数则获取参数id
+            id = getArguments().getInt(Constants.ID);
+            subject = getArguments().getString(Constants.DATA);
+        } else {
+            //我的日记列表
+            id = SpUtil.getInt(Constants.ID);
+        }
         adapter = new DiaryListAdapter(null);
+        if (!TextUtils.isEmpty(subject) && !subject.equals(FOLLOWING)) {
+            isFromNotebook = true;
+            adapter = new DiaryListAdapter(R.layout.list_diary_item_expired, null);
+        }
+
         layoutManager = new LinearLayoutManager(barActivity);
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setAdapter(adapter);
@@ -76,7 +96,7 @@ public class DiaryListFragment extends RecyclerFragment {
 
             @Override
             public void onItemLongClick(BaseQuickAdapter adapter, View view, int position) {
-                log("onSimpleItemClick~~~~~~~~~~~~~~");
+
             }
 
             @Override
@@ -84,10 +104,31 @@ public class DiaryListFragment extends RecyclerFragment {
                 int id = view.getId();
                 if (id == R.id.avatar) {
                     goProfile(adapter.getItem(i).getUserId());
+                }else if (id == R.id.attachPicture) {
+                    onPictureClicked(view, i);
                 }
 
             }
         });
+    }
+
+    private void onPictureClicked(View view, int i) {
+        final ProgressBar progressBar = ImageProgresser.attachProgress(view);
+        String url = adapter.getItem(i).getPhotoUrl();
+        Glide.with(this).load(url).listener(new RequestListener<String, GlideDrawable>() {
+            @Override
+            public boolean onException(Exception e, String model, Target<GlideDrawable> target, boolean isFirstResource) {
+                progressBar.setVisibility(View.GONE);
+                return false;
+            }
+
+            @Override
+            public boolean onResourceReady(GlideDrawable resource, String model, Target<GlideDrawable> target, boolean isFromMemoryCache, boolean isFirstResource) {
+                progressBar.setVisibility(View.GONE);
+                TransitionHelper.startViewer(barActivity, view, url);
+                return false;
+            }
+        }).preload();
     }
 
     @Override
@@ -105,6 +146,7 @@ public class DiaryListFragment extends RecyclerFragment {
         } else {
             int diaryId = adapter.getItem(i).getId();
             Fragment f = DiaryDetailFragment.newInstance(diaryId);
+            log("onDiaryClicked");
             add(f);
         }
     }
@@ -112,20 +154,13 @@ public class DiaryListFragment extends RecyclerFragment {
     @Override
     protected void initData() {
         super.initData();
-        if (getArguments() != null) {
-            //有参数则获取参数id
-            id = getArguments().getInt(Constants.ID);
-            log("gogo" + id);
-            subject = getArguments().getString(Constants.DATA);
-        } else {
-            //我的日记列表
-            id = SpUtil.getInt(Constants.ID);
-        }
-        if (!TextUtils.isEmpty(subject) && !subject.equals(FOLLOWING)) {
-            isFromNotebook = true;
-            toolbar.setVisibility(View.VISIBLE);
+
+        if (isFromNotebook){
             toolbar.setTitle(subject);
+            toolbar.setVisibility(View.VISIBLE);
+            adapter.setIsFromNotebook(isFromNotebook);
         }
+
 
         fetch();
     }
