@@ -222,7 +222,7 @@ public class EditDiaryActivity extends BaseActivity {
                 .subscribe(notebook -> {
                     Log.d(TAG, "call: " + notebook.getContent());
                     UiUtils.showSnack(subjectSpinner, isEditMode ? R.string.diary_update_success : R.string.create_diary_success);
-
+                    SpUtil.remove("draft");
                     setResult(RESULT_OK);
                     supportFinishAfterTransition();
 

@@ -28,7 +28,7 @@ public class App extends Application {
         super.onCreate();
         context = this;
 //        refWatcher = LeakCanary.install(this);
-        Bugtags.start("1ddf7128d535505cc4adbda213e8c12f", this, Bugtags.BTGInvocationEventNone);
+        Bugtags.start("6db43944fc0b79dce98107999a23f486", this, Bugtags.BTGInvocationEventNone);
         Realm.init(this);
         Utils.init(this);
 

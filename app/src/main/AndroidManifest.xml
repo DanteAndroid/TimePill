@@ -35,7 +35,7 @@
         <activity
             android:name=".create.EditDiaryActivity"
             android:label="@string/create_diary"
-            android:windowSoftInputMode="adjustResize">
+            android:windowSoftInputMode="adjustPan">
         </activity>
         <activity
             android:name=".setting.SettingActivity"
@@ -54,6 +54,15 @@
         <activity
             android:name=".about.AboutActivity"
             android:label="@string/about" />
+        <provider
+            android:name="android.support.v4.content.FileProvider"
+            android:authorities="${applicationId}.fileProvider"
+            android:exported="false"
+            android:grantUriPermissions="true">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/file_paths"/>
+        </provider>
     </application>
 
 </manifest>

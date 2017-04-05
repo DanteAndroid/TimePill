@@ -2,6 +2,7 @@ package com.dante.diary.notification;
 
 import android.os.Handler;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.view.View;
 import android.view.ViewGroup;
@@ -145,7 +146,7 @@ public class NotificationListFragment extends RecyclerFragment implements IOnIte
 
     private void onNotificationClicked(View view, int i) {
         TextView n = (TextView) view.findViewById(R.id.notification);
-        n.setTextColor(getColor(R.color.mediumGrey));
+        n.setTextColor(ContextCompat.getColor(getContext(), R.color.mediumGrey));
 
         TipResult notification = adapter.getItem(i);
         int type = adapter.getItem(i).getItemType();

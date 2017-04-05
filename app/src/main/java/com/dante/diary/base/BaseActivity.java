@@ -6,9 +6,11 @@ import android.support.annotation.CallSuper;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.view.MotionEvent;
 import android.view.animation.AccelerateInterpolator;
 import android.view.animation.DecelerateInterpolator;
 
+import com.bugtags.library.Bugtags;
 import com.dante.diary.R;
 import com.dante.diary.model.DataBase;
 
@@ -118,10 +120,10 @@ public abstract class BaseActivity extends AppCompatActivity {
         }
     }
 
-//    @Override
-//    public boolean dispatchTouchEvent(MotionEvent ev) {
-//        Bugtags.onDispatchTouchEvent(this, ev);
-//        return super.dispatchTouchEvent(ev);
-//    }
+    @Override
+    public boolean dispatchTouchEvent(MotionEvent ev) {
+        Bugtags.onDispatchTouchEvent(this, ev);
+        return super.dispatchTouchEvent(ev);
+    }
 
 }

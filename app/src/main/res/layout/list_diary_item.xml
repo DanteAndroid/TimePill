@@ -96,7 +96,7 @@
                 android:textColor="@color/secondText"
                 tools:text="@string/test_diary"/>
 
-            <com.dante.diary.custom.ResizingImageView
+            <ImageView
                 android:id="@+id/attachPicture"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -106,8 +106,6 @@
                 android:adjustViewBounds="true"
                 android:maxHeight="180dp"
                 android:maxWidth="180dp"
-                android:minHeight="60dp"
-                android:minWidth="60dp"
                 android:visibility="gone"
                 tools:src="@mipmap/ic_launcher"
                 tools:visibility="visible"/>

@@ -6,6 +6,7 @@ import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
 import android.text.TextUtils;
 import android.transition.Explode;
@@ -26,7 +27,6 @@ import com.dante.diary.base.TabPagerAdapter;
 import com.dante.diary.login.LoginManager;
 import com.dante.diary.model.User;
 import com.dante.diary.utils.DateUtil;
-import com.dante.diary.utils.StateButton;
 import com.dante.diary.utils.UiUtils;
 
 import java.io.IOException;
@@ -238,13 +238,13 @@ public class ProfileFragment extends BaseFragment {
             @Override
             public void onTabSelected(TabLayout.Tab tab) {
                 TextView icon = (TextView) tab.getCustomView();
-                icon.setTextColor(getContext().getColor(android.R.color.white));
+                icon.setTextColor(ContextCompat.getColor(getContext(), android.R.color.white));
             }
 
             @Override
             public void onTabUnselected(TabLayout.Tab tab) {
                 TextView icon = (TextView) tab.getCustomView();
-                icon.setTextColor(getContext().getColor(R.color.grey));
+                icon.setTextColor(ContextCompat.getColor(getContext(), R.color.grey));
             }
 
             @Override

@@ -28,33 +28,37 @@ public class NetService {
 
     private static OkHttpClient.Builder httpClient = new OkHttpClient.Builder();
 
-    private static Retrofit.Builder builder =
-            new Retrofit.Builder()
-                    .baseUrl(API.BASE_URL)
-                    .addCallAdapterFactory(RxJavaCallAdapterFactory.create())
-                    .addConverterFactory(GsonConverterFactory.create(GsonConfig.gson));
+    private static Retrofit.Builder builder;
 
     private static TimeApi api;
     private static TimeApi registerApi;
 
 
     private static <T> T createService(Class<T> serviceClass) {
+
         return createService(serviceClass, null, null);
     }
+
     public static <T> T createServiceWithBaseUrl(Class<T> serviceClass, String baseUrl) {
         builder = new Retrofit.Builder()
-                        .baseUrl(baseUrl)
-                        .addCallAdapterFactory(RxJavaCallAdapterFactory.create())
-                        .addConverterFactory(GsonConverterFactory.create(GsonConfig.gson));
-        return createService(serviceClass, null, null);
+                .baseUrl(baseUrl)
+                .addCallAdapterFactory(RxJavaCallAdapterFactory.create())
+                .addConverterFactory(GsonConverterFactory.create(GsonConfig.gson));
+        return createService(serviceClass, null);
     }
 
     private static <T> T createService(
             Class<T> serviceClass, String username, String password) {
+        builder = new Retrofit.Builder()
+                .baseUrl(API.BASE_URL)
+                .addCallAdapterFactory(RxJavaCallAdapterFactory.create())
+                .addConverterFactory(GsonConverterFactory.create(GsonConfig.gson));
+
         if (!TextUtils.isEmpty(username) && !TextUtils.isEmpty(password)) {
             String authToken = Credentials.basic(username, password);
             return createService(serviceClass, authToken);
         }
+
         return createService(serviceClass, null);
     }
 
@@ -67,7 +71,6 @@ public class NetService {
                 httpClient.addInterceptor(interceptor);
             }
         }
-
         //debug 模式开启log
         HttpLoggingInterceptor logging = new HttpLoggingInterceptor();
         logging.setLevel(BuildConfig.DEBUG ?

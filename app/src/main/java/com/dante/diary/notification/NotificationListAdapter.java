@@ -1,5 +1,6 @@
 package com.dante.diary.notification;
 
+import android.support.v4.content.ContextCompat;
 import android.widget.TextView;
 
 import com.chad.library.adapter.base.BaseMultiItemQuickAdapter;
@@ -10,9 +11,6 @@ import com.dante.diary.model.TipResult;
 import com.jaychang.st.SimpleText;
 
 import java.util.List;
-
-import static com.dante.diary.R.drawable.comment;
-import static com.dante.diary.R.id.follow;
 
 /**
  * Created by yons on 17/3/17.
@@ -77,6 +75,6 @@ public class NotificationListAdapter extends BaseMultiItemQuickAdapter<TipResult
     }
 
     private void onNotificationClick(TextView textView) {
-        textView.setTextColor(mContext.getColor(R.color.mediumGrey));
+        textView.setTextColor(ContextCompat.getColor(mContext, R.color.mediumGrey));
     }
 }

@@ -108,7 +108,6 @@ public abstract class BaseFragment extends Fragment {
     public void onDestroy() {
         super.onDestroy();
 //        App.getWatcher(getActivity()).watch(this);
-
     }
 
 

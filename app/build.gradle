@@ -11,7 +11,7 @@ android {
         applicationId "com.dante.diary"
         minSdkVersion 19
         targetSdkVersion 25
-        versionCode 1
+        versionCode 2
         versionName "1.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         ndk {
@@ -46,11 +46,11 @@ android {
     }
 }
 
-//bugtags {
-//    appKey "1ddf7128d535505cc4adbda213e8c12f"
-//    appSecret "314528f8ff2f000d4021dc2cde6299e1"
-//    mappingUploadEnabled true
-//}
+bugtags {
+    appKey "6db43944fc0b79dce98107999a23f486"
+    appSecret "62e819c25247bc83a55c2e86210baf8b"
+    mappingUploadEnabled true
+}
 
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
@@ -94,7 +94,6 @@ dependencies {
     compile 'com.github.CymChad:BaseRecyclerViewAdapterHelper:2.9.2'
     compile 'com.ncapdevi:frag-nav:1.4.0'
     compile 'com.roughike:bottom-bar:2.1.1'
-    compile 'com.github.shem8:material-login:2.1.1'
     compile 'com.yqritc:recyclerview-flexibledivider:1.4.0'
     compile 'com.squareup.retrofit2:retrofit:2.1.0'
     compile 'com.squareup.retrofit2:converter-gson:2.1.0'
