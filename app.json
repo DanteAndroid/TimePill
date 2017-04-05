@@ -5,5 +5,5 @@
 	"forceUpdate": true,
 	"message": " - First release;\n  - Code optimized.",
 	"share_app_description": " 时间胶囊: https://github.com/DanteAndroid/TimeDiary/",
-	"apk_name":"app-armeabi-v7a-release.apk"
+	"apk_url":"https://github.com/DanteAndroid/TimeDiary/releases/download/v0.1/app-armeabi-v7a-release.apk"
 }
