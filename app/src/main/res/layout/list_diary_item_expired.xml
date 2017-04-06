@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                xmlns:tools="http://schemas.android.com/tools"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="12dp"
+                android:background="@color/btg_global_light_white"
+                android:foreground="?attr/selectableItemBackground"
+                android:orientation="vertical"
+                android:padding="@dimen/activity_horizontal_margin">
+
+    <TextView
+        android:id="@+id/dayOfDate"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginRight="12dp"
+        android:layout_marginTop="12dp"
+        android:textAppearance="?attr/textAppearanceListItem"
+        android:textSize="22sp"
+        tools:text="09-04"/>
+    <TextView
+        android:id="@+id/yearOfDate"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignRight="@+id/dayOfDate"
+        android:layout_marginBottom="@dimen/activity_horizontal_margin"
+        android:layout_below="@+id/dayOfDate"
+        tools:text="2015"/>
+
+    <TextView
+        android:id="@+id/time"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentStart="true"
+        android:layout_below="@+id/commentsCount"
+        android:gravity="center" android:textSize="12sp"
+        tools:text="20分钟前"/>
+
+    <TextView
+        android:id="@+id/commentsCount"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignEnd="@+id/time"
+        android:layout_alignParentStart="true"
+        android:layout_below="@+id/yearOfDate"
+        android:layout_marginRight="6dp"
+        android:drawablePadding="3dp"
+        android:drawableRight="@drawable/ic_comment_black_18dp"
+        android:gravity="center"
+        android:textColor="@color/mediumGrey"
+        android:textSize="12sp"
+        android:visibility="invisible"
+        tools:text="2"
+        tools:visibility="visible"/>
+
+
+    <TextView
+        android:id="@+id/content"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:layout_toRightOf="@+id/dayOfDate"
+        android:ellipsize="end"
+        android:lineSpacingMultiplier="1.3"
+        android:maxHeight="128dp"
+        android:maxLines="5"
+        android:textColor="@color/secondText"
+        tools:text="@string/test_diary"/>
+
+    <ImageView
+        android:id="@+id/attachPicture"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignStart="@+id/content"
+        android:layout_below="@+id/content"
+        android:layout_marginTop="8dp"
+        android:layout_toRightOf="@+id/yearOfDate"
+        android:adjustViewBounds="true"
+        android:maxHeight="200dp"
+        android:maxWidth="200dp"
+        android:visibility="gone"
+        tools:src="@mipmap/ic_launcher"
+        tools:visibility="visible"/>
+
+
+</RelativeLayout>

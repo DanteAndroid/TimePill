@@ -10,7 +10,7 @@
         title="关注"/>
     <tab
         icon="@drawable/notifications"
-        id="@+id/other"
+        id="@+id/notification"
         title="通知"/>
     <tab
         icon="@drawable/person"

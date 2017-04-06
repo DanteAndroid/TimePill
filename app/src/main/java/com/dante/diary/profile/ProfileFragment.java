@@ -1,7 +1,9 @@
 package com.dante.diary.profile;
 
 
+import android.content.Intent;
 import android.os.Bundle;
+import android.support.design.internal.NavigationMenu;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.TabLayout;
@@ -12,6 +14,7 @@ import android.text.TextUtils;
 import android.transition.Explode;
 import android.transition.Transition;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -24,9 +27,13 @@ import com.dante.diary.base.BaseFragment;
 import com.dante.diary.base.Constants;
 import com.dante.diary.base.RecyclerFragment;
 import com.dante.diary.base.TabPagerAdapter;
+import com.dante.diary.edit.EditDiaryActivity;
+import com.dante.diary.edit.EditNotebookActivity;
 import com.dante.diary.login.LoginManager;
 import com.dante.diary.model.User;
+import com.dante.diary.setting.SettingFragment;
 import com.dante.diary.utils.DateUtil;
+import com.dante.diary.utils.SpUtil;
 import com.dante.diary.utils.UiUtils;
 
 import java.io.IOException;
@@ -34,15 +41,19 @@ import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
+import io.github.yavski.fabspeeddial.FabSpeedDial;
+import io.github.yavski.fabspeeddial.SimpleMenuListenerAdapter;
 import jp.wasabeef.glide.transformations.RoundedCornersTransformation;
 import rx.Subscriber;
+import top.wefor.circularanim.CircularAnim;
 
 /**
  * A simple {@link Fragment} subclass.
  */
 public class ProfileFragment extends BaseFragment {
     private static final String TAG = "ProfileFragment";
-
+    @BindView(R.id.shadowView)
+    View shadowView;
     @BindView(R.id.avatar)
     ImageView avatar;
     @BindView(R.id.followers)
@@ -68,12 +79,15 @@ public class ProfileFragment extends BaseFragment {
     @BindView(R.id.followState)
     TextView followState;
     String[] titles;
+    @BindView(R.id.fabMenu)
+    FabSpeedDial fabMenu;
     private int id;
     private User user;
     private List<RecyclerFragment> fragments = new ArrayList<>();
     private TabPagerAdapter adapter;
     private boolean hasFollow;
     private boolean isOther;
+    private boolean meAsHome;
 
     public static ProfileFragment newInstance(int userId) {
         ProfileFragment fragment = new ProfileFragment();
@@ -81,6 +95,14 @@ public class ProfileFragment extends BaseFragment {
         args.putInt(Constants.ID, userId);
         fragment.setArguments(args);
         return fragment;
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        if (fabMenu != null) {
+            fabMenu.closeMenu();
+        }
     }
 
     @Override
@@ -109,6 +131,11 @@ public class ProfileFragment extends BaseFragment {
 
     @Override
     protected void initViews() {
+       meAsHome = SpUtil.getBoolean(SettingFragment.MY_HOME);
+        if (meAsHome && LoginManager.isMe(id)) {
+            initFab();
+//            setHasOptionsMenu(true);//填充menu（执行onCreateOptionsMenu）
+        }
         if (getArguments() != null) {
             isOther = true;
             fab.setOnClickListener(v -> follow());
@@ -160,12 +187,14 @@ public class ProfileFragment extends BaseFragment {
     }
 
     private void loadProfile() {
+        progress.setVisibility(View.GONE);
         Glide.with(this)
                 .load(user.getAvatarUrl())
                 .bitmapTransform(new RoundedCornersTransformation(getContext(), 5, 0))
                 .into(avatar);
 
         toolbarLayout.setTitle(user.getName());
+
         intro.setText(user.getIntro());
         created.setText(String.format("%s 加入胶囊",
                 DateUtil.getDisplayDay(user.getCreated()))
@@ -174,8 +203,6 @@ public class ProfileFragment extends BaseFragment {
         if (!hasFollow && !LoginManager.isMe(id)) {
             fab.show();
         }
-
-        progress.setVisibility(View.GONE);
         startPostponedEnterTransition();
     }
 
@@ -185,9 +212,7 @@ public class ProfileFragment extends BaseFragment {
                 .subscribe(new Subscriber<User>() {
                     @Override
                     public void onCompleted() {
-                        if (isOther) {
-                            checkFollowState();
-                        }
+                        checkFollowState();
                     }
 
                     @Override
@@ -282,5 +307,42 @@ public class ProfileFragment extends BaseFragment {
     public void onDestroyView() {
         fab.hide();
         super.onDestroyView();
+    }
+
+    private void initFab() {
+        fabMenu.setVisibility(View.VISIBLE);
+        fabMenu.setMenuListener(new SimpleMenuListenerAdapter() {
+            Intent intent;
+
+            @Override
+            public boolean onPrepareMenu(NavigationMenu navigationMenu) {
+                shadowView.animate().alpha(1).start();
+                return super.onPrepareMenu(navigationMenu);
+            }
+
+            @Override
+            public void onMenuClosed() {
+                shadowView.animate().alpha(0).start();
+            }
+
+            @Override
+            public boolean onMenuItemSelected(MenuItem menuItem) {
+                shadowView.animate().alpha(0).start();
+                int id = menuItem.getItemId();
+                View view = fabMenu.getChildAt(1);
+                intent = null;
+                if (id == R.id.action_create_diary) {
+                    intent = new Intent(getContext(), EditDiaryActivity.class);
+                } else if (id == R.id.action_create_notebook) {
+                    intent = new Intent(getContext(), EditNotebookActivity.class);
+                }
+                CircularAnim.fullActivity(getActivity(), view)
+                        .colorOrImageRes(R.color.colorAccent)
+                        .duration(400)
+                        .go(() -> startActivityForResult(intent, 0));
+                return true;
+            }
+        });
+
     }
 }

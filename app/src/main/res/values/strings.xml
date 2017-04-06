@@ -20,7 +20,7 @@
     <string name="copyed">内容已复制~</string>
     <string name="report">举报</string>
     <string name="reply_to_xxx">回复 %s 的评论：</string>
-    <string name="no_text_entered">O__O  您还没说话呢</string>
+    <string name="no_text_entered">O__O 您还没说话呢</string>
     <string name="speak_more">多说点什么吧~</string>
     <string name="total_comments">共 %d 条评论</string>
     <string name="xxx_copied">\"%s\" 已复制</string>
@@ -147,7 +147,7 @@
     <string name="set_current_cache">当前缓存为</string>
     <string name="alipay_not_found">未找到支付宝，已复制微信账号</string>
     <string name="wechat" translatable="false">lightear</string>
-    <string name="set_clear_cache">清理缓存和日记</string>
+    <string name="set_clear_cache">清理缓存</string>
     <string name="about">关于</string>
     <string name="set_check_version">检查更新</string>
     <string name="feedback_description">如果你有好的idea或建议，赶快说出来吧</string>
@@ -173,4 +173,33 @@
     <string name="share_app_description">时间胶囊：https://github.com/DanteAndroid/TimeDiary</string>
     <string name="donate">捐赠</string>
     <string name="donate_description">本App是个人时间的成果，您的支持会让它变得越来越好</string>
+    <string name="leave_app">真的要离开了吗？</string>
+    <string name="set_my_home">我的作为首页</string>
+    <string name="set_my_home_desc">使用自己的资料页作为首页</string>
+    <string name="customize">个性化</string>
+    <string name="nickname_too_short">昵称太短啦</string>
+    <string name="password_cant_empty">密码不能为空</string>
+    <string name="username_cant_empty">用户名不能为空</string>
+    <string name="say_more">再说点什么吧</string>
+    <string name="draw_clear">清空</string>
+    <string name="draw_save">保存</string>
+    <string name="draw_mode">模式</string>
+    <string name="draw_brush">画笔</string>
+    <string name="draw_background">背景图</string>
+    <string name="draw">画图</string>
+    <string name="draw_attrs">属性</string>
+    <string name="redo">重做</string>
+    <string name="undo">撤销</string>
+    <string name="stroke_width">画笔宽度: %1$d</string>
+    <string name="opacity">透明度: %1$d</string>
+    <string name="font_size">字体大小: %1$d</string>
+    <string name="chose_draw_tool">选择画图工具</string>
+    <string name="choose_draw_mode">选择模式</string>
+    <string name="draw_saved_success">图画保存成功</string>
+    <string name="draw_saved_canceled">保存已取消</string>
+    <string name="file_name">文件名</string>
+    <string name="save">保存</string>
+    <string name="cancel">取消</string>
+    <string name="delete">移除</string>
+    <string name="delete_photo_hint">确定要移除图片吗？</string>
 </resources>

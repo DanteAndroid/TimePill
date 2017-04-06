@@ -133,8 +133,6 @@ public class BottomCommentFragment extends DialogFragment {
     @Override
     public void onDismiss(DialogInterface dialog) {
         super.onDismiss(dialog);
-        Log.d(TAG, "onDismiss: ");
-
         if (dismissListener != null) {
             dismissListener.onDismiss(dialog);
         }

@@ -1,7 +1,5 @@
 package com.dante.diary.base;
 
-import android.animation.Animator;
-import android.animation.AnimatorListenerAdapter;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -9,63 +7,53 @@ import android.support.v4.app.FragmentTransaction;
 
 import com.dante.diary.R;
 import com.dante.diary.follow.TabsFragment;
+import com.dante.diary.login.LoginManager;
 import com.dante.diary.main.MainDiaryFragment;
 import com.dante.diary.profile.ProfileFragment;
+import com.dante.diary.setting.SettingFragment;
 import com.dante.diary.utils.SpUtil;
 import com.ncapdevi.fragnav.FragNavController;
 import com.roughike.bottombar.BottomBar;
 
 import butterknife.BindView;
+import rx.Subscription;
 
 public class BottomBarActivity extends BaseActivity implements FragNavController.RootFragmentListener {
-    private final int MAIN = FragNavController.TAB1;
+    public FragNavController controller;
+    @BindView(R.id.bottomBar)
+    public BottomBar bottomBar;
+    private final int DIARIES = FragNavController.TAB1;
+    private int MAIN = FragNavController.TAB1;
     private final int FOLLOWING = FragNavController.TAB2;
     private final int NOTIFICATION = FragNavController.TAB3;
     private final int ME = FragNavController.TAB4;
 
-    public FragNavController controller;
-    @BindView(R.id.bottomBar)
-    public BottomBar bottomBar;
-//    @BindView(R.id.container)
-//    FrameLayout container;
-
-
     @Override
     protected void initViews(@Nullable Bundle savedInstanceState) {
         super.initViews(savedInstanceState);
+        if (SpUtil.getBoolean(SettingFragment.MY_HOME)) {
+            MAIN = FragNavController.TAB4;
+        }
+
         controller = new FragNavController(savedInstanceState, getSupportFragmentManager(), R.id.container, this, 4, MAIN);
         controller.setTransitionMode(FragmentTransaction.TRANSIT_NONE);
         initBottomBar();
+        fetchNotifications();
+    }
 
+    public void fetchNotifications() {
+        Subscription subscription = LoginManager.getApi().getTips().compose(applySchedulers())
+                .subscribe(tipResults -> {
+                    if (!tipResults.isEmpty()) {
+                        bottomBar.getTabAtPosition(2).setBadgeCount(tipResults.size());
+                    }
+                });
+        compositeSubscription.add(subscription);
     }
 
     public void hideBottomBar() {
         bottomBar.animate().translationY(bottomBar.getHeight())
                 .setDuration(300)
-                .start();
-    }
-
-    public void hideBottomBar(AnimatorListenerAdapter listenerAdapter) {
-        bottomBar.animate().translationY(bottomBar.getHeight())
-                .setDuration(300)
-                .setListener(new AnimatorListenerAdapter() {
-                    @Override
-                    public void onAnimationEnd(Animator animation) {
-                        listenerAdapter.onAnimationEnd(animation);
-                    }
-                })
-                .start();
-    }
-
-    public void showBottomBar(AnimatorListenerAdapter listenerAdapter) {
-        bottomBar.animate().translationY(0)
-                .setDuration(300)
-                .setListener(new AnimatorListenerAdapter() {
-                    @Override
-                    public void onAnimationEnd(Animator animation) {
-                        listenerAdapter.onAnimationEnd(animation);
-                    }
-                })
                 .start();
     }
 
@@ -76,16 +64,17 @@ public class BottomBarActivity extends BaseActivity implements FragNavController
     }
 
     private void initBottomBar() {
+//        bottomBar.setDefaultTab(MAIN);
         bottomBar.selectTabAtPosition(MAIN);
         bottomBar.setOnTabSelectListener(tabId -> {
             switch (tabId) {
                 case R.id.main:
-                    controller.switchTab(MAIN);
+                    controller.switchTab(DIARIES);
                     break;
                 case R.id.following:
                     controller.switchTab(FOLLOWING);
                     break;
-                case R.id.other:
+                case R.id.notification:
                     controller.switchTab(NOTIFICATION);
                     break;
                 case R.id.me:
@@ -116,7 +105,7 @@ public class BottomBarActivity extends BaseActivity implements FragNavController
     public Fragment getRootFragment(int index) {
 
         switch (index) {
-            case MAIN:
+            case DIARIES:
                 return MainDiaryFragment.newInstance(index);
             case FOLLOWING:
                 return TabsFragment.newInstance(new String[]{getString(R.string.my_following_diary), getString(R.string.my_following)});

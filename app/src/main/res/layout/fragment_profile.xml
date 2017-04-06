@@ -2,6 +2,7 @@
 <android.support.design.widget.CoordinatorLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:fitsSystemWindows="false"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
@@ -53,5 +54,20 @@
         android:layout_margin="@dimen/fab_margin"
         android:src="@drawable/ic_favorite_white_24dp"
         android:visibility="invisible"/>
+
+    <io.github.yavski.fabspeeddial.FabSpeedDial
+        android:id="@+id/fabMenu"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|end"
+        android:layout_marginBottom="56dp"
+        android:visibility="invisible"
+        app:fabGravity="bottom_end"
+        app:fabMenu="@menu/fab_menu"
+        app:miniFabBackgroundTint="?attr/colorAccent"
+        app:miniFabDrawableTint="@color/white"
+        app:miniFabTitleBackgroundTint="@color/colorAccent"
+        app:miniFabTitleTextColor="@color/white"
+        tools:visibility="visible"/>
 
 </android.support.design.widget.CoordinatorLayout>

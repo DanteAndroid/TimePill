@@ -68,7 +68,7 @@ public class ViewerFragment extends BaseFragment implements View.OnLongClickList
 
     @Override
     protected void initData() {
-        imageView.setScaleLevels(1.0f, 1.5f, 2.1f);
+        imageView.setScaleLevels(0.5f, 1.0f, 2.2f);
         imageView.setOnPhotoTapListener(this);
         imageView.setOnLongClickListener(this);
     }
@@ -116,7 +116,6 @@ public class ViewerFragment extends BaseFragment implements View.OnLongClickList
                         return BitmapUtil.bitmapToUri(bitmap);
                     }
                     return null;
-
                 })
                 .compose(applySchedulers())
                 .subscribe(uri -> {

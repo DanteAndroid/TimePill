@@ -1,0 +1,196 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">时间胶囊</string>
+    <string name="about">about</string>
+    <string name="about_me">About me</string>
+    <string name="about_me_description">I\'m an Android developer in ShangHai, if you got any job,
+        you can recommend to me
+    </string>
+    <string name="action_canceled">Action canceled</string>
+    <string name="action_send">Send</string>
+    <string name="action_settings">Settings</string>
+    <string name="alipay_not_found">Unable to find AliPay, the Wechat account has been copied
+    </string>
+    <string name="all_marked_readed">All have been marked read</string>
+    <string name="app">App</string>
+    <string name="app_info">App Info</string>
+    <string name="cant_connect_net">Unable to connect network</string>
+    <string name="cant_get_diary">Unable to get diary content</string>
+    <string name="cant_get_following">Unable to get your following users</string>
+    <string name="cant_get_login_data">Unable to retieve login info, please wipe your app data and
+        login again
+    </string>
+    <string name="cant_get_notifications">Unable to get recent notifications</string>
+    <string name="choose_notebook_hint">Choose one notebook please</string>
+    <string name="clear_cache_failed">Clear failed</string>
+    <string name="clear_finished">Clear finished</string>
+    <string name="comment_failed">Comment failed</string>
+    <string name="content_copied">Content has been copied</string>
+    <string name="content_saved_as_draft">Content has been saved as draft</string>
+    <string name="copy">Copy</string>
+    <string name="copyed">Content has been copied</string>
+    <string name="cover_upload_failed">Cover picture upload failed</string>
+    <string name="cover_upload_success">Cover picture upload succeed</string>
+    <string name="create_diary">Write a diary</string>
+    <string name="create_diary_failed">Create diary failed, please try later</string>
+    <string name="create_diary_hint">What are you thinking of today?</string>
+    <string name="create_diary_success">Diary has been created</string>
+    <string name="create_notebook">Create a notebook</string>
+    <string name="create_notebook_success">Notebook %s has been created</string>
+    <string name="delete_comment">Delete this reply</string>
+    <string name="delete_comment_failed">Failed to delete reply</string>
+    <string name="delete_diary">Delete this diary</string>
+    <string name="diary_delete_failed">Failed to delete diary</string>
+    <string name="diary_delete_success">Diary has been deleted</string>
+    <string name="diary_update_success">Diary has been updated</string>
+    <string name="draft_restored">Diary draft has been restored</string>
+    <string name="edit">Edit</string>
+    <string name="edit_diary">Edit this diary</string>
+    <string name="edit_notebook">Edit this notebook</string>
+    <string name="email_not_install">No email client found</string>
+    <string name="expire_time">Expire time: %s</string>
+    <string name="fail_read_pictures">Failed to read pictures</string>
+    <string name="fail_to_create_notebook">Failed to create notebook</string>
+    <string name="fail_to_upload_avatar">Failed to update avatar</string>
+    <string name="feedback_description">Any idea or advice will be appreciated</string>
+    <string name="follow_success">Follow success</string>
+    <string name="get_diary_failed">Opps, can\'t find this diary on earth</string>
+    <string name="get_profile_failed">This is a mistery person, fail to read his info</string>
+    <string name="go_setting">Go settins</string>
+    <string name="is_loading">Data is loading, go hava a drink</string>
+    <string name="license_description">Please do not edit this app personally. If you got any
+        advice, let me know
+    </string>
+    <string name="login">Login</string>
+    <string name="login_failed">Login failed, please try later</string>
+    <string name="login_success">Login success</string>
+    <string name="my_diary">My diaries</string>
+    <string name="my_followers">My followers</string>
+    <string name="my_following">My followings</string>
+    <string name="my_following_diary">Followings\' diaries</string>
+    <string name="my_notebook">Notebooks</string>
+    <string name="my_notifications">Notifications</string>
+    <string name="name_or_psw_is_empty">Account or password cannot be empty</string>
+    <string name="nextAction">Next</string>
+    <string name="nickName">Nickname</string>
+    <string name="no_new_notification">No new notifications</string>
+    <string name="no_notebook">No active notebooks</string>
+    <string name="no_text_entered">You haven\'t say a word yet</string>
+    <string name="no_today_diary">No latest diaries</string>
+    <string name="no_valid_notebook">No valid notebooks, go create one</string>
+    <string name="notebook_desc_hint">Notebook description(optional)</string>
+    <string name="notebook_subject_hint">Subject</string>
+    <string name="password">password</string>
+    <string name="pick_picture">Pick picture</string>
+    <string name="picture_load_fail">Fail to load picture</string>
+    <string name="please_enter_account_info">Enter your account info please</string>
+    <string name="pref_avatar">Avatar</string>
+    <string name="pref_default_display_intro">Enter your introduction</string>
+    <string name="pref_default_display_name">Enter your nickname</string>
+    <string name="pref_gender">Gender</string>
+    <string name="pref_header_notifications">Notification</string>
+    <string name="pref_header_profile">Profile</string>
+    <string name="pref_intro">Introduction</string>
+    <string name="pref_name">Nickname</string>
+    <string name="pref_ringtone_silent">Silent</string>
+    <string name="pref_title_new_message_notifications">Message notifications</string>
+    <string name="pref_title_ringtone">Ringtone</string>
+    <string name="pref_title_vibrate">Vibrate</string>
+    <string name="privacy_me_only">Private</string>
+    <string name="privacy_property">Visibility</string>
+    <string name="privacy_public">Public</string>
+    <string name="profile">Profile</string>
+    <string name="register">Register timepill</string>
+    <string name="registerAction">Register</string>
+    <string name="register_failed">Register failed</string>
+    <string name="register_success">Register success, login now…</string>
+    <string name="reply_to_diary">Reply this diary…</string>
+    <string name="reply_to_xxx">Reply to %s:</string>
+    <string name="report">Report</string>
+    <string name="retry">Retry</string>
+    <string name="save_img_failed">Failed to save picture</string>
+    <string name="save_img_success">Picture saved</string>
+    <string name="set_check_version">Check update</string>
+    <string name="set_clear_cache">Clear all cache</string>
+    <string name="set_current_cache">"Current cache is "</string>
+    <string name="set_feedback">Feedback</string>
+    <string name="share_to">Share</string>
+    <string name="speak_more">Say a little bit more</string>
+    <string name="subject_cant_be_empty">Subject cannot be empty</string>
+    <string name="subject_is_long">Subject is long</string>
+    <string name="success_to_upload_avatar">Upload avatar success</string>
+    <string name="tips">Tips</string>
+    <string name="tips_content">Click tab or title to jump to top directly</string>
+    <string name="total_comments">%d comments</string>
+    <string name="unable_to_fetch_notebooks">Unbale to get notebook, maybe you don\'t have a valid
+        one
+    </string>
+    <string name="say_more">Say more about your day</string>
+
+    <string name="unable_to_find_notebook">Unbale to find this notebook</string>
+    <string name="unable_upload_picture">If you reject, temp picture can\'t be created and
+        uploaded
+    </string>
+    <string name="unfollow_success">Unfollow success</string>
+    <string name="update_failed">Update failed</string>
+    <string name="update_success">Update success</string>
+    <string name="update_user_failed">Update user info failed</string>
+    <string name="update_user_success">Update user info success</string>
+    <string name="userAccount">Account (email)</string>
+    <string name="version">Version</string>
+    <string name="view">View</string>
+    <string name="x_diaries_updated">%d diaries updated</string>
+    <string name="xxx_copied">\"%s\" has been copied</string>
+    <string name="detect_new_version">New version detected</string>
+    <string name="donate">Donte</string>
+    <string name="donate_description">This app is my work of private time, your support will make it
+        better and better
+    </string>
+    <string name="share_app_description">TimePill: https://github.com/DanteAndroid/TimeDiary
+    </string>
+    <string name="update">Update</string>
+    <string name="update_message">Update log: \n\n %s</string>
+    <string name="leave_app">Are you sure to leave?</string>
+    <string name="customize">Customize</string>
+    <string name="nickname_too_short">Nickname can\'t be short</string>
+    <string name="password_cant_empty">Password can\'t be empty</string>
+    <string name="username_cant_empty">Username can\'t be empty</string>
+    <string-array name="comment_menu">
+        <item>Copy</item>
+        <item>Share</item>
+        <item>Report</item>
+    </string-array>
+    <string-array name="comment_menu_my">
+        <item>Copy</item>
+        <item>Share</item>
+        <item>Report</item>
+        <item>Delete</item>
+    </string-array>
+    <string-array name="pref_list_genders">
+        <item>Man</item>
+        <item>Woman</item>
+        <item>Do not show</item>
+    </string-array>
+    <string name="set_my_home">Me as home</string>
+    <string name="set_my_home_desc">Set tab Me as home page</string>
+    <string name="file_name">File name</string>
+
+    <string name="stroke_width">Stroke width: %1$d</string>
+    <string name="opacity">Opacity: %1$d</string>
+    <string name="font_size">Font size: %1$d</string>
+    <string name="save">Save</string>
+    <string name="cancel">Cancel</string>
+    <string name="undo">Undo</string>
+    <string name="redo">Redo</string>
+    <string name="draw">Draw</string>
+    <string name="draw_attrs">Attributes</string>
+    <string name="draw_background">Background Image</string>
+    <string name="draw_brush">Brush</string>
+    <string name="draw_clear">Clear</string>
+    <string name="draw_mode">Draw mode</string>
+    <string name="draw_save">Save</string>
+    <string name="choose_draw_mode">Select a draw mode</string>
+    <string name="chose_draw_tool">Select a draw tool</string>
+    <string name="draw_saved_canceled">Capture saved canceled</string>
+    <string name="draw_saved_success">Capture saved succesfully!</string>
+</resources>

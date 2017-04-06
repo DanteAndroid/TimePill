@@ -1,4 +1,4 @@
-package com.dante.diary.create;
+package com.dante.diary.edit;
 
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -11,6 +11,7 @@ import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.support.design.widget.TextInputEditText;
 import android.support.design.widget.TextInputLayout;
+import android.support.v4.content.res.ResourcesCompat;
 import android.support.v4.view.ViewCompat;
 import android.text.Editable;
 import android.text.TextUtils;
@@ -81,6 +82,7 @@ public class EditNotebookActivity extends BaseActivity {
     private Notebook notebook;
     private File coverFile;
     private String expireDate;
+    private boolean notebookChanged;
 
     @Override
     protected int initLayoutId() {
@@ -109,7 +111,10 @@ public class EditNotebookActivity extends BaseActivity {
         initTextInput();
         initCalendar();
 
-        privacy.setOnCheckedChangeListener((buttonView, isChecked) -> isPrivate = !isChecked);
+        privacy.setOnCheckedChangeListener((buttonView, isChecked) -> {
+            isPrivate = !isChecked;
+            notifyNotebookChanged();
+        });
     }
 
     private void initCover() {
@@ -153,7 +158,10 @@ public class EditNotebookActivity extends BaseActivity {
         LoginManager.getApi().setNotebookCover(notebookId, NetService.createMultiPart("cover", coverFile))
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(notebook1 -> UiUtils.showSnack(notebookCover, getString(R.string.cover_upload_success)),
+                .subscribe(notebook1 -> {
+                            notebookChanged = true;
+                            UiUtils.showSnack(notebookCover, getString(R.string.cover_upload_success));
+                        },
                         throwable -> UiUtils.showSnack(notebookCover, getString(R.string.cover_upload_failed)));
 
     }
@@ -195,9 +203,13 @@ public class EditNotebookActivity extends BaseActivity {
         if (isEditMode) {
             notebookSubject = notebook.getSubject();
             subject.setText(notebookSubject);
+            desc.setText(notebook.getDescription());
+            privacy.setChecked(notebook.isIsPublic());
+            subject.setSelection(subject.getText().length());
+            desc.append("");
         }
 
-        new Handler().postDelayed(() -> KeyboardUtils.showSoftInput(subject), 400);
+        new Handler().postDelayed(() -> KeyboardUtils.showSoftInput(subject), 600);
         subject.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -211,6 +223,7 @@ public class EditNotebookActivity extends BaseActivity {
 
             @Override
             public void afterTextChanged(Editable s) {
+                notifyNotebookChanged();
                 String result = s.toString().trim();
                 notebookSubject = result;
                 if (result.length() <= 0) {
@@ -220,14 +233,35 @@ public class EditNotebookActivity extends BaseActivity {
                 } else {
                     subjectWrapper.setError(null);
                 }
-                invalidateOptionsMenu();
+            }
+        });
+        desc.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                notifyNotebookChanged();
+                description = s.toString().trim();
             }
         });
     }
 
+    private void notifyNotebookChanged() {
+        notebookChanged = true;
+        invalidateOptionsMenu();
+    }
+
 
     public void send() {
-        if (isEditMode && notebookSubject.equals(notebook.getSubject())) {
+        if (isEditMode && !notebookChanged) {
             supportFinishAfterTransition();
             return;
         }
@@ -239,7 +273,7 @@ public class EditNotebookActivity extends BaseActivity {
         }
         data.put(Constants.PRIVACY, isPrivate ? PRIVACY_PRIVATE : PRIVACY_PUBLIC);
         data.put(Constants.EXPIRED, expireDate);
-
+        Log.d(TAG, "send: " + data.toString());
         source(data).subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(n -> {
@@ -277,9 +311,9 @@ public class EditNotebookActivity extends BaseActivity {
 
     @Override
     public boolean onPrepareOptionsMenu(Menu menu) {
-        boolean enabled = !TextUtils.isEmpty(notebookSubject);
+        boolean enabled = !TextUtils.isEmpty(notebookSubject) && notebookChanged;
         MenuItem item = menu.findItem(R.id.action_send);
-        Drawable resIcon = getResources().getDrawable(R.drawable.ic_send_white_36px, getTheme());
+        Drawable resIcon = ResourcesCompat.getDrawable(getResources(), R.drawable.ic_send_white_36px, getTheme());
         if (!enabled) {
             resIcon.mutate().setColorFilter(Color.LTGRAY, PorterDuff.Mode.SRC_IN);
         }

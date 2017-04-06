@@ -1,18 +1,19 @@
-package com.dante.diary.create;
+package com.dante.diary.edit;
 
+import android.app.AlertDialog;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.support.design.widget.TextInputLayout;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.util.Log;
-import android.view.KeyCharacterMap;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -28,6 +29,7 @@ import com.bumptech.glide.Glide;
 import com.dante.diary.R;
 import com.dante.diary.base.BaseActivity;
 import com.dante.diary.base.Constants;
+import com.dante.diary.custom.DrawActivity;
 import com.dante.diary.custom.PickPictureActivity;
 import com.dante.diary.login.LoginManager;
 import com.dante.diary.model.Diary;
@@ -49,6 +51,7 @@ import static com.dante.diary.custom.PickPictureActivity.REQUEST_PICK_PICTURE;
 public class EditDiaryActivity extends BaseActivity {
     public static final int DIARY_CONTENT_TEXT_LIMIT = 10;
     private static final String TAG = "CreateDiaryActivity";
+    private static final int REQUEST_DRAW = 2;
     @BindView(R.id.subjectSpinner)
     Spinner subjectSpinner;
     @BindView(R.id.content)
@@ -83,16 +86,15 @@ public class EditDiaryActivity extends BaseActivity {
     @Override
     protected void initViews(@Nullable Bundle savedInstanceState) {
         super.initViews(savedInstanceState);
-
         if (getIntent().getExtras() != null) {
             diaryId = getIntent().getIntExtra(Constants.ID, 0);
+            isEditMode = diaryId > 0;
             diary = base.findDiary(diaryId);
             if (diary == null) {
                 fetchDiary();
             } else {
                 inflateDiary();
             }
-            isEditMode = diaryId > 0;
             toolbar.setTitle(R.string.edit_diary);
         }
         fetchSubjects();
@@ -101,7 +103,7 @@ public class EditDiaryActivity extends BaseActivity {
     }
 
     private void initTools() {
-        if (isEditMode && TextUtils.isEmpty(diary.getPhotoThumbUrl())) {
+        if (isEditMode) {
             photo.setVisibility(View.GONE);
         }
         photo.setOnClickListener(v -> startActivityForResult(new Intent(getApplicationContext(), PickPictureActivity.class), REQUEST_PICK_PICTURE));
@@ -109,7 +111,7 @@ public class EditDiaryActivity extends BaseActivity {
         palette.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                startActivityForResult(new Intent(getApplicationContext(), DrawActivity.class), REQUEST_DRAW);
             }
         });
     }
@@ -122,18 +124,29 @@ public class EditDiaryActivity extends BaseActivity {
                 Uri uri = data.getData();
                 String path = data.getStringExtra("path");
                 retrievePicture(uri, path);
-
             } else if (resultCode == PickPictureActivity.RESULT_FAILED) {
                 UiUtils.showSnack(photo, getString(R.string.fail_read_pictures));
             }
 
+        } else if (requestCode == REQUEST_DRAW) {
+            if (resultCode == RESULT_OK) {
+                String path = data.getStringExtra("path");
+                retrievePicture(null, path);
+            }
         }
     }
 
     private void retrievePicture(Uri uri, String path) {
         attachPhoto.setVisibility(View.VISIBLE);
-        Glide.with(this).load(uri).into(attachPhoto);
+        attachPhoto.setOnClickListener(v -> new AlertDialog.Builder(EditDiaryActivity.this)
+                .setMessage(R.string.delete_photo_hint)
+                .setPositiveButton(R.string.delete, (dialog, which) -> {
+                    attachPhoto.setVisibility(View.GONE);
+                    attachPhoto = null;
+                }).show());
+
         photoFile = new File(path);
+        Glide.with(this).load(photoFile).into(attachPhoto);
     }
 
     private void fetchDiary() {
@@ -151,16 +164,20 @@ public class EditDiaryActivity extends BaseActivity {
     private void inflateDiary() {
         if (diary != null) {
             notebookId = diary.getNotebookId();
-            content.append(diary.getContent());
-            attachPhoto.setVisibility(View.VISIBLE);
-            Imager.load(this, diary.getPhotoThumbUrl(), attachPhoto);
+            content.setText(diary.getContent());
+            content.setSelection(content.getText().length());
+            if (!TextUtils.isEmpty(diary.getPhotoThumbUrl())) {
+                attachPhoto.setVisibility(View.VISIBLE);
+                Imager.load(this, diary.getPhotoThumbUrl(), attachPhoto);
+            }
         }
     }
 
     private void initEditText() {
         String draft = SpUtil.getString("draft");
         if (!draft.isEmpty()) {
-            content.append(draft);
+            content.setText(draft);
+            content.setSelection(content.getText().length());
             SpUtil.remove("draft");
             UiUtils.showSnack(content, getString(R.string.draft_restored));
         }
@@ -179,7 +196,7 @@ public class EditDiaryActivity extends BaseActivity {
             public void afterTextChanged(Editable s) {
                 diaryContent = s.toString().trim();
                 if (diaryContent.length() <= DIARY_CONTENT_TEXT_LIMIT) {
-                    contentWrapper.setError("再说点什么吧");
+                    contentWrapper.setError(getString(R.string.say_more));
                 } else {
                     contentWrapper.setError("");
                     SpUtil.save("draft", diaryContent);
@@ -187,6 +204,8 @@ public class EditDiaryActivity extends BaseActivity {
                 invalidateOptionsMenu();
             }
         });
+
+        new Handler().postDelayed(() -> KeyboardUtils.showSoftInput(content), 300);
     }
 
 

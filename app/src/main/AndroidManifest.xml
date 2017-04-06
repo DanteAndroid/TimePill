@@ -23,9 +23,9 @@
             android:name=".detail.DiariesViewerActivity"
             android:windowSoftInputMode="adjustResize"/>
         <activity
-            android:name=".create.EditNotebookActivity"
+            android:name=".edit.EditNotebookActivity"
             android:label="@string/create_notebook"
-            android:windowSoftInputMode="stateVisible|adjustPan"/>
+            android:windowSoftInputMode="adjustPan"/>
         <activity android:name=".TransitionActivity">
         </activity>
         <activity
@@ -33,14 +33,14 @@
             android:label="@string/pick_picture">
         </activity>
         <activity
-            android:name=".create.EditDiaryActivity"
+            android:name=".edit.EditDiaryActivity"
             android:label="@string/create_diary"
-            android:windowSoftInputMode="adjustPan">
+            android:windowSoftInputMode="adjustResize">
         </activity>
         <activity
             android:name=".setting.SettingActivity"
-            android:theme="@style/AppTheme"
-            android:label="@string/action_settings"/>
+            android:label="@string/action_settings"
+            android:theme="@style/AppTheme"/>
         <activity
             android:name=".login.LoginActivity"
             android:theme="@style/AppTheme.NoActionBar.Placeholder"
@@ -52,8 +52,11 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".about.AboutActivity"
-            android:label="@string/about" />
+            android:name=".base.AboutActivity"
+            android:label="@string/about"/>
+        <activity
+            android:name=".custom.DrawActivity"
+            android:label="@string/draw"/>
         <provider
             android:name="android.support.v4.content.FileProvider"
             android:authorities="${applicationId}.fileProvider"

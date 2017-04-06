@@ -15,4 +15,16 @@
         <item>w</item>
         <item>n</item>
     </string-array>
+    <string-array name="draw_tools">pen
+        <item>钢笔</item>
+        <item>直线</item>
+        <item>长方形</item>
+        <item>圆</item>
+        <item>椭圆</item>
+    </string-array>
+    <string-array name="draw_mode">
+        <item>画画</item>
+        <item>文字</item>
+        <item>橡皮擦</item>
+    </string-array>
 </resources>

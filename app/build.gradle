@@ -73,8 +73,8 @@ dependencies {
     //https://github.com/rubensousa/FloatingToolbar
     //https://github.com/qyxxjd/MultipleStatusView
     //    debugCompile 'com.squareup.leakcanary:leakcanary-android:1.5'
-    compile 'com.android.support:palette-v7:25.3.1'
-
+    compile 'com.github.antwankakki:FabricView:latest'
+    compile 'com.byox.drawview:drawview:1.2.4'
     compile 'moe.feng:AlipayZeroSdk:1.1'
     compile 'com.github.andremion:louvre:1.0.1'
     compile 'com.github.XunMengWinter:CircularAnim:0.3.4'

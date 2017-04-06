@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
               xmlns:app="http://schemas.android.com/apk/res-auto"
+              xmlns:tools="http://schemas.android.com/tools"
+              android:id="@+id/rootLayout"
               android:layout_width="match_parent"
               android:layout_height="match_parent"
               android:orientation="vertical">
@@ -17,11 +19,25 @@
             android:background="?attr/colorPrimary"
             android:minHeight="48dp"
             android:visibility="gone"
-            app:layout_scrollFlags="scroll|enterAlwaysCollapsed"
             app:popupTheme="@style/AppTheme.PopupOverlay"/>
     </android.support.design.widget.AppBarLayout>
 
     <include layout="@layout/fragment_recycler"/>
 
-</LinearLayout>
+    <io.github.yavski.fabspeeddial.FabSpeedDial
+        android:id="@+id/fabMenu"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|end"
+        android:layout_marginBottom="56dp"
+        android:visibility="gone"
+        app:fabGravity="bottom_end"
+        app:fabMenu="@menu/fab_menu"
+        app:miniFabBackgroundTint="?attr/colorAccent"
+        app:miniFabDrawableTint="@color/white"
+        app:miniFabTitleBackgroundTint="@color/colorAccent"
+        app:miniFabTitleTextColor="@color/white"
+        tools:visibility="visible"/>
+
+</android.support.design.widget.CoordinatorLayout>
 

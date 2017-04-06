@@ -1,6 +1,5 @@
 package com.dante.diary.notification;
 
-import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.LinearLayoutManager;
@@ -62,9 +61,8 @@ public class NotificationListFragment extends RecyclerFragment implements IOnIte
 
             }
         });
-        fab.setImageResource(R.drawable.ic_done_all_white_36dp);
-        fab.setOnClickListener(v -> readAllDone());
-        new Handler().postDelayed(() -> fab.show(), 300);
+            fab.setImageResource(R.drawable.ic_done_all_white_36dp);
+            fab.setOnClickListener(v -> readAllDone());
     }
 
     @Override

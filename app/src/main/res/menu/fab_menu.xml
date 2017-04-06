@@ -8,7 +8,7 @@
     <item
         android:id="@+id/action_create_notebook"
         android:orderInCategory="1"
-        android:icon="@drawable/favorite"
+        android:icon="@drawable/ic_book_black_18dp"
         android:title="@string/create_notebook"/>
 
 </menu>

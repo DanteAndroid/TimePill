@@ -9,13 +9,12 @@
     android:layout_margin="@dimen/activity_horizontal_margin"
     android:orientation="vertical"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
-    tools:context="com.dante.diary.create.EditDiaryActivity"
+    tools:context="com.dante.diary.edit.EditDiaryActivity"
     tools:showIn="@layout/activity_create_diary">
     <Spinner
         android:id="@+id/subjectSpinner"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="@dimen/activity_horizontal_margin"
         android:alpha="0">
     </Spinner>
 
@@ -26,18 +25,33 @@
         android:layout_weight="1"
         android:hint="@string/create_diary_hint"
         android:padding="6dp"
-        app:counterEnabled="true"
         app:hintAnimationEnabled="false">
 
-        <android.support.design.widget.TextInputEditText
-            android:id="@+id/content"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_gravity="center"
-            android:layout_weight="1"
-            android:gravity="start"
-            android:lineSpacingMultiplier="1.2"
-        />
+        <FrameLayout android:layout_width="match_parent"
+                     android:layout_height="match_parent">
+
+            <android.support.design.widget.TextInputEditText
+                android:id="@+id/content"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_gravity="center"
+                android:gravity="start"
+                android:lineSpacingMultiplier="1.2"
+            />
+
+            <ImageView
+                android:id="@+id/attachPhoto"
+                android:layout_width="56dp"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/activity_horizontal_margin"
+                android:adjustViewBounds="true"
+                android:maxHeight="56dp"
+                android:layout_gravity="bottom|start"
+                android:visibility="gone"
+                tools:visibility="visible"
+                tools:src="@drawable/portrait_holder"/>
+        </FrameLayout>
+
 
     </android.support.design.widget.TextInputLayout>
 
@@ -76,12 +90,6 @@
             android:src="@drawable/ic_brush_black_24px"/>
 
     </LinearLayout>
-    <ImageView
-        android:id="@+id/attachPhoto"
-        android:layout_width="56dp"
-        android:layout_height="wrap_content"
-        android:minHeight="56dp"
-        android:visibility="gone"
-        tools:src="@drawable/portrait_holder"/>
+
 
 </LinearLayout>

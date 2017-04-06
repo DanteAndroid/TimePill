@@ -95,7 +95,7 @@ public class PickPictureActivity extends AppCompatActivity {
             if (bitmap != null) {
                 OutputStream os = new BufferedOutputStream(new FileOutputStream(photo));
                 Log.i(TAG, "saveToFile: scale bitmap " + bitmap.getWidth() + ", " + bitmap.getHeight());
-                bitmap.compress(Bitmap.CompressFormat.JPEG, 80, os);
+                bitmap.compress(Bitmap.CompressFormat.JPEG, 100, os);
                 os.close();
             }
         } catch (IOException e) {

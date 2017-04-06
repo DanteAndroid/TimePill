@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="picture_menu">
+        <item>Share</item>
+        <item>Save</item>
+
+    </string-array>
+    <string-array name="diary_menu_my">
+        <item>Copy</item>
+        <item>Edit</item>
+        <item>Delete</item>
+    </string-array>
+    <string-array name="pref_list_genders_values">
+        <item>m</item>
+        <item>w</item>
+        <item>n</item>
+    </string-array>
+    <string-array name="draw_tools">
+        <item>PEN</item>
+        <item>LINE</item>
+        <item>RECTANGLE</item>
+        <item>CIRCLE</item>
+        <item>ELLIPSE</item>
+    </string-array>
+    <string-array name="draw_mode">
+        <item>DRAW</item>
+        <item>TEXT</item>
+        <item>ERASER</item>
+    </string-array>
+</resources>

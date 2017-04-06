@@ -52,9 +52,8 @@
                     android:layout_marginTop="@dimen/activity_horizontal_margin"
                     android:hint="@string/notebook_subject_hint"
                     android:imeOptions="actionNext"
-                    android:inputType="text"
-                    android:maxLines="1"
-                    android:selectAllOnFocus="true"/>
+                    android:inputType="textAutoCorrect"
+                    android:maxLines="1"/>
 
             </android.support.design.widget.TextInputLayout>
 
@@ -74,7 +73,8 @@
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/activity_horizontal_margin">
 
                 <TextView
                     android:id="@+id/expire"

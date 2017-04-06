@@ -68,7 +68,6 @@ public class TabsFragment extends BaseFragment {
 
     @Override
     protected void initData() {
-        Log.d("test", "initData: ");
         barActivity.showBottomBar();
     }
 

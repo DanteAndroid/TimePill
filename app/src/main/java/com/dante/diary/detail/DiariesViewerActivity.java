@@ -82,11 +82,6 @@ public class DiariesViewerActivity extends BaseActivity {
         });
     }
 
-    private void fetchNotebookDiaries() {
-
-    }
-
-
     private static class DetailPagerAdapter extends FragmentStatePagerAdapter {
         private List<Fragment> fragments;
 

@@ -7,7 +7,7 @@
     <color name="primaryText">@android:color/primary_text_light</color>
     <color name="secondText">@android:color/secondary_text_light</color>
 
-    <color name="whiteBackground">#f5f5f5f5</color>
+    <color name="whiteBackground">#f5f5f5</color>
     <color name="white">#FFFFFF</color>
     <color name="divider">#BDBDBD</color>
     <color name="grey">#e2e2e2</color>

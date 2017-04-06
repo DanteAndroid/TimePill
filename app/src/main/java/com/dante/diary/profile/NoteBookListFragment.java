@@ -18,7 +18,7 @@ import com.chad.library.adapter.base.listener.OnItemClickListener;
 import com.dante.diary.R;
 import com.dante.diary.base.Constants;
 import com.dante.diary.base.RecyclerFragment;
-import com.dante.diary.create.EditNotebookActivity;
+import com.dante.diary.edit.EditNotebookActivity;
 import com.dante.diary.login.LoginManager;
 import com.dante.diary.model.Notebook;
 import com.dante.diary.utils.UiUtils;

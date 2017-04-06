@@ -34,8 +34,11 @@ public class DiaryListAdapter extends BaseQuickAdapter<Diary, BaseViewHolder> {
 
     @Override
     public long getItemId(int position) {
-        int diaryId = getItem(position).getId();
-        return diaryId > 0 ? diaryId : position;
+        try {
+            return getItem(position).getId();
+        } catch (ArrayIndexOutOfBoundsException e) {
+            return position;
+        }
     }
 
     public void setIsFromNotebook(boolean isFromNotebook) {
@@ -66,7 +69,6 @@ public class DiaryListAdapter extends BaseQuickAdapter<Diary, BaseViewHolder> {
 
         RelativeLayout.LayoutParams timeParams = (RelativeLayout.LayoutParams) time.getLayoutParams();
         if (item.getUser() == null) {
-            Log.d(TAG, "convert: 没有user对象，则是获取用户的日记列表");
             //没有user对象，则是获取用户的日记列表
             name.setVisibility(View.GONE);
             String displayDay = DateUtil.getDisplayDay(item.getCreated());

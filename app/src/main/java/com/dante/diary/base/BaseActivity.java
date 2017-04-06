@@ -18,6 +18,7 @@ import butterknife.ButterKnife;
 import rx.Observable;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
+import rx.subscriptions.CompositeSubscription;
 
 /**
  * BaseActivity includes a base layoutId, init its toolbar (if the layout has one)
@@ -28,6 +29,7 @@ public abstract class BaseActivity extends AppCompatActivity {
     public Toolbar toolbar;
     private boolean isShowToolbar = true;
     private ProgressDialog dialog;
+    public CompositeSubscription compositeSubscription = new CompositeSubscription();
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -92,6 +94,9 @@ public abstract class BaseActivity extends AppCompatActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
+        if (compositeSubscription.hasSubscriptions()) {
+            compositeSubscription.clear();
+        }
         base.close();
     }
 

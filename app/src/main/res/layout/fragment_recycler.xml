@@ -33,27 +33,21 @@
         android:text="空空如也"
         android:visibility="gone"/>
 
-    <io.github.yavski.fabspeeddial.FabSpeedDial
-        android:id="@+id/fabMenu"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="bottom|end"
-        android:layout_marginBottom="56dp"
-        android:visibility="gone"
-        app:fabGravity="bottom_end"
-        app:fabMenu="@menu/fab_menu"
-        app:miniFabBackgroundTint="?attr/colorAccent"
-        app:miniFabDrawableTint="@color/white"
-        app:miniFabTitleBackgroundTint="@color/colorAccent"
-        app:miniFabTitleTextColor="@color/white"
-        tools:visibility="visible"/>
+    <View
+        android:id="@+id/shadowView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:alpha="0"
+        android:background="#64000000"/>
 
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/fab"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|right"
-        android:layout_margin="@dimen/fab_margin"
+        android:layout_marginBottom="72dp"
+        android:layout_marginLeft="@dimen/fab_margin"
+        android:layout_marginRight="@dimen/fab_margin"
         android:src="@drawable/comment"
         android:visibility="invisible"
         app:backgroundTint="@color/colorAccent"

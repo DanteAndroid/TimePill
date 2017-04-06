@@ -4,6 +4,7 @@ package com.dante.diary.main;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.design.internal.NavigationMenu;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.v7.widget.RecyclerView;
 import android.view.Menu;
@@ -20,15 +21,17 @@ import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.listener.OnItemClickListener;
 import com.dante.diary.R;
 import com.dante.diary.base.BaseActivity;
+import com.dante.diary.base.BottomBarActivity;
 import com.dante.diary.base.Constants;
 import com.dante.diary.base.RecyclerFragment;
-import com.dante.diary.create.EditDiaryActivity;
-import com.dante.diary.create.EditNotebookActivity;
+import com.dante.diary.edit.EditDiaryActivity;
+import com.dante.diary.edit.EditNotebookActivity;
 import com.dante.diary.custom.Updater;
 import com.dante.diary.detail.DiariesViewerActivity;
 import com.dante.diary.login.LoginManager;
 import com.dante.diary.model.Diary;
 import com.dante.diary.setting.SettingActivity;
+import com.dante.diary.setting.SettingFragment;
 import com.dante.diary.utils.ImageProgresser;
 import com.dante.diary.utils.Share;
 import com.dante.diary.utils.SpUtil;
@@ -62,9 +65,10 @@ public class MainDiaryFragment extends RecyclerFragment implements OrderedRealmC
     BaseActivity context;
     DiaryListAdapter adapter;
     RealmResults<Diary> diaries;
-    List<Diary> diaryList;
     @BindView(R.id.fabMenu)
     FabSpeedDial fabMenu;
+    @BindView(R.id.shadowView)
+    View shadowView;
 
 
     private Intent intent;
@@ -127,7 +131,16 @@ public class MainDiaryFragment extends RecyclerFragment implements OrderedRealmC
 
             }
         });
+
         initFab();
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        if (fabMenu != null) {
+            fabMenu.closeMenu();
+        }
     }
 
     @Override
@@ -142,10 +155,25 @@ public class MainDiaryFragment extends RecyclerFragment implements OrderedRealmC
     }
 
     private void initFab() {
+        if (SpUtil.getBoolean(SettingFragment.MY_HOME)) {
+            return;
+        }
         fabMenu.setVisibility(View.VISIBLE);
         fabMenu.setMenuListener(new SimpleMenuListenerAdapter() {
             @Override
+            public boolean onPrepareMenu(NavigationMenu navigationMenu) {
+                shadowView.animate().alpha(1).start();
+                return super.onPrepareMenu(navigationMenu);
+            }
+
+            @Override
+            public void onMenuClosed() {
+                shadowView.animate().alpha(0).start();
+            }
+
+            @Override
             public boolean onMenuItemSelected(MenuItem menuItem) {
+                shadowView.animate().alpha(0).start();
                 int id = menuItem.getItemId();
                 View view = fabMenu.getChildAt(1);
                 intent = null;
@@ -283,7 +311,15 @@ public class MainDiaryFragment extends RecyclerFragment implements OrderedRealmC
                         });
                     }
                 });
+
+        BottomBarActivity activity = ((BottomBarActivity) getActivity());
+        if (activity != null) {
+            activity.fetchNotifications();
+        }
+
         compositeSubscription.add(subscription);
+
+
     }
 
     @Override
@@ -300,26 +336,6 @@ public class MainDiaryFragment extends RecyclerFragment implements OrderedRealmC
         isFetching = fetching;
         changeRefresh(isFetching);
     }
-
-//    @Override
-//    public void onChange(RealmResults<Diary> diaries) {
-//        size = diaries.size();
-//        int add = size - old;
-//        log("old--" + old + " new--" + size);
-//        if (page > 1) {
-//            log("from" + old + ", " + add + " added");
-//            adapter.notifyItemRangeInserted(old, add);
-//        } else {
-//            log(add + " added");
-//            adapter.notifyItemRangeInserted(0, add);
-//            if (add > 30) {
-//                recyclerView.scrollToPosition(0);
-//            } else {
-//                recyclerView.smoothScrollToPosition(0);
-//            }
-//        }
-//        old = size;
-//    }
 
     @Override
     public void onChange(RealmResults<Diary> collection, OrderedCollectionChangeSet changeSet) {
@@ -341,7 +357,8 @@ public class MainDiaryFragment extends RecyclerFragment implements OrderedRealmC
             log("no notifyItemRangeInserted " + range.startIndex + " to " + range.length);
             adapter.notifyItemRangeInserted(range.startIndex, range.length);
             if (page == 1) {
-                recyclerView.scrollToPosition(0);
+                scrollToTop(range.length);
+//                recyclerView.scrollToPosition(0);
             }
         }
 
@@ -369,4 +386,5 @@ public class MainDiaryFragment extends RecyclerFragment implements OrderedRealmC
         super.onCreateOptionsMenu(menu, inflater);
         inflater.inflate(R.menu.menu_setting, menu);
     }
+
 }

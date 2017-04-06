@@ -1,14 +1,18 @@
 package com.dante.diary.main;
 
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.Nullable;
 
+import com.dante.diary.R;
 import com.dante.diary.base.BottomBarActivity;
 import com.dante.diary.custom.Updater;
+import com.dante.diary.utils.UiUtils;
 
 public class MainActivity extends BottomBarActivity {
     private static final String TAG = "MainActivity";
     private Updater updater;
+    private boolean backPressed;
 
     @Override
     protected void initViews(@Nullable Bundle savedInstanceState) {
@@ -26,25 +30,29 @@ public class MainActivity extends BottomBarActivity {
         updater = Updater.getInstance(this);
         updater.check();
     }
+
     @Override
     protected void onDestroy() {
         updater.release();
         super.onDestroy();
     }
-//    @Override
-//    public void onBackPressed() {
-//        Log.d(TAG, "onBackPressed: " + controller.getSize());
-//        if (controller.isRootFragment()) {
-//            Log.d(TAG, "onBackPressed: "+"isRoot");
-//            super.onBackPressed();
-//        } else if (getSupportFragmentManager().getBackStackEntryCount() > 0) {
-//            Log.d(TAG, "onBackPressed: "+"popBackStack");
-//            getSupportFragmentManager().popBackStack();
-//
-//        } else {
-//            Log.d(TAG, "onBackPressed: "+"popBackStack");
-//            controller.popFragment();
-//        }
-//
-//    }
+
+    private void doublePressBackToQuit() {
+        if (backPressed) {
+            super.onBackPressed();
+            return;
+        }
+        backPressed = true;
+        UiUtils.showSnack(getWindow().getDecorView(), R.string.leave_app);
+        new Handler().postDelayed(() -> backPressed = false, 2000);
+    }
+
+    @Override
+    public void onBackPressed() {
+        if (getSupportFragmentManager().getBackStackEntryCount() > 0) {
+            super.onBackPressed();
+        }else {
+            doublePressBackToQuit();
+        }
+    }
 }

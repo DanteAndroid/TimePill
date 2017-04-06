@@ -40,7 +40,7 @@ import com.chad.library.adapter.base.listener.OnItemClickListener;
 import com.dante.diary.R;
 import com.dante.diary.base.BaseFragment;
 import com.dante.diary.base.Constants;
-import com.dante.diary.create.EditDiaryActivity;
+import com.dante.diary.edit.EditDiaryActivity;
 import com.dante.diary.custom.BottomCommentFragment;
 import com.dante.diary.interfaces.IOnItemClickListener;
 import com.dante.diary.login.LoginManager;
@@ -64,7 +64,6 @@ import java.util.List;
 
 import butterknife.BindView;
 import jp.wasabeef.glide.transformations.RoundedCornersTransformation;
-import rx.functions.Action1;
 
 import static com.dante.diary.R.id.commit;
 
@@ -521,21 +520,8 @@ public class DiaryDetailFragment extends BaseFragment implements SwipeRefreshLay
     }
 
     @Override
-    public void onPrepareOptionsMenu(Menu menu) {
-//        MenuItem item = menu.findItem(R.id.action_delete);
-//        log("onPrepareOptionsMenu");
-//        if (diary != null && LoginManager.isMe(diary.getUserId())) {
-//            item.setVisible(true);
-//            item.setEnabled(true);
-//            log("onPrepareOptionsMenu enabled " + diary.getUserId());
-//        } else {
-//            item.setVisible(false);
-//            item.setEnabled(false);
-//        }
-    }
-
-    @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        menu.clear();
         inflater.inflate(R.menu.menu_detail, menu);
         MenuItem item = menu.findItem(R.id.action_item_share);
         mShareActionProvider = (ShareActionProvider) MenuItemCompat.getActionProvider(item);
@@ -592,12 +578,9 @@ public class DiaryDetailFragment extends BaseFragment implements SwipeRefreshLay
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
-                }, new Action1<Throwable>() {
-                    @Override
-                    public void call(Throwable throwable) {
-                        UiUtils.showSnackLong(content, getString(R.string.diary_delete_failed));
-                        throwable.printStackTrace();
-                    }
+                }, throwable -> {
+                    UiUtils.showSnackLong(content, getString(R.string.diary_delete_failed));
+                    throwable.printStackTrace();
                 });
     }
 

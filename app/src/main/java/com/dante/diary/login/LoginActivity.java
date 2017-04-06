@@ -86,7 +86,7 @@ public class LoginActivity extends BaseActivity {
     private String password;
     private int id;
     private boolean animationStarted;
-    private String emailAccount = "danteache@163.com";
+    private String emailAccount;
     private boolean animationFinished;
     private boolean isLogin;
 
@@ -173,10 +173,6 @@ public class LoginActivity extends BaseActivity {
         password = SpUtil.getString(Constants.PASSWORD);
         accountEt.setText(emailAccount);
         pswEt.setText(password);
-//        if (LoginManager.isLogin()) {
-//            return;
-//        }
-
         login.setOnClickListener(v -> {
             moveSlogan(LOGO_TRANSLATION_Y - 200);
             CircularAnim.show(reveal).triggerView(login).duration(300).go(() -> {
@@ -231,7 +227,7 @@ public class LoginActivity extends BaseActivity {
             public void afterTextChanged(Editable s) {
                 String result = s.toString().trim();
                 if (result.length() <= 0) {
-                    accountWrapper.setError("用户名不能为空");
+                    accountWrapper.setError(getString(R.string.username_cant_empty));
                     login.setEnabled(false);
                     register.setEnabled(false);
                 } else {
@@ -256,7 +252,7 @@ public class LoginActivity extends BaseActivity {
             public void afterTextChanged(Editable s) {
                 String result = s.toString().trim();
                 if (result.length() <= 0) {
-                    pswWrapper.setError("密码不能为空");
+                    pswWrapper.setError(getString(R.string.password_cant_empty));
                     login.setEnabled(false);
                     register.setEnabled(false);
 
@@ -283,7 +279,7 @@ public class LoginActivity extends BaseActivity {
             public void afterTextChanged(Editable s) {
                 String result = s.toString().trim();
                 if (result.length() <= 0) {
-                    pswWrapper.setError("昵称太短啦");
+                    pswWrapper.setError(getString(R.string.nickname_too_short));
                     register.setEnabled(false);
 
                 } else {
@@ -393,7 +389,6 @@ public class LoginActivity extends BaseActivity {
 
                     @Override
                     public void onNext(User user) {
-                        Log.d(TAG, "onNext: " + user.toString());
                         saveAccount(user);
                     }
                 });
@@ -408,7 +403,7 @@ public class LoginActivity extends BaseActivity {
         eraseMemory();
         CircularAnim.fullActivity(this, fromButton ? login : slogan)
                 .colorOrImageRes(R.color.colorPrimary)
-                .duration(isLogin ? 400 : 600)
+//                .duration(isLogin ? 400 : 600)
                 .go(() -> {
                     startActivity(new Intent(getApplicationContext(), MainActivity.class));
                     finish();
@@ -419,7 +414,6 @@ public class LoginActivity extends BaseActivity {
     private void eraseMemory() {
         String today = DateUtil.getDisplayDay(new Date());
         String lastDate = SpUtil.getString(Constants.DATE);
-        Log.d(TAG, "eraseMemory: " + today + " last:" + lastDate);
         if (!today.equals(lastDate)) {
             base.clearAllDiaries();
         }
