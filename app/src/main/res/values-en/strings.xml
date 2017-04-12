@@ -146,6 +146,8 @@
     <string name="donate_description">This app is my work of private time, your support will make it
         better and better
     </string>
+    <string name="intro_hint">Talk about yourself</string>
+
     <string name="share_app_description">TimePill: https://github.com/DanteAndroid/TimeDiary
     </string>
     <string name="update">Update</string>
@@ -155,6 +157,8 @@
     <string name="nickname_too_short">Nickname can\'t be short</string>
     <string name="password_cant_empty">Password can\'t be empty</string>
     <string name="username_cant_empty">Username can\'t be empty</string>
+    <string name="commit">Commit</string>
+
     <string-array name="comment_menu">
         <item>Copy</item>
         <item>Share</item>

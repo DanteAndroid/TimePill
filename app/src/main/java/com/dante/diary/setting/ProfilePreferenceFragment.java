@@ -1,5 +1,6 @@
 package com.dante.diary.setting;
 
+import android.app.AlertDialog;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -9,6 +10,9 @@ import android.preference.Preference;
 import android.preference.PreferenceFragment;
 import android.util.Log;
 import android.view.MenuItem;
+import android.view.WindowManager;
+import android.widget.Button;
+import android.widget.EditText;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.resource.drawable.GlideDrawable;
@@ -179,14 +183,36 @@ public class ProfilePreferenceFragment extends PreferenceFragment {
             });
 
             loadAvatar(user);
-
             Log.d(TAG, "initUserInfo: " + user.toString());
             intro.setSummary(introduction);
             intro.setOnPreferenceClickListener(preference -> {
-                ((EditTextPreference) preference).getEditText().setText(user.getIntro());
-                ((EditTextPreference) preference).getEditText().append("");
+                AlertDialog dialog = new AlertDialog.Builder(getActivity())
+                        .setView(R.layout.intro_layout).setTitle(R.string.pref_intro)
+                        .create();
+                dialog.getWindow().setSoftInputMode(
+                        WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE);
+                dialog.show();
+                EditText editText = (EditText) dialog.findViewById(R.id.introEt);
+                editText.setText(introduction);
+                editText.setSelection(editText.getText().length());
+                Button commit = (Button) dialog.findViewById(R.id.commit);
+                commit.setOnClickListener(v -> {
+//                        if (editText.getText().length() == 0) {
+//                            UiUtils.showSnack(commit, R.string.say_more);
+//                            return;
+//                        }
+                    dialog.dismiss();
+                    introduction = editText.getText().toString();
+                    update();
+                });
                 return true;
             });
+
+//            intro.setOnPreferenceClickListener(preference -> {
+//                ((EditTextPreference) preference).getEditText().setText(user.getIntro());
+//                ((EditTextPreference) preference).getEditText().append("");
+//                return true;
+//            });
         }
     }
 

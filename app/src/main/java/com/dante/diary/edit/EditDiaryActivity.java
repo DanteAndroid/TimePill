@@ -247,7 +247,7 @@ public class EditDiaryActivity extends BaseActivity {
                 }, throwable -> {
 
                     KeyboardUtils.hideSoftInput(EditDiaryActivity.this);
-                    UiUtils.showSnackLong(subjectSpinner, R.string.create_diary_failed);
+                    UiUtils.showSnackLong(subjectSpinner, getString(R.string.create_diary_failed) + throwable.getMessage());
                     throwable.printStackTrace();
                 });
     }

@@ -75,6 +75,7 @@ dependencies {
     //    debugCompile 'com.squareup.leakcanary:leakcanary-android:1.5'
 
 //    compile 'com.jakewharton:process-phoenix:2.0.0'
+    compile 'com.borjabravo:readmoretextview:2.0.1'
     compile 'com.github.oxoooo:touch-image-view:1.0.1'
     compile 'com.andrognito.patternlockview:patternlockview:1.0.0'
     compile 'com.github.antwankakki:FabricView:latest'

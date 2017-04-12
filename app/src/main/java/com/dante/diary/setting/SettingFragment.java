@@ -69,6 +69,7 @@ public class SettingFragment extends PreferenceFragment implements Preference.On
     private Preference theme;
     private CheckBoxPreference shortSplash;
     private BottomDialogFragment patternDialog;
+    private boolean hasPassword;
 
 
     @Override
@@ -136,16 +137,21 @@ public class SettingFragment extends PreferenceFragment implements Preference.On
     }
 
     private void showPatternLockDialog(String title) {
-        boolean isVerify = title != null;
+        boolean removePassword = title != null;
         patternDialog = BottomDialogFragment.create(R.layout.pattern_lock)
                 .with((AppCompatActivity) getActivity())
                 .gravity(Gravity.CENTER)
                 .isComment(false)
-                .cancelable(!isVerify)
+                .cancelable(!removePassword)
+                .listenDismiss(dialog -> {
+                    if (!removePassword) {
+                        patternLock.setChecked(hasPassword);
+                    }
+                })
                 .bindView(v -> {
                     PatternLockView patternLockView = (PatternLockView) v.findViewById(R.id.pattern_lock);
                     TextView textView = (TextView) v.findViewById(R.id.title);
-                    if (isVerify) {
+                    if (removePassword) {
                         textView.setText(title);
                     }
                     patternLockView.addPatternLockListener(new PatternLockViewListener() {
@@ -161,21 +167,22 @@ public class SettingFragment extends PreferenceFragment implements Preference.On
 
                         @Override
                         public void onComplete(List<PatternLockView.Dot> pattern) {
-                            if (isVerify) {
+                            if (removePassword) {
                                 LockPatternUtil.checkPattern(pattern, patternLockView, new LockPatternUtil.OnCheckPatternResult() {
                                     @Override
                                     public void onSuccess() {
+                                        hasPassword = false;
                                         patternDialog.dismiss();
-                                        shortSplash.setEnabled(true);
                                     }
 
                                     @Override
                                     public void onFailed() {
-                                        patternLock.setEnabled(true);
+                                        patternLock.setChecked(true);
                                     }
                                 });
 
                             } else {
+                                hasPassword = true;
                                 SpUtil.save(SettingFragment.PATTERN_LOCK_PSW, PatternLockUtils.patternToString(patternLockView, patternLockView.getPattern()));
                                 patternDialog.dismiss();
                             }

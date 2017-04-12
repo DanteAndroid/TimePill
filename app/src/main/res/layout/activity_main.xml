@@ -24,7 +24,7 @@
         android:layout_gravity="bottom"
         android:background="@color/white"
         app:bb_activeTabColor="@color/secondText"
-        app:bb_behavior="shifting"
+        app:bb_behavior="shifting|shy"
         app:bb_inActiveTabColor="@color/greyer"
         app:bb_tabXmlResource="@xml/bottombar_tabs"/>
 

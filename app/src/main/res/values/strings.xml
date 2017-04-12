@@ -219,4 +219,8 @@
     <string name="check_old_pattern">验证旧手势</string>
     <string name="pattern_check_failed">手势验证失败，再仔细想想？</string>
     <string name="save_my_home_hint">已设我的界面为主页，下次进入时生效</string>
+    <string name="commit">提交</string>
+    <string name="intro_hint">说说你自己吧</string>
+    <string name="time_order_reverse">时间倒序</string>
+    <string name="time_order_normal">时间正序</string>
 </resources>

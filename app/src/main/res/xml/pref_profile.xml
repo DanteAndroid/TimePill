@@ -27,14 +27,9 @@
         android:positiveButtonText="@null"
         android:title="@string/pref_gender"/>
 
-    <EditTextPreference
-        android:height="56dp"
-        android:capitalize="words"
+    <Preference
         android:icon="@drawable/ic_subject_black_24px"
-        android:inputType="text"
         android:key="intro"
-        android:lineSpacingMultiplier="1.2"
-        android:lines="3"
         android:selectAllOnFocus="true"
         android:title="@string/pref_intro"/>
 

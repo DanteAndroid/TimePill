@@ -140,6 +140,11 @@ public class LoginActivity extends BaseActivity implements PatternLockViewListen
                 .setStartDelay(STARTUP_DELAY)
                 .setDuration(isLogin ? ANIM_DURATION / 2 : ANIM_DURATION).setInterpolator(
                 new DecelerateInterpolator(1.2f)).start();
+        if (isLogin && SpUtil.getBoolean(SettingFragment.HAS_PATTERN_LOCK)) {
+            patternView.setVisibility(View.VISIBLE);
+            patternView.animate().alpha(1).setStartDelay(STARTUP_DELAY + 300).start();
+            patternView.addPatternLockListener(LoginActivity.this);
+        }
         timePill.animate()
                 .translationY(isLogin ? LOGO_TRANSLATION_Y * 2 / 3 : LOGO_TRANSLATION_Y)
                 .setStartDelay(STARTUP_DELAY)
@@ -147,11 +152,7 @@ public class LoginActivity extends BaseActivity implements PatternLockViewListen
                     @Override
                     public void onAnimationEnd(Animator animation) {
                         if (isLogin) {
-                            if (SpUtil.getBoolean(SettingFragment.HAS_PATTERN_LOCK)) {
-                                patternView.setVisibility(View.VISIBLE);
-                                patternView.animate().alpha(1).start();
-                                patternView.addPatternLockListener(LoginActivity.this);
-                            } else {
+                            if (!hasPassword) {
                                 loginSuccess(timePill);
                             }
                         }

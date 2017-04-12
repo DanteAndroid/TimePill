@@ -5,6 +5,9 @@ import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.text.TextUtils;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -30,6 +33,7 @@ import com.dante.diary.utils.TransitionHelper;
 import java.util.List;
 
 import butterknife.BindView;
+import io.realm.Sort;
 import rx.Observable;
 
 /**
@@ -42,14 +46,14 @@ public class DiaryListFragment extends RecyclerFragment {
     public static final String FOLLOWING = "following";
     private static final String TAG = "DiaryListFragment";
     DiaryListAdapter adapter;
-    Observable<List<Diary>> diaries;
     @BindView(R.id.stateText)
     TextView stateText;
-
+    private List<Diary> diaries;
     private int page = 1;
     private int id;
     private String subject;
     private boolean isFromNotebook;
+    private boolean isTimeReversed;
 
     //id可以是用户id，也可以是notebook的id
     public static DiaryListFragment newInstance(int id, String notebookSubject) {
@@ -70,7 +74,6 @@ public class DiaryListFragment extends RecyclerFragment {
     @Override
     protected void initViews() {
         super.initViews();
-
         if (getArguments() != null) {
             //有参数则获取参数id
             id = getArguments().getInt(Constants.ID);
@@ -82,6 +85,7 @@ public class DiaryListFragment extends RecyclerFragment {
         adapter = new DiaryListAdapter(null);
         if (!TextUtils.isEmpty(subject) && !subject.equals(FOLLOWING)) {
             isFromNotebook = true;
+            setHasOptionsMenu(true);
             adapter = new DiaryListAdapter(R.layout.list_diary_item_expired, null);
         }
 
@@ -174,7 +178,6 @@ public class DiaryListFragment extends RecyclerFragment {
                     if (isFromNotebook) {
                         base.save(diaries);
                     }
-
                     if (page <= 1 && diaries.isEmpty()) {
                         adapter.setNewData(null);
                         stateText.setText(R.string.no_today_diary);
@@ -212,4 +215,36 @@ public class DiaryListFragment extends RecyclerFragment {
         fetch();
     }
 
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+        if (id == R.id.action_order) {
+            if (isTimeReversed) {
+                item.setTitle(R.string.time_order_reverse);
+                reverseDiary();
+            } else {
+                item.setTitle(R.string.time_order_normal);
+                reverseDiary();
+            }
+        }
+        return true;
+    }
+
+    private void reverseDiary() {
+        if (isTimeReversed) {
+            diaries = base.findDiariesOfNotebook(id).sort(Constants.CREATED, Sort.ASCENDING);
+            isTimeReversed = false;
+        } else {
+            diaries = base.findDiariesOfNotebook(id).sort(Constants.CREATED, Sort.DESCENDING);
+            isTimeReversed = true;
+        }
+        log("diaries reverse " + diaries.get(0).getContent());
+        adapter.setNewData(diaries);
+    }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        super.onCreateOptionsMenu(menu, inflater);
+        inflater.inflate(R.menu.menu_order, menu);
+    }
 }

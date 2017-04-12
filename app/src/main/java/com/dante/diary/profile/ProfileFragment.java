@@ -1,6 +1,7 @@
 package com.dante.diary.profile;
 
 
+import android.app.Dialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.internal.NavigationMenu;
@@ -197,6 +198,15 @@ public class ProfileFragment extends BaseFragment {
         toolbarLayout.setTitle(user.getName());
 
         intro.setText(user.getIntro());
+        intro.setOnClickListener(v -> {
+            Dialog dialog = new Dialog(getActivity());
+            dialog.setContentView(R.layout.text);
+            dialog.show();
+            TextView textView = (TextView) dialog.findViewById(R.id.text);
+            textView.setOnClickListener(v1 -> dialog.dismiss());
+            textView.setText(user.getIntro());
+
+        });
         created.setText(String.format("%s 加入胶囊",
                 DateUtil.getDisplayDay(user.getCreated()))
         );

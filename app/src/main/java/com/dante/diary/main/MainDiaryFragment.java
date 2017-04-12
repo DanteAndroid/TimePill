@@ -190,6 +190,7 @@ public class MainDiaryFragment extends RecyclerFragment implements OrderedRealmC
                 return true;
             }
         });
+
         recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
             public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
