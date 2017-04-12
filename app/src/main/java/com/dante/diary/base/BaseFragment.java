@@ -18,7 +18,6 @@ import android.view.ViewGroup;
 import com.dante.diary.BuildConfig;
 import com.dante.diary.R;
 import com.dante.diary.model.DataBase;
-import com.dante.diary.profile.ProfileFragment;
 
 import butterknife.ButterKnife;
 import rx.Observable;
@@ -120,7 +119,9 @@ public abstract class BaseFragment extends Fragment {
 
     public void initAppBar() {
         toolbar = (Toolbar) getView().findViewById(R.id.toolbar);
+        log("initAppBar");
         if (getActivity() != null && null != toolbar) {
+            log("initAppBar set");
             ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
             ((AppCompatActivity) getActivity()).getSupportActionBar().setDisplayHomeAsUpEnabled(needNavigation());
             toolbar.setNavigationOnClickListener(v -> getActivity().onBackPressed());
@@ -180,8 +181,9 @@ public abstract class BaseFragment extends Fragment {
     }
 
     public void goProfile(int userId) {
-        Fragment f = ProfileFragment.newInstance(userId);
-        addNoAnimation(f);
+//        Fragment f = ProfileFragment.newInstance(userId);
+//        addNoAnimation(f);
+        ViewActivity.viewProfile(getActivity(), userId);
     }
 
 

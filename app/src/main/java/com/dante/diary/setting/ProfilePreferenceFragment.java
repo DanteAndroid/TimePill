@@ -48,7 +48,7 @@ public class ProfilePreferenceFragment extends PreferenceFragment {
     private ListPreference gender;
     private Preference intro;
     private String nickName;
-    private String introduction = "";
+    private String introduction;
     private DataBase base;
     private User user;
     private Preference avatar;
@@ -170,7 +170,7 @@ public class ProfilePreferenceFragment extends PreferenceFragment {
     private void initUserInfo() {
         if (user != null) {
             nickName = user.getName();
-            introduction = user.getIntro();
+            introduction = user.getIntro() == null ? "" : user.getIntro();
             nickname.setSummary(nickName);
             nickname.setOnPreferenceClickListener(preference -> {
                 ((EditTextPreference) preference).getEditText().setText(user.getName());

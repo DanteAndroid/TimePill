@@ -8,7 +8,7 @@ import com.dante.diary.R;
 import com.dante.diary.base.BaseActivity;
 import com.dante.diary.base.Constants;
 
-public class ViewerActivity extends BaseActivity {
+public class PictureActivity extends BaseActivity {
     private static final String TAG = "ViewerActivity";
 
     private String url;
@@ -24,7 +24,7 @@ public class ViewerActivity extends BaseActivity {
         supportPostponeEnterTransition();
 
         url = getIntent().getStringExtra(Constants.URL);
-        Fragment fragment = ViewerFragment.newInstance(url);
+        Fragment fragment = PictureFragment.newInstance(url);
         getSupportFragmentManager().beginTransaction()
                 .replace(R.id.frame_layout, fragment)
                 .commit();

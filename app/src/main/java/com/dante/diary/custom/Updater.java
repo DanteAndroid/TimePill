@@ -3,6 +3,7 @@ package com.dante.diary.custom;
 import android.Manifest;
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.util.Log;
 
 import com.dante.diary.BuildConfig;
 import com.dante.diary.R;
@@ -48,6 +49,7 @@ public class Updater {
     }
 
     public void check() {
+        Log.d("test", "check: ");
         NetService.createServiceWithBaseUrl(AppApi.class, API.GITHUB_RAW).getAppInfo()
                 .filter(appInfo -> {
                     SpUtil.save(Updater.SHARE_APP, appInfo.getShareApp());

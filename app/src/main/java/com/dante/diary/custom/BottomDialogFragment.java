@@ -22,7 +22,7 @@ import com.dante.diary.R;
 /**
  * A BottomDialogFragment that uses for comment.
  */
-public class BottomCommentFragment extends DialogFragment {
+public class BottomDialogFragment extends DialogFragment {
 
     private static final String TAG = "BottomCommentFragment";
     protected View rootView;
@@ -32,34 +32,46 @@ public class BottomCommentFragment extends DialogFragment {
     private Fragment f;
     private AppCompatActivity activity;
     private OnViewBind binder;
+    private int gravity = Gravity.BOTTOM;
+    private boolean isComment = true;
 
-    public BottomCommentFragment() {
+    public BottomDialogFragment() {
         Log.d(TAG, "BottomCommentFragment: create");
     }
 
-    public static BottomCommentFragment create(int layoutId) {
+    public static BottomDialogFragment create(int layoutId) {
         if (layoutId <= 0) {
             throw new UnsupportedOperationException("You must pass a valid layoutId");
         }
         return newInstance(layoutId);
     }
 
-    public static BottomCommentFragment newInstance(int layoutId) {
+    public static BottomDialogFragment newInstance(int layoutId) {
 
         Bundle args = new Bundle();
         args.putInt("id", layoutId);
-        BottomCommentFragment fragment = new BottomCommentFragment();
+        BottomDialogFragment fragment = new BottomDialogFragment();
         fragment.setArguments(args);
         return fragment;
     }
 
-    public BottomCommentFragment with(Fragment f) {
+    public BottomDialogFragment with(Fragment f) {
         this.f = f;
         return this;
     }
 
-    public BottomCommentFragment with(AppCompatActivity a) {
+    public BottomDialogFragment gravity(int gravity) {
+        this.gravity = gravity;
+        return this;
+    }
+
+    public BottomDialogFragment with(AppCompatActivity a) {
         this.activity = a;
+        return this;
+    }
+
+    public BottomDialogFragment isComment(boolean isComment) {
+        this.isComment = isComment;
         return this;
     }
 
@@ -71,17 +83,17 @@ public class BottomCommentFragment extends DialogFragment {
         }
     }
 
-    public BottomCommentFragment listenViewClick(int id, View.OnClickListener l) {
+    public BottomDialogFragment listenViewClick(int id, View.OnClickListener l) {
         ids.put(id, l);
         return this;
     }
 
-    public BottomCommentFragment listenDismiss(Dialog.OnDismissListener l) {
+    public BottomDialogFragment listenDismiss(Dialog.OnDismissListener l) {
         this.dismissListener = l;
         return this;
     }
 
-    public BottomCommentFragment bindView(OnViewBind l) {
+    public BottomDialogFragment bindView(OnViewBind l) {
         this.binder = l;
         return this;
     }
@@ -89,7 +101,7 @@ public class BottomCommentFragment extends DialogFragment {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setStyle(DialogFragment.STYLE_NO_TITLE, R.style.BottomSheetDialog);
+        setStyle(DialogFragment.STYLE_NO_TITLE, isComment ? R.style.BottomCommentDialog : R.style.BottomDialog);
     }
 
     @Nullable
@@ -115,7 +127,7 @@ public class BottomCommentFragment extends DialogFragment {
         WindowManager.LayoutParams params = window.getAttributes();
         params.width = WindowManager.LayoutParams.MATCH_PARENT;
         params.height = WindowManager.LayoutParams.WRAP_CONTENT;
-        params.gravity = Gravity.BOTTOM;
+        params.gravity = gravity;
         window.setAttributes(params);
     }
 
@@ -145,6 +157,11 @@ public class BottomCommentFragment extends DialogFragment {
                 rootView.findViewById(id).setOnClickListener(ids.get(id));
             }
         }
+    }
+
+    public BottomDialogFragment cancelable(boolean b) {
+        setCancelable(b);
+        return this;
     }
 
     public interface OnViewBind {

@@ -55,7 +55,7 @@
     <string name="feedback_description">Any idea or advice will be appreciated</string>
     <string name="follow_success">Follow success</string>
     <string name="get_diary_failed">Opps, can\'t find this diary on earth</string>
-    <string name="get_profile_failed">This is a mistery person, fail to read his info</string>
+    <string name="get_profile_failed">This is a mystery person, fail to read his info</string>
     <string name="go_setting">Go settins</string>
     <string name="is_loading">Data is loading, go hava a drink</string>
     <string name="license_description">Please do not edit this app personally. If you got any
@@ -192,5 +192,28 @@
     <string name="choose_draw_mode">Select a draw mode</string>
     <string name="chose_draw_tool">Select a draw tool</string>
     <string name="draw_saved_canceled">Capture saved canceled</string>
-    <string name="draw_saved_success">Capture saved succesfully!</string>
+    <string name="draw_saved_success">Capture saved successfully!</string>
+    <string name="input_text">Input text</string>
+    <string name="check_old_pattern">Verify old pattern</string>
+    <string name="confirm">Confirm</string>
+    <string name="delete">Delete</string>
+    <string name="delete_photo_hint">Are you sure to remove attach picture?</string>
+    <string name="draw_exit_message">Are you sure to exit without saving?</string>
+    <string name="fill">Fill color</string>
+    <string name="paint_style">Paint style</string>
+    <string name="pattern_cant_be_empty">Pattern can\'t be empty</string>
+    <string name="pattern_check_failed">Pattern verify failed</string>
+    <string name="pattern_lock_psw_wrong">Wrong pattern password</string>
+    <string name="reset">Reset</string>
+    <string name="set_pattern_lock">Enable pattern lock</string>
+    <string name="set_pattern_lock_title">Set pattern lock</string>
+    <string name="set_short_splash">Simplfy splash</string>
+    <string name="set_short_splash_desc">Use short splash animation</string>
+    <string name="stroke">Stroke</string>
+    <string name="exit">Exit</string>
+    <string name="save_my_home_hint">My profile has been set as home page, takes effect until next
+        entering
+    </string>
+
+
 </resources>

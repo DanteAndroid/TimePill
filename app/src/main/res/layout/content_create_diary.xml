@@ -18,42 +18,35 @@
         android:alpha="0">
     </Spinner>
 
-    <android.support.design.widget.TextInputLayout
-        android:id="@+id/contentWrapper"
+    <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="1"
-        android:hint="@string/create_diary_hint"
-        android:padding="6dp"
-        app:hintAnimationEnabled="false">
+        android:layout_weight="1">
 
-        <FrameLayout android:layout_width="match_parent"
-                     android:layout_height="match_parent">
+        <EditText
+            android:id="@+id/content"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_gravity="center"
+            android:gravity="start"
+            android:hint="@string/create_diary_hint"
+            android:lineSpacingMultiplier="1.2"
+            android:padding="6dp"
+        />
 
-            <android.support.design.widget.TextInputEditText
-                android:id="@+id/content"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_gravity="center"
-                android:gravity="start"
-                android:lineSpacingMultiplier="1.2"
-            />
-
-            <ImageView
-                android:id="@+id/attachPhoto"
-                android:layout_width="56dp"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="@dimen/activity_horizontal_margin"
-                android:adjustViewBounds="true"
-                android:maxHeight="56dp"
-                android:layout_gravity="bottom|start"
-                android:visibility="gone"
-                tools:visibility="visible"
-                tools:src="@drawable/portrait_holder"/>
-        </FrameLayout>
-
-
-    </android.support.design.widget.TextInputLayout>
+        <ImageView
+            android:id="@+id/attachPhoto"
+            android:layout_width="56dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom|start"
+            android:layout_marginBottom="@dimen/activity_horizontal_margin"
+            android:adjustViewBounds="true"
+            android:background="?android:selectableItemBackground"
+            android:maxHeight="56dp"
+            android:visibility="gone"
+            tools:src="@drawable/portrait_holder"
+            tools:visibility="visible"/>
+    </FrameLayout>
 
     <LinearLayout
         android:layout_width="match_parent"

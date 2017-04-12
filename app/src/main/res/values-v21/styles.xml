@@ -24,9 +24,6 @@
 
     </style>
 
-    <style name="FlatButton" parent="Theme.AppCompat.Light">
-        <item name="colorControlHighlight">?attr/colorAccent</item>
-    </style>
     <style name="Translucent" parent="AppTheme.NoActionBar">
         <item name="android:windowBackground">@android:color/transparent</item>
         <item name="android:backgroundDimEnabled">true</item>

@@ -7,8 +7,6 @@ import android.view.MenuItem;
 
 import com.dante.diary.R;
 
-import static com.dante.diary.setting.SettingActivity.bindSummaryToValue;
-
 /**
  * Created by yons on 17/3/29.
  */
@@ -19,11 +17,6 @@ public class NotificationPreferenceFragment extends PreferenceFragment {
         addPreferencesFromResource(R.xml.pref_notification);
         setHasOptionsMenu(true);
 
-        // Bind the summaries of EditText/List/Dialog/Ringtone preferences
-        // to their values. When their values change, their summaries are
-        // updated to reflect the new value, per the Android Design
-        // guidelines.
-        bindSummaryToValue(findPreference("notifications_new_message_ringtone"));
     }
 
     @Override

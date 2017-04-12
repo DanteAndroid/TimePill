@@ -105,14 +105,13 @@ public class ProfileFragment extends BaseFragment {
         }
     }
 
-    @Override
-    protected void setAnimations() {
-        super.setAnimations();
-        id = getArguments().getInt(Constants.ID);
-        if (!LoginManager.isMe(id)) {
-            setEnterTransition(initTransitions());
-        }
-    }
+//    @Override
+//    protected void setAnimations() {
+//        super.setAnimations();
+//        if (!LoginManager.isMe(id)) {
+//            setEnterTransition(initTransitions());
+//        }
+//    }
 
     @Override
     protected boolean needNavigation() {
@@ -131,7 +130,9 @@ public class ProfileFragment extends BaseFragment {
 
     @Override
     protected void initViews() {
-       meAsHome = SpUtil.getBoolean(SettingFragment.MY_HOME);
+        id = getArguments().getInt(Constants.ID);
+
+        meAsHome = SpUtil.getBoolean(SettingFragment.MY_HOME);
         if (meAsHome && LoginManager.isMe(id)) {
             initFab();
 //            setHasOptionsMenu(true);//填充menu（执行onCreateOptionsMenu）
@@ -218,6 +219,7 @@ public class ProfileFragment extends BaseFragment {
                     @Override
                     public void onError(Throwable e) {
                         UiUtils.showSnack(rootView, R.string.get_profile_failed);
+                        progress.setVisibility(View.GONE);
                     }
 
                     @Override

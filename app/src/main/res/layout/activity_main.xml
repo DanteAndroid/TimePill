@@ -22,10 +22,10 @@
         android:layout_width="match_parent"
         android:layout_height="56dp"
         android:layout_gravity="bottom"
+        android:background="@color/white"
         app:bb_activeTabColor="@color/secondText"
-        app:bb_inActiveTabColor="@color/greyer"
         app:bb_behavior="shifting"
-        android:background="@color/whiteBackground"
+        app:bb_inActiveTabColor="@color/greyer"
         app:bb_tabXmlResource="@xml/bottombar_tabs"/>
 
     <android.support.design.widget.FloatingActionButton

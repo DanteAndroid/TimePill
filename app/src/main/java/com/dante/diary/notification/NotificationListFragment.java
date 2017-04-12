@@ -157,7 +157,7 @@ public class NotificationListFragment extends RecyclerFragment implements IOnIte
             add(fragment);
         }
 
-//        readDone(notification.id);
+        readDone(notification.id);
     }
 
     @Override

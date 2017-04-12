@@ -13,11 +13,12 @@
         android:theme="@style/AppTheme.NoActionBar">
         <activity
             android:name=".main.MainActivity"
-            android:alwaysRetainTaskState="true">
+            android:alwaysRetainTaskState="true"
+            android:launchMode="singleTop">
         </activity>
         <activity android:name=".base.BottomBarActivity"/>
         <activity
-            android:name=".detail.ViewerActivity"
+            android:name=".detail.PictureActivity"
             android:theme="@style/ViewerTheme.TransNav"/>
         <activity
             android:name=".detail.DiariesViewerActivity"
@@ -49,14 +50,18 @@
                 <action android:name="android.intent.action.MAIN"/>
 
                 <category android:name="android.intent.category.LAUNCHER"/>
+                <category android:name="android.intent.category.DEFAULT"/>
             </intent-filter>
         </activity>
         <activity
             android:name=".base.AboutActivity"
             android:label="@string/about"/>
         <activity
-            android:name=".custom.DrawActivity"
-            android:label="@string/draw"/>
+            android:name=".base.ViewActivity"/>
+        <activity
+            android:name=".draw.DrawActivity"
+            android:label="@string/draw"
+            android:windowSoftInputMode="stateHidden"/>
         <provider
             android:name="android.support.v4.content.FileProvider"
             android:authorities="${applicationId}.fileProvider"

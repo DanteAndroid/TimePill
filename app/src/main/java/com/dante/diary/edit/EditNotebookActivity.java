@@ -6,6 +6,7 @@ import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.Nullable;
@@ -83,6 +84,7 @@ public class EditNotebookActivity extends BaseActivity {
     private File coverFile;
     private String expireDate;
     private boolean notebookChanged;
+    private boolean coverChanged;
 
     @Override
     protected int initLayoutId() {
@@ -93,8 +95,9 @@ public class EditNotebookActivity extends BaseActivity {
     protected void initViews(@Nullable Bundle savedInstanceState) {
         supportPostponeEnterTransition();
         super.initViews(savedInstanceState);
-
-        getWindow().setEnterTransition(new Slide(Gravity.RIGHT));
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            getWindow().setEnterTransition(new Slide(Gravity.RIGHT));
+        }
 
         if (getIntent().getExtras() != null) {
             notebookId = getIntent().getIntExtra(Constants.ID, 0);
@@ -159,7 +162,8 @@ public class EditNotebookActivity extends BaseActivity {
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(notebook1 -> {
-                            notebookChanged = true;
+                            coverChanged = true;
+                            notifyNotebookChanged();
                             UiUtils.showSnack(notebookCover, getString(R.string.cover_upload_success));
                         },
                         throwable -> UiUtils.showSnack(notebookCover, getString(R.string.cover_upload_failed)));
@@ -282,12 +286,15 @@ public class EditNotebookActivity extends BaseActivity {
                     } else {
                         notebook = n;
                         notebookId = n.getId();
-                        setNoteBookCover();
                         String s = String.format(getString(R.string.create_notebook_success), notebookSubject);
                         UiUtils.showSnack(expireCalendar, s);
                     }
                     setResult(RESULT_OK);
-                    supportFinishAfterTransition();
+                    if (coverChanged) {
+                        finish();
+                    } else {
+                        supportFinishAfterTransition();
+                    }
 
                 }, throwable -> {
                     if (isEditMode) {
@@ -311,7 +318,7 @@ public class EditNotebookActivity extends BaseActivity {
 
     @Override
     public boolean onPrepareOptionsMenu(Menu menu) {
-        boolean enabled = !TextUtils.isEmpty(notebookSubject) && notebookChanged;
+        boolean enabled = !TextUtils.isEmpty(notebookSubject) || notebookChanged;
         MenuItem item = menu.findItem(R.id.action_send);
         Drawable resIcon = ResourcesCompat.getDrawable(getResources(), R.drawable.ic_send_white_36px, getTheme());
         if (!enabled) {

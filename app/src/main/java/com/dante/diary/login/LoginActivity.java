@@ -25,24 +25,29 @@ import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import com.andrognito.patternlockview.PatternLockView;
+import com.andrognito.patternlockview.listener.PatternLockViewListener;
 import com.blankj.utilcode.utils.KeyboardUtils;
 import com.dante.diary.R;
 import com.dante.diary.base.BaseActivity;
 import com.dante.diary.base.Constants;
+import com.dante.diary.custom.LockPatternUtil;
 import com.dante.diary.main.MainActivity;
 import com.dante.diary.model.User;
+import com.dante.diary.setting.SettingFragment;
 import com.dante.diary.utils.DateUtil;
 import com.dante.diary.utils.SpUtil;
 import com.dante.diary.utils.UiUtils;
 
 import java.io.IOException;
 import java.util.Date;
+import java.util.List;
 
 import butterknife.BindView;
 import rx.Subscriber;
 import top.wefor.circularanim.CircularAnim;
 
-public class LoginActivity extends BaseActivity {
+public class LoginActivity extends BaseActivity implements PatternLockViewListener {
     public static final int STARTUP_DELAY = 400;
     public static final int ANIM_DURATION = 1200;
     public static final int ITEM_DELAY = 300;
@@ -81,6 +86,8 @@ public class LoginActivity extends BaseActivity {
     TextInputEditText nameEt;
     @BindView(R.id.nameWrapper)
     TextInputLayout nameWrapper;
+    @BindView(R.id.pattern_lock)
+    PatternLockView patternView;
     private int LOGO_TRANSLATION_Y = -600;
     private String nickName;
     private String password;
@@ -89,6 +96,7 @@ public class LoginActivity extends BaseActivity {
     private String emailAccount;
     private boolean animationFinished;
     private boolean isLogin;
+    private boolean hasPassword;
 
 
     @Override
@@ -104,6 +112,7 @@ public class LoginActivity extends BaseActivity {
     @Override
     protected void initViews(@Nullable Bundle savedInstanceState) {
         super.initViews(savedInstanceState);
+//        animate();
     }
 
     @Override
@@ -118,6 +127,13 @@ public class LoginActivity extends BaseActivity {
     private void animate() {
         animationStarted = true;
         isLogin = LoginManager.isLogin();
+        hasPassword = SpUtil.getBoolean(SettingFragment.HAS_PATTERN_LOCK);
+        if (isLogin && SpUtil.getBoolean(SettingFragment.SHORT_SPLASH)) {
+            slogan.setText(R.string.app_name);
+            Log.d(TAG, "animate: " + SpUtil.getBoolean(SettingFragment.HAS_PATTERN_LOCK));
+            new Handler().postDelayed(() -> loginSuccess(slogan), 600);
+            return;
+        }
 
         slogan.animate()
                 .translationY(isLogin ? LOGO_TRANSLATION_Y * 2 / 3 : LOGO_TRANSLATION_Y)
@@ -131,7 +147,13 @@ public class LoginActivity extends BaseActivity {
                     @Override
                     public void onAnimationEnd(Animator animation) {
                         if (isLogin) {
-                            CircularAnim.hide(login).triggerView(progressLogin).go(() -> loginSuccess(false));
+                            if (SpUtil.getBoolean(SettingFragment.HAS_PATTERN_LOCK)) {
+                                patternView.setVisibility(View.VISIBLE);
+                                patternView.animate().alpha(1).start();
+                                patternView.addPatternLockListener(LoginActivity.this);
+                            } else {
+                                loginSuccess(timePill);
+                            }
                         }
                     }
                 })
@@ -323,7 +345,7 @@ public class LoginActivity extends BaseActivity {
                 }, throwable -> {
                     showRegister();
                     UiUtils.showSnack(register, getString(R.string.register_failed));
-                    throwable.printStackTrace();
+                    Log.e("test", "fetch: " + throwable.getMessage());
                 });
     }
 
@@ -379,7 +401,7 @@ public class LoginActivity extends BaseActivity {
 
                     @Override
                     public void onCompleted() {
-                        loginSuccess(true);
+                        loginSuccess(login);
                     }
 
                     @Override
@@ -399,11 +421,11 @@ public class LoginActivity extends BaseActivity {
     }
 
 
-    private void loginSuccess(boolean fromButton) {
+    private void loginSuccess(View view) {
         eraseMemory();
-        CircularAnim.fullActivity(this, fromButton ? login : slogan)
+        CircularAnim.fullActivity(this, view)
                 .colorOrImageRes(R.color.colorPrimary)
-//                .duration(isLogin ? 400 : 600)
+                .duration(600)
                 .go(() -> {
                     startActivity(new Intent(getApplicationContext(), MainActivity.class));
                     finish();
@@ -428,4 +450,33 @@ public class LoginActivity extends BaseActivity {
         SpUtil.save(Constants.ID, id);
     }
 
+    @Override
+    public void onStarted() {
+
+    }
+
+    @Override
+    public void onProgress(List<PatternLockView.Dot> progressPattern) {
+
+    }
+
+    @Override
+    public void onComplete(List<PatternLockView.Dot> pattern) {
+        LockPatternUtil.checkPattern(pattern, patternView, new LockPatternUtil.OnCheckPatternResult() {
+            @Override
+            public void onSuccess() {
+                loginSuccess(patternView);
+            }
+
+            @Override
+            public void onFailed() {
+
+            }
+        });
+    }
+
+    @Override
+    public void onCleared() {
+
+    }
 }

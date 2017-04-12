@@ -10,7 +10,9 @@ import android.os.Handler;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.TextInputLayout;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.view.MenuItemCompat;
+import android.support.v4.widget.NestedScrollView;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.ShareActionProvider;
@@ -18,10 +20,12 @@ import android.support.v7.widget.Toolbar;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -40,8 +44,8 @@ import com.chad.library.adapter.base.listener.OnItemClickListener;
 import com.dante.diary.R;
 import com.dante.diary.base.BaseFragment;
 import com.dante.diary.base.Constants;
+import com.dante.diary.custom.BottomDialogFragment;
 import com.dante.diary.edit.EditDiaryActivity;
-import com.dante.diary.custom.BottomCommentFragment;
 import com.dante.diary.interfaces.IOnItemClickListener;
 import com.dante.diary.login.LoginManager;
 import com.dante.diary.model.Comment;
@@ -63,6 +67,7 @@ import java.util.HashMap;
 import java.util.List;
 
 import butterknife.BindView;
+import butterknife.ButterKnife;
 import jp.wasabeef.glide.transformations.RoundedCornersTransformation;
 
 import static com.dante.diary.R.id.commit;
@@ -105,10 +110,12 @@ public class DiaryDetailFragment extends BaseFragment implements SwipeRefreshLay
     View divider;
     @BindView(R.id.diary_layout)
     RelativeLayout diaryLayout;
+    @BindView(R.id.scrollView)
+    NestedScrollView scrollView;
     private ShareActionProvider mShareActionProvider;
     private int diaryId;
     private String commentTemp;
-    private BottomCommentFragment commentFragment;
+    private BottomDialogFragment commentFragment;
     private long start;
 
     public DiaryDetailFragment() {
@@ -154,6 +161,8 @@ public class DiaryDetailFragment extends BaseFragment implements SwipeRefreshLay
         commentsRecycler.setLayoutManager(layoutManager);
         commentsRecycler.setNestedScrollingEnabled(false);//recyclerView在NestedScrollView中顺滑的秘诀
         commentsRecycler.setAdapter(adapter);
+        swipeRefresh.setColorSchemeColors(ContextCompat.getColor(getContext(), R.color.colorPrimary),
+                ContextCompat.getColor(getContext(), R.color.colorAccent), ContextCompat.getColor(getContext(), R.color.indigo_500));
         swipeRefresh.setOnRefreshListener(this);
         commentsRecycler.addOnItemTouchListener(new OnItemClickListener() {
             @Override
@@ -228,6 +237,12 @@ public class DiaryDetailFragment extends BaseFragment implements SwipeRefreshLay
         //本来 onCreateOptionsMenu 已填充了分享Menu，但是却遇到了一个诡异的bug
         // 就是当前的fragment不显示分享menu（左右滑动发现其他fragment都有分享按钮）。所以只好用这个work-around
         toolbar.inflateMenu(R.menu.menu_detail);
+        toolbar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                scrollView.smoothScrollTo(0, 0);
+            }
+        });
         fetch();
 
     }
@@ -262,7 +277,7 @@ public class DiaryDetailFragment extends BaseFragment implements SwipeRefreshLay
     }
 
     private void comment() {
-        commentFragment = BottomCommentFragment.create(R.layout.comment_layout)
+        commentFragment = BottomDialogFragment.create(R.layout.comment_layout)
                 .with(this)
                 .bindView(v -> {
                     TextInputLayout textInputLayout = (TextInputLayout) v.findViewById(R.id.commentTextInputLayout);
@@ -292,7 +307,7 @@ public class DiaryDetailFragment extends BaseFragment implements SwipeRefreshLay
 
 
     private void comment(int recipientId, String userName) {
-        commentFragment = BottomCommentFragment.create(R.layout.comment_layout)
+        commentFragment = BottomDialogFragment.create(R.layout.comment_layout)
                 .with(this)
                 .bindView(v -> {
                     TextInputLayout textInputLayout = (TextInputLayout) v.findViewById(R.id.commentTextInputLayout);
@@ -391,6 +406,7 @@ public class DiaryDetailFragment extends BaseFragment implements SwipeRefreshLay
         diaryDate.setText(DateUtil.getDisplayDay(diary.getCreated()));
         content.setText(diary.getContent());
         diaryLayout.setOnLongClickListener(this);
+        content.setOnLongClickListener(this);
         //给名字加蓝
         String name = diary.getUser().getName();
         SimpleText sText = SimpleText.create(getContext(), name)
@@ -436,11 +452,6 @@ public class DiaryDetailFragment extends BaseFragment implements SwipeRefreshLay
     private void initFab() {
         new Handler().postDelayed(() -> fab.show(), 400);
         fab.setOnClickListener(v -> comment());
-
-//                if (!TextUtils.isEmpty(commentTemp)) {
-//                    UiUtils.showSnack(rootView, getString(R.string.content_saved_as_draft));
-
-
     }
 
 
@@ -450,7 +461,6 @@ public class DiaryDetailFragment extends BaseFragment implements SwipeRefreshLay
         initFab();
         inflateComments(comments);
         startTransition();
-
 
         goCertainComment(comments);
     }
@@ -573,17 +583,22 @@ public class DiaryDetailFragment extends BaseFragment implements SwipeRefreshLay
                 .compose(applySchedulers())
                 .subscribe(responseBodyResponse -> {
                     UiUtils.showSnack(content, getString(R.string.diary_delete_success));
-                    try {
-                        log("respone" + responseBodyResponse.body().string());
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
+                    base.deleteDiary(diaryId);
+                    new Handler().postDelayed(() -> getActivity().onBackPressed(), 400);
+
                 }, throwable -> {
                     UiUtils.showSnackLong(content, getString(R.string.diary_delete_failed));
                     throwable.printStackTrace();
                 });
     }
 
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        // TODO: inflate a fragment view
+        View rootView = super.onCreateView(inflater, container, savedInstanceState);
+        ButterKnife.bind(this, rootView);
+        return rootView;
+    }
 }
 
 

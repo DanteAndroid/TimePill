@@ -45,9 +45,12 @@
         <item name="android:windowExitAnimation">@anim/slide_out_from_bottom</item>
     </style>
 
-    <style name="BottomSheetDialog" parent="@android:style/Theme.DeviceDefault.Light.Dialog">
+    <style name="BottomCommentDialog" parent="@android:style/Theme.DeviceDefault.Light.Dialog">
         <item name="android:windowAnimationStyle">@style/BottomAnimationStyle</item>
         <item name="android:windowSoftInputMode">stateAlwaysVisible|adjustPan</item>
+    </style>
+    <style name="BottomDialog" parent="@android:style/Theme.DeviceDefault.Light.Dialog">
+        <item name="android:windowAnimationStyle">@style/BottomAnimationStyle</item>
     </style>
     <style name="AppTheme.NoActionBar.AppBarOverlay"
            parent="ThemeOverlay.AppCompat.Dark.ActionBar"/>

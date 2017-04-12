@@ -23,36 +23,29 @@ import com.dante.diary.utils.UiUtils;
 import com.tbruyelle.rxpermissions.RxPermissions;
 
 import butterknife.BindView;
+import ooo.oxo.library.widget.TouchImageView;
 import rx.Observable;
 import rx.Subscription;
-import uk.co.senab.photoview.PhotoView;
-import uk.co.senab.photoview.PhotoViewAttacher;
-
-import static com.dante.diary.base.App.context;
 
 /**
  * A simple {@link Fragment} subclass.
  */
-public class ViewerFragment extends BaseFragment implements View.OnLongClickListener, PhotoViewAttacher.OnPhotoTapListener {
+public class PictureFragment extends BaseFragment implements View.OnLongClickListener {
 
     @BindView(R.id.image)
-    PhotoView imageView;
+    TouchImageView imageView;
     private Bitmap bitmap;
     private String url;
 
 
-    public static ViewerFragment newInstance(String url) {
-        ViewerFragment fragment = new ViewerFragment();
+    public static PictureFragment newInstance(String url) {
+        PictureFragment fragment = new PictureFragment();
         Bundle args = new Bundle();
         args.putString(Constants.URL, url);
         fragment.setArguments(args);
         return fragment;
     }
 
-    @Override
-    protected void setAnimations() {
-//        postponeEnterTransition();
-    }
 
     @Override
     protected int initLayoutId() {
@@ -68,8 +61,7 @@ public class ViewerFragment extends BaseFragment implements View.OnLongClickList
 
     @Override
     protected void initData() {
-        imageView.setScaleLevels(0.5f, 1.0f, 2.2f);
-        imageView.setOnPhotoTapListener(this);
+        imageView.setSingleTapListener(() -> getActivity().onBackPressed());
         imageView.setOnLongClickListener(this);
     }
 
@@ -119,7 +111,7 @@ public class ViewerFragment extends BaseFragment implements View.OnLongClickList
                 })
                 .compose(applySchedulers())
                 .subscribe(uri -> {
-                    Share.shareImage(context, uri);
+                    Share.shareImage(getActivity(), uri);
                 });
         compositeSubscription.add(subscription);
     }
@@ -151,13 +143,4 @@ public class ViewerFragment extends BaseFragment implements View.OnLongClickList
     }
 
 
-    @Override
-    public void onPhotoTap(View view, float x, float y) {
-        getActivity().onBackPressed();
-    }
-
-    @Override
-    public void onOutsidePhotoTap() {
-        getActivity().onBackPressed();
-    }
 }

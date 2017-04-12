@@ -5,7 +5,7 @@
              android:layout_height="match_parent"
              android:background="@color/bb_darkBackgroundColor">
 
-    <uk.co.senab.photoview.PhotoView
+    <ooo.oxo.library.widget.TouchImageView
         android:id="@+id/image"
         android:layout_width="match_parent"
         android:layout_height="match_parent"

@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.support.design.internal.NavigationMenu;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -24,10 +25,10 @@ import com.dante.diary.base.BaseActivity;
 import com.dante.diary.base.BottomBarActivity;
 import com.dante.diary.base.Constants;
 import com.dante.diary.base.RecyclerFragment;
-import com.dante.diary.edit.EditDiaryActivity;
-import com.dante.diary.edit.EditNotebookActivity;
 import com.dante.diary.custom.Updater;
 import com.dante.diary.detail.DiariesViewerActivity;
+import com.dante.diary.edit.EditDiaryActivity;
+import com.dante.diary.edit.EditNotebookActivity;
 import com.dante.diary.login.LoginManager;
 import com.dante.diary.model.Diary;
 import com.dante.diary.setting.SettingActivity;
@@ -301,7 +302,7 @@ public class MainDiaryFragment extends RecyclerFragment implements OrderedRealmC
                     public void onError(Throwable e) {
                         adapter.loadMoreFail();
                         changeState(false);
-                        e.printStackTrace();
+                        Log.e("test", "fetch: " + e.getMessage());
                     }
 
                     @Override
@@ -318,7 +319,6 @@ public class MainDiaryFragment extends RecyclerFragment implements OrderedRealmC
         }
 
         compositeSubscription.add(subscription);
-
 
     }
 
@@ -345,13 +345,13 @@ public class MainDiaryFragment extends RecyclerFragment implements OrderedRealmC
             adapter.notifyDataSetChanged();
             return;
         }
-//        // For deletions, the adapter has to be notified in reverse order.
-//        OrderedCollectionChangeSet.Range[] deletions = changeSet.getDeletionRanges();
-//        for (int i = deletions.length - 1; i >= 0; i--) {
-//            OrderedCollectionChangeSet.Range range = deletions[i];
-//            log("no notifyItemRangeRemoved " + range.startIndex+" to "+range.length);
-//            adapter.notifyItemRangeRemoved(range.startIndex, range.length);
-//        }
+        // For deletions, the adapter has to be notified in reverse order.
+        OrderedCollectionChangeSet.Range[] deletions = changeSet.getDeletionRanges();
+        for (int i = deletions.length - 1; i >= 0; i--) {
+            OrderedCollectionChangeSet.Range range = deletions[i];
+            log("no notifyItemRangeRemoved " + range.startIndex + " to " + range.length);
+            adapter.notifyItemRangeRemoved(range.startIndex, range.length);
+        }
         OrderedCollectionChangeSet.Range[] insertions = changeSet.getInsertionRanges();
         for (OrderedCollectionChangeSet.Range range : insertions) {
             log("no notifyItemRangeInserted " + range.startIndex + " to " + range.length);
@@ -364,7 +364,7 @@ public class MainDiaryFragment extends RecyclerFragment implements OrderedRealmC
 
 //        OrderedCollectionChangeSet.Range[] modifications = changeSet.getChangeRanges();
 //        for (OrderedCollectionChangeSet.Range range : modifications) {
-//            log("no notifyItemRangeChanged " + range.startIndex+" to "+range.length);
+//            log("notifyItemRangeChanged " + range.startIndex + " to " + (range.startIndex + range.length));
 //            adapter.notifyItemRangeChanged(range.startIndex, range.length);
 //        }
     }
@@ -376,7 +376,11 @@ public class MainDiaryFragment extends RecyclerFragment implements OrderedRealmC
             startActivity(new Intent(getContext(), SettingActivity.class));
         } else if (id == R.id.action_share) {
             String text = SpUtil.get(Updater.SHARE_APP, getString(R.string.share_app_description));
+            Log.d("test", "check: get " + text);
+
             Share.shareText(getContext(), text);
+        } else if (id == 0) {
+
         }
         return true;
     }

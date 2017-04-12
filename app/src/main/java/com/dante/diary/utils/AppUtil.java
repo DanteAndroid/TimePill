@@ -10,11 +10,14 @@ import com.blankj.utilcode.utils.ClipboardUtils;
 import com.dante.diary.BuildConfig;
 import com.dante.diary.R;
 import com.dante.diary.base.Constants;
+import com.dante.diary.main.MainActivity;
 
 import java.util.List;
 
 import moe.feng.alipay.zerosdk.AlipayZeroSdk;
 
+import static android.content.Intent.FLAG_ACTIVITY_CLEAR_TOP;
+import static android.content.Intent.FLAG_ACTIVITY_NEW_TASK;
 import static com.dante.diary.base.App.context;
 
 /**
@@ -50,10 +53,10 @@ public class AppUtil {
         }
     }
 
-    public static void restartApp(){
-        Intent restart = context.getPackageManager()
-                .getLaunchIntentForPackage(context.getPackageName());
-        restart.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-        context.startActivity(restart);
+    public static void restartApp(Context context) {
+        Intent intent = new Intent(context, MainActivity.class);
+        intent.addFlags(FLAG_ACTIVITY_NEW_TASK);
+        intent.addFlags(FLAG_ACTIVITY_CLEAR_TOP);
+        context.startActivity(intent);
     }
 }

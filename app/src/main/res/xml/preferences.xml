@@ -13,10 +13,23 @@
             android:title="@string/my_notifications"/>
 
         <SwitchPreference
-            android:key="my_home"
             android:icon="@drawable/home"
+            android:key="pattern_lock"
+            android:title="@string/set_pattern_lock"/>
+
+
+        <CheckBoxPreference
+            android:icon="@drawable/ic_stay_current_portrait_black_24px"
+            android:key="short_splash"
+            android:summary="@string/set_short_splash_desc"
+            android:title="@string/set_short_splash"/>
+
+        <CheckBoxPreference
+            android:icon="@drawable/home"
+            android:key="my_home"
             android:summary="@string/set_my_home_desc"
             android:title="@string/set_my_home"/>
+
     </PreferenceCategory>
 
 

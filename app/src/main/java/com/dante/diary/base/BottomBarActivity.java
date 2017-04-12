@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
+import android.util.Log;
 
 import com.dante.diary.R;
 import com.dante.diary.follow.TabsFragment;
@@ -19,14 +20,14 @@ import butterknife.BindView;
 import rx.Subscription;
 
 public class BottomBarActivity extends BaseActivity implements FragNavController.RootFragmentListener {
-    public FragNavController controller;
-    @BindView(R.id.bottomBar)
-    public BottomBar bottomBar;
     private final int DIARIES = FragNavController.TAB1;
-    private int MAIN = FragNavController.TAB1;
     private final int FOLLOWING = FragNavController.TAB2;
     private final int NOTIFICATION = FragNavController.TAB3;
     private final int ME = FragNavController.TAB4;
+    public FragNavController controller;
+    @BindView(R.id.bottomBar)
+    public BottomBar bottomBar;
+    private int MAIN = FragNavController.TAB1;
 
     @Override
     protected void initViews(@Nullable Bundle savedInstanceState) {
@@ -44,10 +45,9 @@ public class BottomBarActivity extends BaseActivity implements FragNavController
     public void fetchNotifications() {
         Subscription subscription = LoginManager.getApi().getTips().compose(applySchedulers())
                 .subscribe(tipResults -> {
-                    if (!tipResults.isEmpty()) {
-                        bottomBar.getTabAtPosition(2).setBadgeCount(tipResults.size());
-                    }
-                });
+                    Log.d("test", "fetchNotifications: " + tipResults.size());
+                    bottomBar.getTabWithId(R.id.notification).setBadgeCount(tipResults.size());
+                }, throwable -> Log.e("test", "fetch: " + throwable.getMessage()));
         compositeSubscription.add(subscription);
     }
 

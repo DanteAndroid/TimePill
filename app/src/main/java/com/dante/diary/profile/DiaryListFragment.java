@@ -2,9 +2,9 @@ package com.dante.diary.profile;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -18,8 +18,8 @@ import com.chad.library.adapter.base.listener.OnItemClickListener;
 import com.dante.diary.R;
 import com.dante.diary.base.Constants;
 import com.dante.diary.base.RecyclerFragment;
+import com.dante.diary.base.ViewActivity;
 import com.dante.diary.detail.DiariesViewerActivity;
-import com.dante.diary.detail.DiaryDetailFragment;
 import com.dante.diary.login.LoginManager;
 import com.dante.diary.main.DiaryListAdapter;
 import com.dante.diary.model.Diary;
@@ -70,6 +70,7 @@ public class DiaryListFragment extends RecyclerFragment {
     @Override
     protected void initViews() {
         super.initViews();
+
         if (getArguments() != null) {
             //有参数则获取参数id
             id = getArguments().getInt(Constants.ID);
@@ -104,7 +105,7 @@ public class DiaryListFragment extends RecyclerFragment {
                 int id = view.getId();
                 if (id == R.id.avatar) {
                     goProfile(adapter.getItem(i).getUserId());
-                }else if (id == R.id.attachPicture) {
+                } else if (id == R.id.attachPicture) {
                     onPictureClicked(view, i);
                 }
 
@@ -125,7 +126,7 @@ public class DiaryListFragment extends RecyclerFragment {
             @Override
             public boolean onResourceReady(GlideDrawable resource, String model, Target<GlideDrawable> target, boolean isFromMemoryCache, boolean isFirstResource) {
                 progressBar.setVisibility(View.GONE);
-                TransitionHelper.startViewer(barActivity, view, url);
+                TransitionHelper.startViewer(getActivity(), view, url);
                 return false;
             }
         }).preload();
@@ -145,22 +146,21 @@ public class DiaryListFragment extends RecyclerFragment {
 
         } else {
             int diaryId = adapter.getItem(i).getId();
-            Fragment f = DiaryDetailFragment.newInstance(diaryId);
-            log("onDiaryClicked");
-            add(f);
+            ViewActivity.viewDiary(getActivity(), diaryId);
+//            Fragment f = DiaryDetailFragment.newInstance(diaryId);
+//            add(f);
         }
     }
 
     @Override
     protected void initData() {
         super.initData();
-
-        if (isFromNotebook){
+        if (isFromNotebook) {
+            initAppBar();
             toolbar.setTitle(subject);
             toolbar.setVisibility(View.VISIBLE);
             adapter.setIsFromNotebook(isFromNotebook);
         }
-
 
         fetch();
     }
@@ -176,6 +176,7 @@ public class DiaryListFragment extends RecyclerFragment {
                     }
 
                     if (page <= 1 && diaries.isEmpty()) {
+                        adapter.setNewData(null);
                         stateText.setText(R.string.no_today_diary);
                         stateText.setVisibility(View.VISIBLE);
                     } else {
@@ -184,7 +185,7 @@ public class DiaryListFragment extends RecyclerFragment {
                     }
 
                     changeRefresh(false);
-                }, Throwable::printStackTrace);
+                }, throwable -> Log.e("test", "fetch: " + throwable.getMessage()));
     }
 
     private Observable<List<Diary>> diariesSource() {

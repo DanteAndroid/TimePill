@@ -28,7 +28,10 @@ public class AboutActivity extends BaseActivity {
     @Override
     protected void initViews(@Nullable Bundle savedInstanceState) {
         super.initViews(savedInstanceState);
+        toolbar.setNavigationOnClickListener(v -> onBackPressed());
+
         versionName.setText(String.format(getString(R.string.version) + " %s(%s)", BuildConfig.VERSION_NAME, BuildConfig.VERSION_CODE));
+
 
         donate.setOnClickListener(v -> AppUtil.donate(AboutActivity.this));
     }

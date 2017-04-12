@@ -4,7 +4,7 @@ package com.dante.diary.base;
 import android.os.Handler;
 import android.support.annotation.CallSuper;
 import android.support.design.widget.FloatingActionButton;
-import android.support.v4.content.res.ResourcesCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -51,8 +51,8 @@ public abstract class RecyclerFragment extends BaseFragment implements SwipeRefr
     @Override
     protected void initViews() {
         recyclerView.setHasFixedSize(true);
-        swipeRefresh.setColorSchemeColors(getColor(R.color.colorPrimary),
-                getColor(R.color.colorPrimaryDark), getColor(R.color.colorAccent));
+        swipeRefresh.setColorSchemeColors(ContextCompat.getColor(getContext(), R.color.colorPrimary),
+                ContextCompat.getColor(getContext(), R.color.colorAccent), ContextCompat.getColor(getContext(), R.color.indigo_500));
         swipeRefresh.setOnRefreshListener(this);
         recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
 
@@ -64,7 +64,7 @@ public abstract class RecyclerFragment extends BaseFragment implements SwipeRefr
                     }
                 }
                 if (dy < -60) {
-                    if (getStackCount() == 0) {
+                    if (getStackCount() == 0 && barActivity != null) {
                         barActivity.showBottomBar();
                     }
                 }
@@ -101,10 +101,6 @@ public abstract class RecyclerFragment extends BaseFragment implements SwipeRefr
                 firstEnter = false;
             }
         }
-    }
-
-    public int getColor(int resId) {
-        return ResourcesCompat.getColor(getResources(), resId, null);
     }
 
     public void scrollToTop() {

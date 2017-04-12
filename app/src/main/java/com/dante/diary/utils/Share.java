@@ -1,8 +1,10 @@
 package com.dante.diary.utils;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
+import android.support.annotation.NonNull;
 
 import com.blankj.utilcode.utils.IntentUtils;
 import com.dante.diary.R;
@@ -20,10 +22,7 @@ public class Share {
                         context.getString(R.string.share_to)));
     }
 
-    public static void shareImage(Context context, Uri uri) {
-        if (uri == null) {
-            return;
-        }
+    public static void shareImage(Activity context, @NonNull Uri uri) {
         context.startActivity(
                 Intent.createChooser(IntentUtils.getShareImageIntent("", uri),
                         context.getString(R.string.share_to)));

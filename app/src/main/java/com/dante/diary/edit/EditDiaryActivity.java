@@ -9,7 +9,6 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.Nullable;
-import android.support.design.widget.TextInputLayout;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
@@ -26,11 +25,12 @@ import android.widget.Spinner;
 
 import com.blankj.utilcode.utils.KeyboardUtils;
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.dante.diary.R;
 import com.dante.diary.base.BaseActivity;
 import com.dante.diary.base.Constants;
-import com.dante.diary.custom.DrawActivity;
 import com.dante.diary.custom.PickPictureActivity;
+import com.dante.diary.draw.DrawActivity;
 import com.dante.diary.login.LoginManager;
 import com.dante.diary.model.Diary;
 import com.dante.diary.model.Notebook;
@@ -62,8 +62,8 @@ public class EditDiaryActivity extends BaseActivity {
     ImageView palette;
     @BindView(R.id.emoji)
     ImageView emoji;
-    @BindView(R.id.contentWrapper)
-    TextInputLayout contentWrapper;
+    //    @BindView(R.id.contentWrapper)
+//    TextInputLayout contentWrapper;
     @BindView(R.id.root)
     LinearLayout root;
     @BindView(R.id.attachPhoto)
@@ -105,14 +105,13 @@ public class EditDiaryActivity extends BaseActivity {
     private void initTools() {
         if (isEditMode) {
             photo.setVisibility(View.GONE);
+            palette.setVisibility(View.GONE);
         }
         photo.setOnClickListener(v -> startActivityForResult(new Intent(getApplicationContext(), PickPictureActivity.class), REQUEST_PICK_PICTURE));
 
-        palette.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                startActivityForResult(new Intent(getApplicationContext(), DrawActivity.class), REQUEST_DRAW);
-            }
+        palette.setOnClickListener(v -> {
+            KeyboardUtils.hideSoftInput(EditDiaryActivity.this);
+            startActivityForResult(new Intent(getApplicationContext(), DrawActivity.class), REQUEST_DRAW);
         });
     }
 
@@ -146,7 +145,7 @@ public class EditDiaryActivity extends BaseActivity {
                 }).show());
 
         photoFile = new File(path);
-        Glide.with(this).load(photoFile).into(attachPhoto);
+        Glide.with(this).load(photoFile).diskCacheStrategy(DiskCacheStrategy.NONE).into(attachPhoto);
     }
 
     private void fetchDiary() {
@@ -196,9 +195,9 @@ public class EditDiaryActivity extends BaseActivity {
             public void afterTextChanged(Editable s) {
                 diaryContent = s.toString().trim();
                 if (diaryContent.length() <= DIARY_CONTENT_TEXT_LIMIT) {
-                    contentWrapper.setError(getString(R.string.say_more));
+//                    contentWrapper.setError(getString(R.string.say_more));
                 } else {
-                    contentWrapper.setError("");
+//                    contentWrapper.setError("");
                     SpUtil.save("draft", diaryContent);
                 }
                 invalidateOptionsMenu();

@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.v4.widget.NestedScrollView
+    android:id="@+id/scrollView"
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -7,10 +8,10 @@
     tools:showIn="@layout/fragment_diary_detail">
 
     <LinearLayout
-        android:clickable="true"
-        android:focusableInTouchMode="true"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:clickable="true"
+        android:focusableInTouchMode="true"
         android:orientation="vertical">
 
         <TextView
@@ -27,7 +28,8 @@
             android:id="@+id/diary_layout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_margin="@dimen/activity_horizontal_margin">
+            android:layout_margin="@dimen/activity_horizontal_margin"
+            android:addStatesFromChildren="true">
 
             <ImageView
                 android:id="@+id/myAvatar"

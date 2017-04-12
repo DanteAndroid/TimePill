@@ -23,7 +23,7 @@ class NotebookListAdapter extends BaseQuickAdapter<Notebook, BaseViewHolder> {
 
     public NotebookListAdapter(List<Notebook> data) {
         super(R.layout.list_notebook_item, data);
-        setHasStableIds(true);
+//        setHasStableIds(true);
     }
 
     @Override

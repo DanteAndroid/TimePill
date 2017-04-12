@@ -15,6 +15,11 @@ import java.util.Locale;
  */
 public class DateUtil {
     public static final String LAST_DATE = "lastDate";
+    public final static long minute = 60 * 1000;// 1分钟
+    public final static long hour = 60 * minute;// 1小时
+    public final static long day = 24 * hour;// 1天
+    public final static long month = 31 * day;// 月
+    public final static long year = 12 * month;// 年
     private static final String TAG = "DateUtil";
 
     public static String getDisplayTime(Date date) {
@@ -22,10 +27,16 @@ public class DateUtil {
         return formatter.format(date);
     }
 
+    public static String getDisplayDayAndTime(Date date) {
+        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss", Locale.getDefault());
+        return formatter.format(date);
+    }
+
     public static String getDisplayDay(Date date) {
         SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
         return formatter.format(date);
     }
+
     public static String getDisplayDayOfMonth(Date date) {
         SimpleDateFormat formatter = new SimpleDateFormat("dd/MM", Locale.getDefault());
         return formatter.format(date);
@@ -60,6 +71,7 @@ public class DateUtil {
         calendar.add(Calendar.MONTH, 1);
         return calendar.getTime();
     }
+
     public static Date nextWeekDateOfToday() {
         Date today= new Date();
         Calendar calendar = Calendar.getInstance();
@@ -72,13 +84,6 @@ public class DateUtil {
         SimpleDateFormat formatter = new SimpleDateFormat("yyyy", Locale.getDefault());
         return formatter.format(created);
     }
-
-
-    public final static long minute = 60 * 1000;// 1分钟
-    public final static long hour = 60 * minute;// 1小时
-    public final static long day = 24 * hour;// 1天
-    public final static long month = 31 * day;// 月
-    public final static long year = 12 * month;// 年
 
     /**
      * 把Date转换为 "几分钟前"、"几小时前"

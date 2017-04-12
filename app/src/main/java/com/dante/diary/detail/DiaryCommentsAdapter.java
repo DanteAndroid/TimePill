@@ -1,4 +1,3 @@
-
 package com.dante.diary.detail;
 
 import android.widget.ImageView;
@@ -58,7 +57,7 @@ public class DiaryCommentsAdapter extends BaseQuickAdapter<Comment, BaseViewHold
         } else {
             //评论内容前面加上"回复 接收人："
             String recipient = item.getRecipient().getName();
-            content = String.format("回复 %s ：" + content, recipient);
+            content = String.format("回复 %s ：", recipient) + content;
 
             SimpleText sText = SimpleText.create(helper.itemView.getContext(), content)
                     .first(recipient)

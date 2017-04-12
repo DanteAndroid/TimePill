@@ -4,6 +4,7 @@ package com.dante.diary.follow;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -87,7 +88,7 @@ public class FollowListFragment extends RecyclerFragment {
 
                 }, throwable -> {
                     UiUtils.showSnack(rootView, getString(R.string.cant_get_following));
-                    throwable.printStackTrace();
+                    Log.e("test", "fetch: " + throwable.getMessage());
                 });
 
     }

@@ -119,4 +119,10 @@ public class DataBase {
         realm.removeAllChangeListeners();
         realm.close();
     }
+
+    public void deleteDiary(int diaryId) {
+        realm.beginTransaction();
+        realm.where(Diary.class).equalTo(Constants.ID, diaryId).findAll().deleteAllFromRealm();
+        realm.commitTransaction();
+    }
 }

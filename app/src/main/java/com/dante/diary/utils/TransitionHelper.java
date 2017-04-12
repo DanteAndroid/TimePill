@@ -9,7 +9,7 @@ import android.support.v4.view.ViewCompat;
 import android.view.View;
 
 import com.dante.diary.base.Constants;
-import com.dante.diary.detail.ViewerActivity;
+import com.dante.diary.detail.PictureActivity;
 
 /**
  * Created by yons on 17/3/21.
@@ -19,7 +19,7 @@ public class TransitionHelper {
 
     public static void startViewer(Activity context, View view, String url) {
         ViewCompat.setTransitionName(view, url);
-        Intent intent = new Intent(context.getApplicationContext(), ViewerActivity.class);
+        Intent intent = new Intent(context.getApplicationContext(), PictureActivity.class);
         intent.putExtra(Constants.URL, url);
         ActivityOptionsCompat options = ActivityOptionsCompat
                 .makeSceneTransitionAnimation(context, view, url);

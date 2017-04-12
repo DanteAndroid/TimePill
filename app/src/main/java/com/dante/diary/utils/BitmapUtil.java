@@ -20,6 +20,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.util.Date;
 
 import static com.dante.diary.base.App.context;
 
@@ -58,7 +59,7 @@ public class BitmapUtil {
     }
 
     public static File writeToFile(Bitmap bitmap) {
-        File file = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES), System.currentTimeMillis() + ".png");
+        File file = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES), DateUtil.getDisplayDayAndTime(new Date()) + ".png");
         try {
             FileOutputStream stream = new FileOutputStream(file);
             bitmap.compress(Bitmap.CompressFormat.PNG, 100, stream);

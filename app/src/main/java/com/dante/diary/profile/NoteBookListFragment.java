@@ -4,9 +4,9 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.ActivityOptionsCompat;
-import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewCompat;
 import android.support.v7.widget.StaggeredGridLayoutManager;
+import android.util.Log;
 import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,6 +18,7 @@ import com.chad.library.adapter.base.listener.OnItemClickListener;
 import com.dante.diary.R;
 import com.dante.diary.base.Constants;
 import com.dante.diary.base.RecyclerFragment;
+import com.dante.diary.base.ViewActivity;
 import com.dante.diary.edit.EditNotebookActivity;
 import com.dante.diary.login.LoginManager;
 import com.dante.diary.model.Notebook;
@@ -98,9 +99,11 @@ public class NoteBookListFragment extends RecyclerFragment {
     }
 
     private void onNotebookClicked(View view, int index) {
-        int userId = adapter.getItem(index).getId();
-        Fragment f = DiaryListFragment.newInstance(userId, adapter.getItem(index).getSubject());
-        add(f);
+        int id = adapter.getItem(index).getId();
+        String subject = adapter.getItem(index).getSubject();
+//        Fragment f = DiaryListFragment.newInstance(userId, subject);
+//        add(f);
+        ViewActivity.viewDiaryList(getActivity(), id, subject);
     }
 
     @Override
@@ -114,18 +117,12 @@ public class NoteBookListFragment extends RecyclerFragment {
 
         notebooks = base.findNotebooks(userId);
         adapter.setNewData(notebooks);
-    }
-
-
-    @Override
-    public void onStart() {
-        super.onStart();
         fetch();
     }
 
+
     protected void fetch() {
         changeRefresh(true);
-
         subscription = LoginManager.getApi()
                 .getMyNotebooks(userId)
                 .compose(applySchedulers())
@@ -134,11 +131,11 @@ public class NoteBookListFragment extends RecyclerFragment {
                         stateText.setText(R.string.no_notebook);
                         stateText.setVisibility(View.VISIBLE);
                     } else {
-                        adapter.notifyItemRangeChanged(0, notebooks.size());
+                        adapter.setNewData(notebooks);
                     }
                     base.save(notebooks);
                     changeRefresh(false);
-                }, Throwable::printStackTrace);
+                }, throwable -> Log.e("test", "fetch: " + throwable.getMessage()));
     }
 
     @Override

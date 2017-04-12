@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/fab_draw_clear"
+        android:icon="@drawable/ic_content_clear"
+        android:orderInCategory="0"
+        android:title="@string/draw_clear"/>
+    <item
+        android:id="@+id/fab_draw_attrs"
+        android:icon="@drawable/ic_image_color_lens"
+        android:orderInCategory="1"
+        android:title="@string/draw_attrs"/>
+
+    <!--<item-->
+    <!--android:id="@+id/fab_draw_mode"-->
+    <!--android:orderInCategory="1"-->
+    <!--android:icon="@drawable/ic_editor_mode_edit"-->
+    <!--android:title="@string/draw_mode"/>-->
+
+    <item
+        android:id="@+id/fab_draw_background"
+        android:icon="@drawable/ic_image_white_24px"
+        android:orderInCategory="3"
+        android:title="@string/draw_background"/>
+    <item
+        android:id="@+id/fab_draw_tool"
+        android:icon="@drawable/ic_image_brush"
+        android:orderInCategory="4"
+        android:title="@string/draw_brush"/>
+    <item
+        android:id="@+id/fab_draw_save"
+        android:icon="@drawable/ic_content_save"
+        android:orderInCategory="5"
+        android:title="@string/draw_save"/>
+
+</menu>

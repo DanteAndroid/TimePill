@@ -116,6 +116,13 @@
             </android.support.design.widget.TextInputLayout>
         </LinearLayout>
 
+        <com.andrognito.patternlockview.PatternLockView
+            android:id="@+id/pattern_lock"
+            android:layout_width="280dp"
+            android:layout_height="280dp"
+            android:alpha="0"
+            android:visibility="gone"/>
+
         <FrameLayout
             android:id="@+id/loginLayout"
             android:layout_width="match_parent"

@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.design.widget.CoordinatorLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fitsSystemWindows="true"
+    android:orientation="vertical">
+    <android.support.design.widget.AppBarLayout
+        android:id="@+id/appBar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:theme="@style/AppTheme.AppBarOverlay">
+
+        <android.support.v7.widget.Toolbar
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="?actionBarSize"
+            android:background="?attr/colorPrimary"
+            android:minHeight="48dp"
+            app:popupTheme="@style/AppTheme.PopupOverlay"/>
+    </android.support.design.widget.AppBarLayout>
+
+    <com.byox.drawview.views.DrawView
+        android:id="@+id/drawView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:dv_draw_anti_alias="true"
+        app:dv_draw_color="@color/colorPrimaryDark"
+        app:dv_draw_corners="round"
+        app:dv_draw_mode="draw"
+        app:dv_draw_tool="pen"
+        app:dv_draw_width="18"/>
+
+    <io.github.yavski.fabspeeddial.FabSpeedDial
+        android:id="@+id/fabMenu"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|end"
+        android:layout_margin="@dimen/activity_horizontal_margin"
+        app:fabGravity="bottom_end"
+        app:fabMenu="@menu/draw_menu"
+        app:miniFabBackgroundTint="?attr/colorAccent"
+        app:miniFabDrawableTint="@color/white"
+        app:miniFabTitleBackgroundTint="@color/colorAccent"
+        app:miniFabTitleTextColor="@color/white"/>
+
+</android.support.design.widget.CoordinatorLayout>

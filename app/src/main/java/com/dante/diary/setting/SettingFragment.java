@@ -5,25 +5,35 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.preference.CheckBoxPreference;
 import android.preference.Preference;
 import android.preference.PreferenceFragment;
 import android.preference.SwitchPreference;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
+import com.andrognito.patternlockview.PatternLockView;
+import com.andrognito.patternlockview.listener.PatternLockViewListener;
+import com.andrognito.patternlockview.utils.PatternLockUtils;
 import com.blankj.utilcode.utils.CleanUtils;
 import com.blankj.utilcode.utils.FileUtils;
 import com.dante.diary.R;
 import com.dante.diary.base.AboutActivity;
 import com.dante.diary.base.App;
 import com.dante.diary.base.BaseActivity;
+import com.dante.diary.custom.BottomDialogFragment;
+import com.dante.diary.custom.LockPatternUtil;
 import com.dante.diary.utils.AppUtil;
 import com.dante.diary.utils.SpUtil;
 import com.dante.diary.utils.UiUtils;
 
 import java.io.File;
+import java.util.List;
 
 import rx.Observable;
 import rx.android.schedulers.AndroidSchedulers;
@@ -41,12 +51,15 @@ public class SettingFragment extends PreferenceFragment implements Preference.On
     public static final String MY_HOME = "my_home";
     public static final String PROFILE = "profile";
     public static final String ABOUT = "about";
+    public static final String SHORT_SPLASH = "short_splash";
+    public static final String HAS_PATTERN_LOCK = "pattern_lock";
+    public static final String PATTERN_LOCK_PSW = "pattern_lock_psw";
     private static final long DURATION = 300;
-
     private Preference clearCache;
     private Preference feedback;
     private Preference version;
-    private SwitchPreference my;
+    private CheckBoxPreference my;
+    private SwitchPreference patternLock;
     private Preference about;
 
     private View rootView;
@@ -54,6 +67,8 @@ public class SettingFragment extends PreferenceFragment implements Preference.On
     private boolean first = true;
     private int secretIndex;
     private Preference theme;
+    private CheckBoxPreference shortSplash;
+    private BottomDialogFragment patternDialog;
 
 
     @Override
@@ -62,8 +77,24 @@ public class SettingFragment extends PreferenceFragment implements Preference.On
         addPreferencesFromResource(R.xml.preferences);
         clearCache = findPreference(CLEAR_CACHE);
         feedback = findPreference(FEED_BACK);
-        my = (SwitchPreference) findPreference(MY_HOME);
+        my = (CheckBoxPreference) findPreference(MY_HOME);
+        shortSplash = (CheckBoxPreference) findPreference(SHORT_SPLASH);
         about = findPreference(ABOUT);
+        patternLock = (SwitchPreference) findPreference(HAS_PATTERN_LOCK);
+        patternLock.setOnPreferenceChangeListener((preference, newValue) -> {
+            boolean enable = (boolean) newValue;
+            boolean hadLock = SpUtil.getBoolean(HAS_PATTERN_LOCK);
+            if (hadLock && !enable) {
+                showPatternLockDialog(getString(R.string.check_old_pattern));
+                return true;
+            }
+            if (enable) {
+                shortSplash.setChecked(false);
+                shortSplash.setEnabled(false);
+                showPatternLockDialog(null);
+            }
+            return true;
+        });
 //        theme = findPreference(THEME_COLOR);
         findPreference(PROFILE).setOnPreferenceClickListener(preference -> {
             replace(new ProfilePreferenceFragment());
@@ -80,14 +111,12 @@ public class SettingFragment extends PreferenceFragment implements Preference.On
         });
         clearCache.setOnPreferenceClickListener(this);
         feedback.setOnPreferenceClickListener(this);
-        my.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
-            @Override
-            public boolean onPreferenceChange(Preference preference, Object newValue) {
-                AppUtil.restartApp();
-                return true;
+        my.setOnPreferenceChangeListener((preference, newValue) -> {
+            if ((boolean) newValue) {
+                UiUtils.showSnack(getView(), getString(R.string.save_my_home_hint));
             }
+            return true;
         });
-
 
 //        theme.setOnPreferenceClickListener(preference -> {
 //            Log.i("test", secretIndex + ">>>>");
@@ -104,6 +133,61 @@ public class SettingFragment extends PreferenceFragment implements Preference.On
 ////                dialog.show();
 //            return true;
 //        });
+    }
+
+    private void showPatternLockDialog(String title) {
+        boolean isVerify = title != null;
+        patternDialog = BottomDialogFragment.create(R.layout.pattern_lock)
+                .with((AppCompatActivity) getActivity())
+                .gravity(Gravity.CENTER)
+                .isComment(false)
+                .cancelable(!isVerify)
+                .bindView(v -> {
+                    PatternLockView patternLockView = (PatternLockView) v.findViewById(R.id.pattern_lock);
+                    TextView textView = (TextView) v.findViewById(R.id.title);
+                    if (isVerify) {
+                        textView.setText(title);
+                    }
+                    patternLockView.addPatternLockListener(new PatternLockViewListener() {
+                        @Override
+                        public void onStarted() {
+
+                        }
+
+                        @Override
+                        public void onProgress(List<PatternLockView.Dot> progressPattern) {
+
+                        }
+
+                        @Override
+                        public void onComplete(List<PatternLockView.Dot> pattern) {
+                            if (isVerify) {
+                                LockPatternUtil.checkPattern(pattern, patternLockView, new LockPatternUtil.OnCheckPatternResult() {
+                                    @Override
+                                    public void onSuccess() {
+                                        patternDialog.dismiss();
+                                        shortSplash.setEnabled(true);
+                                    }
+
+                                    @Override
+                                    public void onFailed() {
+                                        patternLock.setEnabled(true);
+                                    }
+                                });
+
+                            } else {
+                                SpUtil.save(SettingFragment.PATTERN_LOCK_PSW, PatternLockUtils.patternToString(patternLockView, patternLockView.getPattern()));
+                                patternDialog.dismiss();
+                            }
+                        }
+
+                        @Override
+                        public void onCleared() {
+
+                        }
+                    });
+                });
+        patternDialog.show();
     }
 
     private void refreshCache() {
@@ -171,7 +255,7 @@ public class SettingFragment extends PreferenceFragment implements Preference.On
                             if (success) {
                                 refreshCache();
                                 UiUtils.showSnack(rootView, R.string.clear_finished);
-                                AppUtil.restartApp();
+                                AppUtil.restartApp(getActivity());
 
                             } else {
                                 UiUtils.showSnack(rootView, R.string.clear_cache_failed);
