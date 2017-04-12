@@ -200,9 +200,9 @@ public class ProfileFragment extends BaseFragment {
         intro.setText(user.getIntro());
         intro.setOnClickListener(v -> {
             Dialog dialog = new Dialog(getActivity());
-            dialog.setContentView(R.layout.text);
+            dialog.setContentView(R.layout.intro_detail);
             dialog.show();
-            TextView textView = (TextView) dialog.findViewById(R.id.text);
+            TextView textView = (TextView) dialog.findViewById(R.id.introduction);
             textView.setOnClickListener(v1 -> dialog.dismiss());
             textView.setText(user.getIntro());
 
@@ -233,10 +233,10 @@ public class ProfileFragment extends BaseFragment {
                     }
 
                     @Override
-                    public void onNext(User t) {
-                        id = t.getId();
-                        user = t;
-                        base.save(t);
+                    public void onNext(User user) {
+                        id = user.getId();
+                        ProfileFragment.this.user = user;
+                        base.save(user);
                     }
                 });
 
@@ -260,7 +260,7 @@ public class ProfileFragment extends BaseFragment {
                     fab.show();
                     changeFollowState(false);
                     loadProfile();
-                    throwable.printStackTrace();
+
                 });
         compositeSubscription.add(subscription);
     }

@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto" android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical">
 
     <EditText
         android:id="@+id/introEt"
         android:layout_width="match_parent"
-        android:layout_height="90dp"
+        android:layout_height="120dp"
         android:layout_margin="@dimen/activity_horizontal_margin"
         android:gravity="start"
         android:hint="@string/intro_hint"
@@ -20,9 +20,9 @@
         android:layout_width="wrap_content"
         android:layout_height="38dp"
         android:layout_gravity="end"
-        android:layout_marginBottom="@dimen/activity_horizontal_margin"
+        android:layout_marginBottom="8dp"
         android:layout_marginRight="@dimen/activity_horizontal_margin"
-        android:src="@drawable/ic_send_black_24px"
-        android:text="@string/commit"/>
+        android:text="@string/commit"
+        app:srcCompat="@drawable/ic_send_black_24px"/>
 
 </LinearLayout>

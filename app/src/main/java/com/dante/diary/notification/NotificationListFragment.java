@@ -81,8 +81,7 @@ public class NotificationListFragment extends RecyclerFragment implements IOnIte
                         e.printStackTrace();
                     }
                 }, throwable -> {
-                    UiUtils.showSnack(rootView, getString(R.string.cant_connect_net));
-                    throwable.printStackTrace();
+                    UiUtils.showSnack(rootView, getString(R.string.cant_connect_net) + throwable.getMessage());
                 });
     }
 
@@ -112,8 +111,7 @@ public class NotificationListFragment extends RecyclerFragment implements IOnIte
                         e.printStackTrace();
                     }
                 }, throwable -> {
-                    UiUtils.showSnack(rootView, getString(R.string.cant_connect_net));
-                    throwable.printStackTrace();
+                    UiUtils.showSnack(rootView, getString(R.string.cant_connect_net) + throwable.getMessage());
                 });
     }
 
@@ -136,9 +134,8 @@ public class NotificationListFragment extends RecyclerFragment implements IOnIte
                     adapter.setNewData(tipResults);
                     changeRefresh(false);
                 }, throwable -> {
-                    UiUtils.showSnack(rootView, getString(R.string.cant_get_notifications));
+                    UiUtils.showSnack(rootView, getString(R.string.cant_get_notifications) + throwable.getMessage());
                     changeRefresh(false);
-                    throwable.printStackTrace();
                 });
     }
 

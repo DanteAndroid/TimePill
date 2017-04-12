@@ -300,9 +300,8 @@ public class EditNotebookActivity extends BaseActivity {
                     if (isEditMode) {
                         UiUtils.showSnack(expireCalendar, String.format(getString(R.string.update_failed) + " %s", throwable.getMessage()));
                     } else {
-                        UiUtils.showSnack(expireCalendar, getString(R.string.fail_to_create_notebook));
+                        UiUtils.showSnack(expireCalendar, getString(R.string.fail_to_create_notebook) + throwable.getMessage());
                     }
-                    throwable.printStackTrace();
                 });
     }
 

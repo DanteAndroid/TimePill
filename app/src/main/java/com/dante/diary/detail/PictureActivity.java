@@ -2,14 +2,19 @@ package com.dante.diary.detail;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.design.widget.CoordinatorLayout;
 import android.support.v4.app.Fragment;
 
 import com.dante.diary.R;
 import com.dante.diary.base.BaseActivity;
 import com.dante.diary.base.Constants;
 
+import butterknife.BindView;
+
 public class PictureActivity extends BaseActivity {
     private static final String TAG = "ViewerActivity";
+    @BindView(R.id.frame_layout)
+    CoordinatorLayout frameLayout;
 
     private String url;
 
@@ -22,7 +27,7 @@ public class PictureActivity extends BaseActivity {
     protected void initViews(@Nullable Bundle savedInstanceState) {
         super.initViews(savedInstanceState);
         supportPostponeEnterTransition();
-
+        frameLayout.setFitsSystemWindows(false);
         url = getIntent().getStringExtra(Constants.URL);
         Fragment fragment = PictureFragment.newInstance(url);
         getSupportFragmentManager().beginTransaction()

@@ -155,8 +155,7 @@ public class EditDiaryActivity extends BaseActivity {
                     EditDiaryActivity.this.diary = diary1;
                     inflateDiary();
                 }, throwable -> {
-                    UiUtils.showSnackLong(content, R.string.cant_get_diary);
-                    throwable.printStackTrace();
+                    UiUtils.showSnackLong(content, getString(R.string.cant_get_diary) + throwable.getMessage());
                 });
     }
 
@@ -245,10 +244,8 @@ public class EditDiaryActivity extends BaseActivity {
                     supportFinishAfterTransition();
 
                 }, throwable -> {
-
                     KeyboardUtils.hideSoftInput(EditDiaryActivity.this);
                     UiUtils.showSnackLong(subjectSpinner, getString(R.string.create_diary_failed) + throwable.getMessage());
-                    throwable.printStackTrace();
                 });
     }
 

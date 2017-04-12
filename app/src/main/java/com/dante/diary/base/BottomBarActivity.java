@@ -53,13 +53,13 @@ public class BottomBarActivity extends BaseActivity implements FragNavController
 
     public void hideBottomBar() {
         bottomBar.animate().translationY(bottomBar.getHeight())
-                .setDuration(300)
+                .setDuration(200)
                 .start();
     }
 
     public void showBottomBar() {
         bottomBar.animate().translationY(0)
-                .setDuration(300)
+                .setDuration(200)
                 .start();
     }
 

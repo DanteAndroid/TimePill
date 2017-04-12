@@ -68,6 +68,7 @@
                 android:autoLink="all"
                 android:lineSpacingMultiplier="1.2"
                 android:textColor="@color/primaryText"
+                android:textIsSelectable="true"
                 android:textSize="16sp"
                 tools:text="@string/test_diary"/>
 

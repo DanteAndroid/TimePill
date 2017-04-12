@@ -32,7 +32,10 @@
         android:key="intro"
         android:selectAllOnFocus="true"
         android:title="@string/pref_intro"/>
-
+    <Preference
+        android:icon="@drawable/ic_info_outline_black_24px"
+        android:key="user_id"
+        android:title="@string/pref_id"/>
 
     <!-- NOTE: ListPreference's summary should be set to its value by the activity code. -->
     <!--<ListPreference-->

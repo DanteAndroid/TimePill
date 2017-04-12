@@ -141,7 +141,7 @@
     <string name="tips_content">点击标签或者标题可跳转到顶部</string>
     <string name="about_me">关于我</string>
     <string name="about_me_description">我是个热爱 Google 的 Android 开发者，现在上海，如果有好的职位可以推荐给我~</string>
-    <string name="my_email" translatable="false">danteandroid@gmail.com</string>
+    <string name="my_email" translatable="false">danteandroi@gmail.com</string>
     <string name="license" translatable="false">License</string>
     <string name="license_description">本APP已得到站长授权。如有任何建议请直接联系我</string>
     <string name="set_current_cache">当前缓存为</string>
@@ -222,5 +222,7 @@
     <string name="commit">提交</string>
     <string name="intro_hint">说说你自己吧</string>
     <string name="time_order_reverse">时间倒序</string>
-    <string name="time_order_normal">时间正序</string>
+    <string name="time_order_normal">时间顺序</string>
+    <string name="pref_id">用户ID</string>
+    <string name="id_has_been_copied">用户id已复制</string>
 </resources>

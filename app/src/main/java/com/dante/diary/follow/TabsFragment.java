@@ -4,7 +4,6 @@ import android.os.Bundle;
 import android.support.design.widget.TabLayout;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
 import android.widget.TextView;
@@ -93,6 +92,9 @@ public class TabsFragment extends BaseFragment {
             @Override
             public void onTabReselected(TabLayout.Tab tab) {
                 fragments.get(tab.getPosition()).scrollToTop();
+                if (barActivity != null) {
+                    barActivity.showBottomBar();
+                }
             }
         });
         setupTabsIcon();

@@ -14,6 +14,7 @@ import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
 
+import com.blankj.utilcode.utils.ClipboardUtils;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.resource.drawable.GlideDrawable;
 import com.bumptech.glide.request.RequestListener;
@@ -47,6 +48,7 @@ public class ProfilePreferenceFragment extends PreferenceFragment {
     private static final String INTRO = "intro";
     private static final String GENDER = "gender";
     private static final String AVATAR = "avatar";
+    private static final String USER_ID = "user_id";
     private CompositeSubscription subscription = new CompositeSubscription();
     private Preference nickname;
     private ListPreference gender;
@@ -57,6 +59,7 @@ public class ProfilePreferenceFragment extends PreferenceFragment {
     private User user;
     private Preference avatar;
     private File photoFile;
+    private Preference userId;
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -110,6 +113,7 @@ public class ProfilePreferenceFragment extends PreferenceFragment {
         addPreferencesFromResource(R.xml.pref_profile);
         setHasOptionsMenu(true);
         nickname = findPreference(NICKNAME);
+        userId = findPreference(USER_ID);
         intro = findPreference(INTRO);
         gender = (ListPreference) findPreference(GENDER);
         avatar = findPreference(AVATAR);
@@ -169,10 +173,19 @@ public class ProfilePreferenceFragment extends PreferenceFragment {
             return true;
         });
 
+        userId.setOnPreferenceClickListener(preference -> {
+            if (preference.getSummary() != null) {
+                ClipboardUtils.copyText(preference.getSummary());
+                UiUtils.showSnack(getView(), getString(R.string.id_has_been_copied));
+            }
+            return true;
+        });
+
     }
 
     private void initUserInfo() {
         if (user != null) {
+            userId.setSummary(String.valueOf(user.getId()));
             nickName = user.getName();
             introduction = user.getIntro() == null ? "" : user.getIntro();
             nickname.setSummary(nickName);

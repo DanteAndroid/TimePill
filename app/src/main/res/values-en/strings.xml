@@ -218,6 +218,10 @@
     <string name="save_my_home_hint">My profile has been set as home page, takes effect until next
         entering
     </string>
+    <string name="id_has_been_copied">User id copied</string>
+    <string name="time_order_normal">Time order</string>
+    <string name="time_order_reverse">Time order reverse</string>
 
+    <string name="pref_id">User ID</string>
 
 </resources>

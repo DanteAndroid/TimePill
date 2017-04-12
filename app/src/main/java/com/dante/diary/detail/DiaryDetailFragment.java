@@ -20,12 +20,10 @@ import android.support.v7.widget.Toolbar;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
-import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -67,7 +65,6 @@ import java.util.HashMap;
 import java.util.List;
 
 import butterknife.BindView;
-import butterknife.ButterKnife;
 import jp.wasabeef.glide.transformations.RoundedCornersTransformation;
 
 import static com.dante.diary.R.id.commit;
@@ -225,8 +222,7 @@ public class DiaryDetailFragment extends BaseFragment implements SwipeRefreshLay
                         e.printStackTrace();
                     }
                 }, throwable -> {
-                    UiUtils.showSnack(rootView, R.string.delete_comment_failed);
-                    throwable.printStackTrace();
+                    UiUtils.showSnack(rootView, R.string.delete_comment_failed + throwable.getMessage());
                 });
     }
 
@@ -237,12 +233,7 @@ public class DiaryDetailFragment extends BaseFragment implements SwipeRefreshLay
         //本来 onCreateOptionsMenu 已填充了分享Menu，但是却遇到了一个诡异的bug
         // 就是当前的fragment不显示分享menu（左右滑动发现其他fragment都有分享按钮）。所以只好用这个work-around
         toolbar.inflateMenu(R.menu.menu_detail);
-        toolbar.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                scrollView.smoothScrollTo(0, 0);
-            }
-        });
+        toolbar.setOnClickListener(v -> scrollView.smoothScrollTo(0, 0));
         fetch();
 
     }
@@ -358,8 +349,7 @@ public class DiaryDetailFragment extends BaseFragment implements SwipeRefreshLay
 
                 }, throwable -> {
                     swipeRefresh.setRefreshing(false);
-                    UiUtils.showSnackLong(rootView, R.string.comment_failed);
-                    throwable.printStackTrace();
+                    UiUtils.showSnackLong(rootView, getString(R.string.comment_failed) + throwable.getMessage());
                 });
         commentTemp = null;
         commentFragment.dismiss();
@@ -384,7 +374,6 @@ public class DiaryDetailFragment extends BaseFragment implements SwipeRefreshLay
                 }, throwable -> {
                     swipeRefresh.setRefreshing(false);
                     UiUtils.showSnackLong(rootView, R.string.get_diary_failed);
-                    throwable.printStackTrace();
                 });
         compositeSubscription.add(subscription);
 
@@ -399,9 +388,11 @@ public class DiaryDetailFragment extends BaseFragment implements SwipeRefreshLay
         toolbar.setTitle(diary.getNotebookSubject());
 
         myAvatar.setOnClickListener(v -> goProfile(diary.getUserId()));
+
         Glide.with(this).load(diary.getUser().getAvatarUrl())
                 .bitmapTransform(new RoundedCornersTransformation(getContext(), 5, 0))
                 .into(myAvatar);
+        getActivity().supportPostponeEnterTransition();
 
         diaryDate.setText(DateUtil.getDisplayDay(diary.getCreated()));
         content.setText(diary.getContent());
@@ -542,24 +533,19 @@ public class DiaryDetailFragment extends BaseFragment implements SwipeRefreshLay
     @Override
     public boolean onLongClick(View v) {
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-        String[] items;
         if (LoginManager.isMe(diary.getUserId())) {
-            items = getResources().getStringArray(R.array.diary_menu_my);
-        } else {
-            items = new String[]{getString(R.string.copy)};
-        }
-        builder.setItems(items, (dialog, which) -> {
-            if (which == 0) {
-                ClipboardUtils.copyText(diary.getContent());
-                UiUtils.showSnack(content, R.string.content_copied);
-            } else if (which == 1) {
-                editDiary();
-            } else if (which == 2) {
-                deleteDiary();
+            String[] items = getResources().getStringArray(R.array.diary_menu_my);
+            builder.setItems(items, (dialog, which) -> {
+                if (which == 0) {
+                    editDiary();
+                } else if (which == 1) {
+                    deleteDiary();
 
-            }
-        }).show();
-        return true;
+                }
+            }).show();
+            return true;
+        }
+        return false;
     }
 
     @Override
@@ -587,18 +573,10 @@ public class DiaryDetailFragment extends BaseFragment implements SwipeRefreshLay
                     new Handler().postDelayed(() -> getActivity().onBackPressed(), 400);
 
                 }, throwable -> {
-                    UiUtils.showSnackLong(content, getString(R.string.diary_delete_failed));
-                    throwable.printStackTrace();
+                    UiUtils.showSnackLong(content, getString(R.string.diary_delete_failed) + throwable.getMessage());
                 });
     }
 
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        // TODO: inflate a fragment view
-        View rootView = super.onCreateView(inflater, container, savedInstanceState);
-        ButterKnife.bind(this, rootView);
-        return rootView;
-    }
 }
 
 

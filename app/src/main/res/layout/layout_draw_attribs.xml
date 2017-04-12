@@ -142,7 +142,7 @@
         <!--android:layout_height="wrap_content"-->
         <!--android:layout_gravity="center_horizontal"-->
         <!--android:padding="12dp"-->
-        <!--android:text="@string/font_size"-->
+        <!--android:intro_detail="@string/font_size"-->
         <!--android:textStyle="bold" />-->
 
         <!--<android.support.v7.widget.AppCompatSeekBar-->
@@ -166,7 +166,7 @@
         <!--android:layout_height="wrap_content"-->
         <!--android:layout_gravity="center_horizontal"-->
         <!--android:padding="12dp"-->
-        <!--android:text="Anti alias"-->
+        <!--android:intro_detail="Anti alias"-->
         <!--app:buttonTint="@color/colorAccent" />-->
 
         <!--<android.support.v7.widget.AppCompatCheckBox-->
@@ -175,7 +175,7 @@
         <!--android:layout_height="wrap_content"-->
         <!--android:layout_gravity="center_horizontal"-->
         <!--android:padding="12dp"-->
-        <!--android:text="Dither"-->
+        <!--android:intro_detail="Dither"-->
         <!--app:buttonTint="@color/colorAccent" />-->
         <!--</LinearLayout>-->
 
@@ -236,7 +236,7 @@
         <!--android:layout_height="wrap_content"-->
         <!--android:layout_gravity="center_horizontal"-->
         <!--android:padding="12dp"-->
-        <!--android:text="Paint cap"-->
+        <!--android:intro_detail="Paint cap"-->
         <!--android:textStyle="bold" />-->
 
         <!--<RadioGroup-->
@@ -251,7 +251,7 @@
         <!--android:layout_height="wrap_content"-->
         <!--android:layout_gravity="center_horizontal"-->
         <!--android:padding="12dp"-->
-        <!--android:text="Butt"-->
+        <!--android:intro_detail="Butt"-->
         <!--app:buttonTint="@color/colorAccent" />-->
 
         <!--<android.support.v7.widget.AppCompatRadioButton-->
@@ -260,7 +260,7 @@
         <!--android:layout_height="wrap_content"-->
         <!--android:layout_gravity="center_horizontal"-->
         <!--android:padding="12dp"-->
-        <!--android:text="Round"-->
+        <!--android:intro_detail="Round"-->
         <!--app:buttonTint="@color/colorAccent" />-->
 
         <!--<android.support.v7.widget.AppCompatRadioButton-->
@@ -269,7 +269,7 @@
         <!--android:layout_height="wrap_content"-->
         <!--android:layout_gravity="center_horizontal"-->
         <!--android:padding="12dp"-->
-        <!--android:text="Square"-->
+        <!--android:intro_detail="Square"-->
         <!--app:buttonTint="@color/colorAccent" />-->
         <!--</RadioGroup>-->
 
@@ -278,7 +278,7 @@
         <!--android:layout_height="wrap_content"-->
         <!--android:layout_gravity="center_horizontal"-->
         <!--android:padding="12dp"-->
-        <!--android:text="Paint typeface"-->
+        <!--android:intro_detail="Paint typeface"-->
         <!--android:textStyle="bold" />-->
 
         <!--<RadioGroup-->
@@ -293,7 +293,7 @@
         <!--android:layout_height="wrap_content"-->
         <!--android:layout_gravity="center_horizontal"-->
         <!--android:padding="12dp"-->
-        <!--android:text="Default"-->
+        <!--android:intro_detail="Default"-->
         <!--android:typeface="normal"-->
         <!--app:buttonTint="@color/colorAccent" />-->
 
@@ -303,7 +303,7 @@
         <!--android:layout_height="wrap_content"-->
         <!--android:layout_gravity="center_horizontal"-->
         <!--android:padding="12dp"-->
-        <!--android:text="Monospace"-->
+        <!--android:intro_detail="Monospace"-->
         <!--android:typeface="monospace"-->
         <!--app:buttonTint="@color/colorAccent" />-->
 
@@ -313,7 +313,7 @@
         <!--android:layout_height="wrap_content"-->
         <!--android:layout_gravity="center_horizontal"-->
         <!--android:padding="12dp"-->
-        <!--android:text="Sans serif"-->
+        <!--android:intro_detail="Sans serif"-->
         <!--android:typeface="sans"-->
         <!--app:buttonTint="@color/colorAccent" />-->
 
@@ -323,7 +323,7 @@
         <!--android:layout_height="wrap_content"-->
         <!--android:layout_gravity="center_horizontal"-->
         <!--android:padding="12dp"-->
-        <!--android:text="Serif"-->
+        <!--android:intro_detail="Serif"-->
         <!--android:typeface="serif"-->
         <!--app:buttonTint="@color/colorAccent" />-->
         <!--</RadioGroup>-->

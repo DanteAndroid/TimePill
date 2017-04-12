@@ -194,11 +194,11 @@ public class MainDiaryFragment extends RecyclerFragment implements OrderedRealmC
         recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
             public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
-                if (dy > 30) {
+                if (dy > 5) {
                     CoordinatorLayout.LayoutParams layoutParams = (CoordinatorLayout.LayoutParams) fabMenu.getLayoutParams();
                     int fab_bottomMargin = layoutParams.bottomMargin;
                     fabMenu.animate().translationY(fabMenu.getHeight() + fab_bottomMargin).setDuration(400).start();
-                } else if (dy < -60) {
+                } else if (dy < -30) {
                     fabMenu.animate().translationY(0).setDuration(400).start();
                 }
             }
@@ -211,6 +211,15 @@ public class MainDiaryFragment extends RecyclerFragment implements OrderedRealmC
         Intent intent = new Intent(context.getApplicationContext(), DiariesViewerActivity.class);
         intent.putExtra(Constants.POSITION, i);
         startActivity(intent);
+
+//        ImageView avatar = (ImageView) view.findViewById(R.id.avatar);
+//        int id = adapter.getItem(i).getId();
+//        ViewCompat.setTransitionName(avatar, String.valueOf(id));
+//        Intent intent = new Intent(getContext().getApplicationContext(), DiariesViewerActivity.class);
+//        intent.putExtra(Constants.ID, id);
+//        ActivityOptionsCompat options = ActivityOptionsCompat
+//                .makeSceneTransitionAnimation(getActivity(), avatar, String.valueOf(id));
+//        ActivityCompat.startActivity(getContext(), intent, options.toBundle());
     }
 
     @Override

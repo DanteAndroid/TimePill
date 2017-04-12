@@ -12,6 +12,7 @@
         android:id="@+id/container"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:fitsSystemWindows="true"
         app:layout_behavior="@string/appbar_scrolling_view_behavior">
     </android.support.design.widget.CoordinatorLayout>
 
@@ -24,7 +25,7 @@
         android:layout_gravity="bottom"
         android:background="@color/white"
         app:bb_activeTabColor="@color/secondText"
-        app:bb_behavior="shifting|shy"
+        app:bb_behavior="shifting"
         app:bb_inActiveTabColor="@color/greyer"
         app:bb_tabXmlResource="@xml/bottombar_tabs"/>
 

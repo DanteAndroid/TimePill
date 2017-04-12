@@ -1,11 +1,14 @@
 package com.dante.diary.detail;
 
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.ViewPager;
+import android.transition.Slide;
+import android.view.Gravity;
 
 import com.dante.diary.R;
 import com.dante.diary.base.BaseActivity;
@@ -44,8 +47,11 @@ public class DiariesViewerActivity extends BaseActivity {
 
     @Override
     protected void initViews(@Nullable Bundle savedInstanceState) {
-//        supportPostponeEnterTransition();
+        supportPostponeEnterTransition();
         super.initViews(savedInstanceState);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            getWindow().setEnterTransition(new Slide(Gravity.RIGHT));
+        }
 
         position = getIntent().getIntExtra(Constants.POSITION, 0);
         notebookId = getIntent().getIntExtra("notebookId", 0);

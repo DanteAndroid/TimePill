@@ -54,22 +54,22 @@ public abstract class RecyclerFragment extends BaseFragment implements SwipeRefr
         swipeRefresh.setColorSchemeColors(ContextCompat.getColor(getContext(), R.color.colorPrimary),
                 ContextCompat.getColor(getContext(), R.color.colorAccent), ContextCompat.getColor(getContext(), R.color.indigo_500));
         swipeRefresh.setOnRefreshListener(this);
-//        recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
-//
-//            @Override
-//            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
-//                if (dy > 10) {
-//                    if (barActivity != null) {
-//                        barActivity.hideBottomBar();
-//                    }
-//                }
-//                if (dy < -60) {
-//                    if (getStackCount() == 0 && barActivity != null) {
-//                        barActivity.showBottomBar();
-//                    }
-//                }
-//            }
-//        });
+        recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+
+            @Override
+            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+                if (dy > 5) {
+                    if (barActivity != null) {
+                        barActivity.hideBottomBar();
+                    }
+                }
+                if (dy < -30) {
+                    if (getStackCount() == 0 && barActivity != null) {
+                        barActivity.showBottomBar();
+                    }
+                }
+            }
+        });
     }
 
     protected abstract boolean hasFab();

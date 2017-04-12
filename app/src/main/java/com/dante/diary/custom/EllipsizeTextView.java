@@ -146,7 +146,7 @@ public class EllipsizeTextView extends android.support.v7.widget.AppCompatTextVi
         Layout layout = createWorkingLayout(workingText);
         int linesCount = getLinesCount();
         if (layout.getLineCount() > linesCount) {
-            // We have more lines of text than we are allowed to display.
+            // We have more lines of intro_detail than we are allowed to display.
             workingText = fullText.subSequence(0, layout.getLineEnd(linesCount - 1));
             while (createWorkingLayout(workingText + ELLIPSIS).getLineCount() > linesCount) {
                 int lastSpace = workingText.toString().lastIndexOf(' ');
@@ -188,7 +188,7 @@ public class EllipsizeTextView extends android.support.v7.widget.AppCompatTextVi
     }
 
     /**
-     * Get how many lines of text we are allowed to display.
+     * Get how many lines of intro_detail we are allowed to display.
      */
     private int getLinesCount() {
         if (ellipsizingLastFullyVisibleLine()) {
@@ -204,7 +204,7 @@ public class EllipsizeTextView extends android.support.v7.widget.AppCompatTextVi
     }
 
     /**
-     * Get how many lines of text we can display so their full height is visible.
+     * Get how many lines of intro_detail we can display so their full height is visible.
      */
     private int getFullyVisibleLinesCount() {
         Layout layout = createWorkingLayout("");
