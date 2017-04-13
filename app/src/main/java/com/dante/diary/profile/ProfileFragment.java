@@ -132,7 +132,6 @@ public class ProfileFragment extends BaseFragment {
     @Override
     protected void initViews() {
         id = getArguments().getInt(Constants.ID);
-
         meAsHome = SpUtil.getBoolean(SettingFragment.MY_HOME);
         if (meAsHome && LoginManager.isMe(id)) {
             initFab();

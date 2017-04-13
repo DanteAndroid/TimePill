@@ -13,7 +13,7 @@
             android:title="@string/my_notifications"/>
 
         <SwitchPreference
-            android:icon="@drawable/home"
+            android:icon="@drawable/ic_lock_black_24px"
             android:key="pattern_lock"
             android:title="@string/set_pattern_lock"/>
 
@@ -35,9 +35,9 @@
 
     <PreferenceCategory android:title="@string/app">
         <Preference
-            android:key="clear_cache"
-            android:summary="@string/set_current_cache"
-            android:title="@string/set_clear_cache"/>
+            android:key="log_off"
+            android:summary="@string/set_log_off_hint"
+            android:title="@string/set_log_off"/>
         <Preference
             android:key="feedback"
             android:summary="@string/feedback_description"

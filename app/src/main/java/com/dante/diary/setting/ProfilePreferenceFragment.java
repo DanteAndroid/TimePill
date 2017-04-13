@@ -90,7 +90,7 @@ public class ProfilePreferenceFragment extends PreferenceFragment {
     }
 
     private void loadAvatar(User user) {
-        Glide.with(getContext()).load(user.getAvatarUrl())
+        Glide.with(getActivity()).load(user.getAvatarUrl())
                 .crossFade()
                 .listener(new RequestListener<String, GlideDrawable>() {
 
@@ -135,7 +135,7 @@ public class ProfilePreferenceFragment extends PreferenceFragment {
             return true;
         });
         avatar.setOnPreferenceClickListener(preference -> {
-            startActivityForResult(new Intent(getContext(), PickPictureActivity.class), REQUEST_PICK_PICTURE);
+            startActivityForResult(new Intent(getActivity(), PickPictureActivity.class), REQUEST_PICK_PICTURE);
             return true;
         });
         gender.setOnPreferenceChangeListener((preference, newValue) -> {

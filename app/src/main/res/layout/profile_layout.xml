@@ -55,14 +55,14 @@
         android:layout_below="@+id/avatar"
         tools:text="2010-03-17 加入胶囊"/>
 
-    <com.dante.diary.custom.EllipsizeTextView
+    <TextView
         android:id="@+id/intro"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentEnd="true"
         android:layout_centerVertical="true"
         android:layout_toRightOf="@+id/created"
-        android:ellipsize="marquee"
+        android:ellipsize="end"
         android:gravity="end|center_vertical"
         android:lineSpacingMultiplier="1.3"
         android:maxLines="9"

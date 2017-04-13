@@ -2,6 +2,7 @@ package com.dante.diary.login;
 
 import android.app.AlertDialog;
 import android.content.Context;
+import android.util.Log;
 
 import com.blankj.utilcode.utils.AppUtils;
 import com.dante.diary.R;
@@ -17,6 +18,7 @@ import java.util.List;
 import rx.Observable;
 
 import static com.blankj.utilcode.utils.Utils.getContext;
+import static it.sephiroth.android.library.imagezoom.ImageViewTouchBase.TAG;
 
 /**
  * Created by yons on 17/3/6.
@@ -43,6 +45,8 @@ public class LoginManager {
     public static TimeApi getApi() {
         if (api == null) {
             if (isLogin()) {
+                Log.d(TAG, "getApi: " + SpUtil.getString(Constants.ACCOUNT));
+
                 api = NetService.getTimeApi(SpUtil.getString(Constants.ACCOUNT), SpUtil.getString(Constants.PASSWORD));
             }
         }

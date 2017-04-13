@@ -114,7 +114,7 @@ public interface TimeApi {
 
     @FormUrlEncoded
     @POST("users")
-    Observable<Response<ResponseBody>> register(@Field("email") String email, @Field("name") String nickName, @Field("password") String password);
+    Observable<User> register(@Field("email") String email, @Field("name") String nickName, @Field("password") String password);
 
     @FormUrlEncoded
     @PUT("users")

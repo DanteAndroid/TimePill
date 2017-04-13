@@ -38,6 +38,7 @@ import com.dante.diary.base.Constants;
 import com.dante.diary.custom.PickPictureActivity;
 import com.dante.diary.login.LoginManager;
 import com.dante.diary.model.Notebook;
+import com.dante.diary.net.HttpErrorAction;
 import com.dante.diary.net.NetService;
 import com.dante.diary.utils.DateUtil;
 import com.dante.diary.utils.UiUtils;
@@ -296,11 +297,17 @@ public class EditNotebookActivity extends BaseActivity {
                         supportFinishAfterTransition();
                     }
 
-                }, throwable -> {
-                    if (isEditMode) {
-                        UiUtils.showSnack(expireCalendar, String.format(getString(R.string.update_failed) + " %s", throwable.getMessage()));
-                    } else {
-                        UiUtils.showSnack(expireCalendar, getString(R.string.fail_to_create_notebook) + throwable.getMessage());
+                }, new HttpErrorAction<Throwable>() {
+                    @Override
+                    public void call(Throwable throwable) {
+                        super.call(throwable);
+                        if (!TextUtils.isEmpty(errorMessage)) {
+                            if (isEditMode) {
+                                UiUtils.showSnack(expireCalendar, String.format(getString(R.string.update_failed) + " ", errorMessage));
+                            } else {
+                                UiUtils.showSnack(expireCalendar, getString(R.string.fail_to_create_notebook) + " " + errorMessage);
+                            }
+                        }
                     }
                 });
     }

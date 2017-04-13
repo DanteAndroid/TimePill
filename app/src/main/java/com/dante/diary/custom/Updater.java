@@ -11,6 +11,7 @@ import com.dante.diary.model.AppInfo;
 import com.dante.diary.net.API;
 import com.dante.diary.net.AppApi;
 import com.dante.diary.net.NetService;
+import com.dante.diary.utils.AppUtil;
 import com.dante.diary.utils.SpUtil;
 import com.tbruyelle.rxpermissions.RxPermissions;
 
@@ -43,6 +44,7 @@ public class Updater {
                 .filter(granted -> granted)
                 .subscribe(aBoolean -> {
                     String url = appInfo.getApkUrl();
+
                     helper = new DownloadHelper(context, url);
                     helper.downWithDownloadManager(getApkName(appInfo.getVersion()), getApkName(appInfo.getFormerVersion()));
                 });
@@ -65,7 +67,9 @@ public class Updater {
         new AlertDialog.Builder(context).setTitle(R.string.detect_new_version)
                 .setCancelable(!needUpdate)//需要更新就不可取消
                 .setMessage(String.format(context.getString(R.string.update_message), appInfo.getMessage()))
-                .setPositiveButton(R.string.update, (dialog, which) -> downloadAndInstall(appInfo)).show();
+                .setPositiveButton(R.string.update, (dialog, which) -> downloadAndInstall(appInfo))
+                .setNegativeButton(R.string.go_market, (dialog, which) -> AppUtil.goMarket(context))
+                .show();
     }
 
     private String getApkName(String version) {

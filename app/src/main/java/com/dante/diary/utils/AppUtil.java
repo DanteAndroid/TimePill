@@ -43,6 +43,15 @@ public class AppUtil {
         return activities.size() > 0;
     }
 
+    public static void goMarket(Activity activity) {
+        try {
+            Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=" + BuildConfig.APPLICATION_ID));
+            activity.startActivity(intent);
+        } catch (android.content.ActivityNotFoundException anfe) {
+            Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("www.coolapk.com/apk/" + BuildConfig.APPLICATION_ID));
+            activity.startActivity(intent);
+        }
+    }
 
     public static void donate(Activity activity) {
         if (AlipayZeroSdk.hasInstalledAlipayClient(activity.getApplicationContext())) {
@@ -53,10 +62,11 @@ public class AppUtil {
         }
     }
 
-    public static void restartApp(Context context) {
-        Intent intent = new Intent(context, MainActivity.class);
+    public static void restartApp(Activity activity) {
+        activity.finishAndRemoveTask();
+        Intent intent = new Intent(activity, MainActivity.class);
         intent.addFlags(FLAG_ACTIVITY_NEW_TASK);
         intent.addFlags(FLAG_ACTIVITY_CLEAR_TOP);
-        context.startActivity(intent);
+        activity.startActivity(intent);
     }
 }

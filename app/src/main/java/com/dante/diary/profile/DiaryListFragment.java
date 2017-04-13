@@ -238,7 +238,6 @@ public class DiaryListFragment extends RecyclerFragment {
             diaries = base.findDiariesOfNotebook(id).sort(Constants.CREATED, Sort.DESCENDING);
             isTimeReversed = true;
         }
-        log("diaries reverse " + diaries.get(0).getContent());
         adapter.setNewData(diaries);
     }
 

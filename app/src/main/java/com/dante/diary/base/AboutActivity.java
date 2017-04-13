@@ -32,7 +32,6 @@ public class AboutActivity extends BaseActivity {
 
         versionName.setText(String.format(getString(R.string.version) + " %s(%s)", BuildConfig.VERSION_NAME, BuildConfig.VERSION_CODE));
 
-
         donate.setOnClickListener(v -> AppUtil.donate(AboutActivity.this));
     }
 

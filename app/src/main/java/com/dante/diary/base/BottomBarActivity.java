@@ -20,6 +20,8 @@ import butterknife.BindView;
 import rx.Subscription;
 
 public class BottomBarActivity extends BaseActivity implements FragNavController.RootFragmentListener {
+    private static final String TAG = "BottomBarActivity";
+
     private final int DIARIES = FragNavController.TAB1;
     private final int FOLLOWING = FragNavController.TAB2;
     private final int NOTIFICATION = FragNavController.TAB3;
@@ -64,7 +66,6 @@ public class BottomBarActivity extends BaseActivity implements FragNavController
     }
 
     private void initBottomBar() {
-//        bottomBar.setDefaultTab(MAIN);
         bottomBar.selectTabAtPosition(MAIN);
         bottomBar.setOnTabSelectListener(tabId -> {
             switch (tabId) {
@@ -76,6 +77,7 @@ public class BottomBarActivity extends BaseActivity implements FragNavController
                     break;
                 case R.id.notification:
                     controller.switchTab(NOTIFICATION);
+                    bottomBar.getTabWithId(R.id.notification).setBadgeCount(0);
                     break;
                 case R.id.me:
                     controller.switchTab(ME);
@@ -113,6 +115,7 @@ public class BottomBarActivity extends BaseActivity implements FragNavController
                 return TabsFragment.newInstance(new String[]{getString(R.string.my_notifications), getString(R.string.my_followers)});
             case ME:
                 int id = SpUtil.getInt(Constants.ID);
+                Log.d(TAG, "getRootFragment: " + id);
                 return ProfileFragment.newInstance(id);
         }
         throw new IllegalStateException("Need to send an index that we know");

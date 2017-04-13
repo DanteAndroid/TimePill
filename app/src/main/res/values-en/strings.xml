@@ -22,7 +22,7 @@
     </string>
     <string name="cant_get_notifications">Unable to get recent notifications</string>
     <string name="choose_notebook_hint">Choose one notebook please</string>
-    <string name="clear_cache_failed">Clear failed</string>
+    <string name="clear_cache_failed">Clear failed. Please go app setting to clear data</string>
     <string name="clear_finished">Clear finished</string>
     <string name="comment_failed">Comment failed</string>
     <string name="content_copied">Content has been copied</string>
@@ -111,8 +111,8 @@
     <string name="save_img_failed">Failed to save picture</string>
     <string name="save_img_success">Picture saved</string>
     <string name="set_check_version">Check update</string>
-    <string name="set_clear_cache">Clear all cache</string>
-    <string name="set_current_cache">"Current cache is "</string>
+    <string name="set_log_off">Log off</string>
+    <string name="set_log_off_hint">Will erase all data. Current cache is</string>
     <string name="set_feedback">Feedback</string>
     <string name="share_to">Share</string>
     <string name="speak_more">Say a little bit more</string>
@@ -215,6 +215,9 @@
     <string name="set_short_splash_desc">Use short splash animation</string>
     <string name="stroke">Stroke</string>
     <string name="exit">Exit</string>
+    <string name="feedback_hint">Any problem or advices?</string>
+    <string name="thx_for_feedback">Thanks for feedback!</string>
+    <string name="go_market">Go market</string>
     <string name="save_my_home_hint">My profile has been set as home page, takes effect until next
         entering
     </string>

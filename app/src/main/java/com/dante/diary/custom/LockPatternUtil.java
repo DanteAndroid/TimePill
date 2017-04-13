@@ -20,7 +20,7 @@ public class LockPatternUtil {
             l.onSuccess();
         } else {
             view.setViewMode(PatternLockView.PatternViewMode.WRONG);
-            view.postDelayed(view::clearPattern, 500);
+            view.postDelayed(view::clearPattern, 400);
             l.onFailed();
         }
     }

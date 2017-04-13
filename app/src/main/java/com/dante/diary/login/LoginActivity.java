@@ -34,17 +34,17 @@ import com.dante.diary.base.Constants;
 import com.dante.diary.custom.LockPatternUtil;
 import com.dante.diary.main.MainActivity;
 import com.dante.diary.model.User;
+import com.dante.diary.net.HttpErrorAction;
 import com.dante.diary.setting.SettingFragment;
 import com.dante.diary.utils.DateUtil;
 import com.dante.diary.utils.SpUtil;
 import com.dante.diary.utils.UiUtils;
 
-import java.io.IOException;
 import java.util.Date;
 import java.util.List;
 
 import butterknife.BindView;
-import rx.Subscriber;
+import rx.functions.Action1;
 import top.wefor.circularanim.CircularAnim;
 
 public class LoginActivity extends BaseActivity implements PatternLockViewListener {
@@ -333,20 +333,21 @@ public class LoginActivity extends BaseActivity implements PatternLockViewListen
         CircularAnim.hide(register).triggerView(progressRegister).go(() -> animationFinished = true);
         LoginManager.getRegisterApi().register(emailAccount, nickName, password)
                 .compose(applySchedulers())
-                .subscribe(requestBodyResponse -> {
+                .subscribe(user -> {
                     showRegister();
-                    try {
-                        Log.d(TAG, "register response : " + requestBodyResponse.body().string());
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
                     UiUtils.showSnack(register, getString(R.string.register_success));
                     login();
+                    saveAccount(user);
 
-                }, throwable -> {
-                    showRegister();
-                    UiUtils.showSnack(register, getString(R.string.register_failed));
-                    Log.e("test", "fetch: " + throwable.getMessage());
+                }, new HttpErrorAction<Throwable>() {
+                    @Override
+                    public void call(Throwable throwable) {
+                        super.call(throwable);
+                        showRegister();
+                        if (!TextUtils.isEmpty(errorMessage)) {
+                            UiUtils.showSnackLong(register, getString(R.string.register_failed) + " " + errorMessage);
+                        }
+                    }
                 });
     }
 
@@ -371,12 +372,10 @@ public class LoginActivity extends BaseActivity implements PatternLockViewListen
         //登录失败时才show login
         if (animationFinished) {
             CircularAnim.show(login).triggerView(progressRegister).go();
-            UiUtils.showSnack(timePill, R.string.login_failed);
             animationFinished = false;
 
         } else {
             new Handler().postDelayed(() -> {
-                UiUtils.showSnack(timePill, R.string.login_failed);
                 CircularAnim.show(login).triggerView(progressRegister).go();
                 animationFinished = false;
             }, 800);
@@ -388,9 +387,6 @@ public class LoginActivity extends BaseActivity implements PatternLockViewListen
             UiUtils.showSnack(login, getString(R.string.name_or_psw_is_empty));
             return;
         }
-        SpUtil.remove(Constants.ID);
-        SpUtil.remove(Constants.PASSWORD);
-        SpUtil.save(Constants.ACCOUNT, emailAccount);
         Log.d(TAG, "login: " + emailAccount + "  " + password);
         KeyboardUtils.hideSoftInput(this);
         CircularAnim.hide(login).go(() -> {
@@ -398,21 +394,20 @@ public class LoginActivity extends BaseActivity implements PatternLockViewListen
         });
         LoginManager.login(emailAccount, password)
                 .compose(applySchedulers())
-                .subscribe(new Subscriber<User>() {
-
+                .subscribe(new Action1<User>() {
                     @Override
-                    public void onCompleted() {
+                    public void call(User user) {
+                        saveAccount(user);
                         loginSuccess(login);
                     }
-
+                }, new HttpErrorAction<Throwable>() {
                     @Override
-                    public void onError(Throwable e) {
+                    public void call(Throwable throwable) {
+                        super.call(throwable);
                         showLogin();
-                    }
-
-                    @Override
-                    public void onNext(User user) {
-                        saveAccount(user);
+                        if (!TextUtils.isEmpty(errorMessage)) {
+                            UiUtils.showSnackLong(login, getString(R.string.login_failed) + " " + errorMessage);
+                        }
                     }
                 });
     }
@@ -425,13 +420,12 @@ public class LoginActivity extends BaseActivity implements PatternLockViewListen
     private void loginSuccess(View view) {
         eraseMemory();
         CircularAnim.fullActivity(this, view)
-                .colorOrImageRes(R.color.colorPrimary)
+                .colorOrImageRes(R.color.colorAccent)
                 .duration(600)
                 .go(() -> {
                     startActivity(new Intent(getApplicationContext(), MainActivity.class));
                     finish();
                 });
-//        new Handler().postDelayed(() -> startActivity(new Intent(getApplicationContext(), MainActivity.class)), 300);
     }
 
     private void eraseMemory() {
@@ -446,6 +440,8 @@ public class LoginActivity extends BaseActivity implements PatternLockViewListen
     private void saveAccount(User user) {
         base.save(user);
         id = user.getId();
+        Log.d(TAG, "saveAccount: " + SpUtil.getString(Constants.ACCOUNT) + "   id: " + id);
+
         SpUtil.save(Constants.ACCOUNT, emailAccount);
         SpUtil.save(Constants.PASSWORD, password);
         SpUtil.save(Constants.ID, id);

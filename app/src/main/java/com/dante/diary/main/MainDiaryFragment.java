@@ -39,7 +39,6 @@ import com.dante.diary.utils.SpUtil;
 import com.dante.diary.utils.TransitionHelper;
 import com.dante.diary.utils.UiUtils;
 import com.dante.diary.utils.WrapContentLinearLayoutManager;
-import com.yqritc.recyclerviewflexibledivider.HorizontalDividerItemDecoration;
 
 import java.util.List;
 
@@ -103,17 +102,16 @@ public class MainDiaryFragment extends RecyclerFragment implements OrderedRealmC
     protected void initViews() {
         super.initViews();
         setHasOptionsMenu(true);//填充menu（执行onCreateOptionsMenu）
-
         context = (BaseActivity) getActivity();
         layoutManager = new WrapContentLinearLayoutManager(context);
         recyclerView.setLayoutManager(layoutManager);
 
         adapter = new DiaryListAdapter(null);
         recyclerView.setAdapter(adapter);
-        recyclerView.addItemDecoration(new HorizontalDividerItemDecoration.Builder(context)
-                .colorResId(R.color.grey)
-                .size(2)
-                .build());
+//        recyclerView.addItemDecoration(new HorizontalDividerItemDecoration.Builder(context)
+//                .colorResId(R.color.grey)
+//                .size(2)
+//                .build());
         recyclerView.addOnItemTouchListener(new OnItemClickListener() {
             @Override
             public void onSimpleItemClick(BaseQuickAdapter baseQuickAdapter, View view, int i) {
@@ -364,7 +362,6 @@ public class MainDiaryFragment extends RecyclerFragment implements OrderedRealmC
         }
         OrderedCollectionChangeSet.Range[] insertions = changeSet.getInsertionRanges();
         for (OrderedCollectionChangeSet.Range range : insertions) {
-            log("no notifyItemRangeInserted " + range.startIndex + " to " + range.length);
             adapter.notifyItemRangeInserted(range.startIndex, range.length);
             if (page == 1) {
                 scrollToTop(range.length);

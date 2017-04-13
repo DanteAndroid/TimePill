@@ -1,10 +1,10 @@
 package com.dante.diary.setting;
 
+import android.app.AlertDialog;
 import android.app.Fragment;
 import android.content.Intent;
-import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
 import android.preference.CheckBoxPreference;
 import android.preference.Preference;
 import android.preference.PreferenceFragment;
@@ -15,13 +15,18 @@ import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.TextView;
 
 import com.andrognito.patternlockview.PatternLockView;
 import com.andrognito.patternlockview.listener.PatternLockViewListener;
 import com.andrognito.patternlockview.utils.PatternLockUtils;
+import com.blankj.utilcode.utils.AppUtils;
 import com.blankj.utilcode.utils.CleanUtils;
 import com.blankj.utilcode.utils.FileUtils;
+import com.bugtags.library.Bugtags;
 import com.dante.diary.R;
 import com.dante.diary.base.AboutActivity;
 import com.dante.diary.base.App;
@@ -44,7 +49,7 @@ import rx.schedulers.Schedulers;
  * the view in setting activity.
  */
 public class SettingFragment extends PreferenceFragment implements Preference.OnPreferenceClickListener {
-    public static final String CLEAR_CACHE = "clear_cache";
+    public static final String LOG_OFF = "log_off";
     public static final String FEED_BACK = "feedback";
     public static final String SECRET_MODE = "secret_mode";
     public static final String THEME_COLOR = "theme_color";
@@ -69,14 +74,14 @@ public class SettingFragment extends PreferenceFragment implements Preference.On
     private Preference theme;
     private CheckBoxPreference shortSplash;
     private BottomDialogFragment patternDialog;
-    private boolean hasPassword;
+    private boolean hasPassword = true;
 
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         addPreferencesFromResource(R.xml.preferences);
-        clearCache = findPreference(CLEAR_CACHE);
+        clearCache = findPreference(LOG_OFF);
         feedback = findPreference(FEED_BACK);
         my = (CheckBoxPreference) findPreference(MY_HOME);
         shortSplash = (CheckBoxPreference) findPreference(SHORT_SPLASH);
@@ -142,11 +147,8 @@ public class SettingFragment extends PreferenceFragment implements Preference.On
                 .with((AppCompatActivity) getActivity())
                 .gravity(Gravity.CENTER)
                 .isComment(false)
-                .cancelable(!removePassword)
                 .listenDismiss(dialog -> {
-                    if (!removePassword) {
-                        patternLock.setChecked(hasPassword);
-                    }
+                    patternLock.setChecked(hasPassword);
                 })
                 .bindView(v -> {
                     PatternLockView patternLockView = (PatternLockView) v.findViewById(R.id.pattern_lock);
@@ -198,7 +200,7 @@ public class SettingFragment extends PreferenceFragment implements Preference.On
     }
 
     private void refreshCache() {
-        String cache = String.format(getString(R.string.set_current_cache) + " %s", getDataSize());
+        String cache = String.format(getString(R.string.set_log_off_hint) + " %s", getDataSize());
         clearCache.setSummary(cache);
     }
 
@@ -254,51 +256,54 @@ public class SettingFragment extends PreferenceFragment implements Preference.On
     public boolean onPreferenceClick(Preference preference) {
         String key = preference.getKey();
         switch (key) {
-            case CLEAR_CACHE:
+            case LOG_OFF:
                 Observable.just(clearCache())
                         .subscribeOn(Schedulers.io())
                         .observeOn(AndroidSchedulers.mainThread())
                         .subscribe(success -> {
                             if (success) {
                                 refreshCache();
-                                UiUtils.showSnack(rootView, R.string.clear_finished);
                                 AppUtil.restartApp(getActivity());
-
                             } else {
-                                UiUtils.showSnack(rootView, R.string.clear_cache_failed);
+                                UiUtils.showSnackLong(rootView, R.string.clear_cache_failed, R.string.go_setting, v -> AppUtils.getAppDetailsSettings(getActivity()));
                             }
                         });
 
                 break;
             case FEED_BACK:
-                sendEmailFeedback();
+                sendFeedback();
                 break;
         }
         return true;
     }
 
     private boolean clearCache() {
-        ((BaseActivity) getActivity()).base.clearAllDiaries();
+        ((BaseActivity) getActivity()).base.clearAll();
         SpUtil.clear();
-        return CleanUtils.cleanInternalCache();
+        return CleanUtils.cleanExternalCache() && CleanUtils.cleanInternalCache();
     }
 
-    private void sendEmailFeedback() {
-        //This is wired, I used ACTION_SENDTO at first
-        //but check intent returns unsafe
-        //so I change to ACTION_VIEW (like the system do)
-        Intent email = new Intent(Intent.ACTION_SENDTO);
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            email = new Intent(Intent.ACTION_VIEW);
-        }
-        if (AppUtil.isIntentSafe(email)) {
-            email.setData(Uri.parse("mailto:" + getString(R.string.my_email)));
-            email.putExtra(Intent.EXTRA_SUBJECT, getString(R.string.app_name) + " Feedback");
-            email.putExtra(Intent.EXTRA_TEXT, "Hi，");
-            startActivity(email);
-        } else {
-            UiUtils.showSnack(rootView, R.string.email_not_install);
-        }
+    private void sendFeedback() {
+        AlertDialog dialog = new AlertDialog.Builder(getActivity())
+                .setView(R.layout.intro_layout).setTitle(R.string.set_feedback)
+                .create();
+        dialog.getWindow().setSoftInputMode(
+                WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE);
+        dialog.show();
+        EditText editText = (EditText) dialog.findViewById(R.id.introEt);
+        editText.setHint(R.string.feedback_hint);
+        editText.setSelection(editText.getText().length());
+        Button commit = (Button) dialog.findViewById(R.id.commit);
+        commit.setOnClickListener(v -> {
+            if (editText.getText().length() < 5) {
+                UiUtils.showSnack(commit, R.string.say_more);
+                return;
+            }
+            String feedback = editText.getText().toString();
+            Bugtags.sendFeedback(feedback);
+            UiUtils.showSnack(commit, getString(R.string.thx_for_feedback));
+            new Handler().postDelayed(dialog::dismiss, 500);
+        });
     }
 
     public void replace(Fragment fragment) {

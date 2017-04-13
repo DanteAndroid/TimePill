@@ -134,7 +134,7 @@
     <string name="secret_mode_closed" translatable="false">隐藏模式已关闭</string>
     <string name="secret_mode_opened" translatable="false">隐藏模式已开启</string>
     <string name="clear_finished">清理完成</string>
-    <string name="clear_cache_failed">清除失败</string>
+    <string name="clear_cache_failed">注销失败，请到应用中手动清除数据</string>
     <string name="email_not_install">未安装邮件客户端</string>
     <string name="version">版本号</string>
     <string name="tips">提示</string>
@@ -144,10 +144,10 @@
     <string name="my_email" translatable="false">danteandroi@gmail.com</string>
     <string name="license" translatable="false">License</string>
     <string name="license_description">本APP已得到站长授权。如有任何建议请直接联系我</string>
-    <string name="set_current_cache">当前缓存为</string>
+    <string name="set_log_off_hint">将清除所有缓存数据。当前缓存为</string>
     <string name="alipay_not_found">未找到支付宝，已复制微信账号</string>
     <string name="wechat" translatable="false">lightear</string>
-    <string name="set_clear_cache">清理缓存</string>
+    <string name="set_log_off">注销登录</string>
     <string name="about">关于</string>
     <string name="set_check_version">检查更新</string>
     <string name="feedback_description">如果你有好的idea或建议，赶快说出来吧</string>
@@ -173,7 +173,7 @@
     <string name="share_app_description">时间胶囊：https://github.com/DanteAndroid/TimeDiary</string>
     <string name="donate">捐赠</string>
     <string name="donate_description">本App是个人时间的成果，您的支持会让它变得越来越好</string>
-    <string name="leave_app">真的要离开了吗？</string>
+    <string name="leave_app">再按一次返回键退出胶囊</string>
     <string name="set_my_home">我的作为首页</string>
     <string name="set_my_home_desc">使用自己的资料页作为首页</string>
     <string name="customize">个性化</string>
@@ -225,4 +225,8 @@
     <string name="time_order_normal">时间顺序</string>
     <string name="pref_id">用户ID</string>
     <string name="id_has_been_copied">用户id已复制</string>
+    <string name="feedback_hint">有什么问题或者建议？</string>
+    <string name="thx_for_feedback">感謝您的反馈~ 您的支持会让app越来越好</string>
+    <string name="go_market">去市场</string>
+    <string name="share_url" translatable="false">http://coolapk.com/apk/com.dante.diary</string>
 </resources>

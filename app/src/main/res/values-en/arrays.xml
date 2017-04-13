@@ -6,7 +6,6 @@
 
     </string-array>
     <string-array name="diary_menu_my">
-        <item>Copy</item>
         <item>Edit</item>
         <item>Delete</item>
     </string-array>

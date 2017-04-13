@@ -14,6 +14,7 @@ import android.util.Log;
 import android.webkit.MimeTypeMap;
 import android.widget.Toast;
 
+import com.bugtags.library.Bugtags;
 import com.dante.diary.BuildConfig;
 import com.dante.diary.base.App;
 
@@ -61,6 +62,9 @@ public class DownloadHelper {
     }
 
     public void downWithDownloadManager(String name, String oldName) {
+        if (url.isEmpty()) {
+            return;
+        }
         manager = (DownloadManager) context.getSystemService(Context.DOWNLOAD_SERVICE);
         Uri resource = Uri.parse(url);
         Log.d(TAG, "downWithDownloadManager: " + url);
@@ -75,11 +79,11 @@ public class DownloadHelper {
             boolean result = oldFile.delete();
             Log.i(TAG, "downWithDownloadManager:  old apk file deleted " + result);
         }
-        if (file.exists()) {
-            Log.i(TAG, "downWithDownloadManager: exists" + file.getPath());
-            startInstall();
-            return;
-        }
+//        if (file.exists()) {
+//            Log.i(TAG, "downWithDownloadManager: exists" + file.getPath());
+//            startInstall();
+//            return;
+//        }
         registerInstall();
         DownloadManager.Request request = new DownloadManager.Request(resource);
 //        request.setAllowedNetworkTypes(DownloadManager.Request.NETWORK_MOBILE | DownloadManager.Request.NETWORK_WIFI);
@@ -100,7 +104,13 @@ public class DownloadHelper {
             @Override
             public void onReceive(Context context, Intent intent) {
                 //可取得下载的id，适用与多个下载任务的监听
-                startInstall();
+                try {
+                    startInstall();
+                } catch (Exception e) {
+                    Bugtags.sendException(e.getCause());
+                    e.printStackTrace();
+
+                }
                 Log.i("test", "Downloaded id " + intent.getLongExtra(DownloadManager.EXTRA_DOWNLOAD_ID, 0));
             }
         };

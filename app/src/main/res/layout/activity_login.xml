@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/indigo_500"
+    android:background="@color/colorPrimaryDark"
     android:padding="@dimen/activity_horizontal_margin">
 
     <LinearLayout
@@ -24,11 +24,11 @@
             android:layout_margin="@dimen/activity_horizontal_margin"
             android:alpha="0"
             android:gravity="center"
-            android:text="This a nice text"
             android:textAppearance="@style/TextAppearance.AppCompat.Widget.ActionBar.Subtitle.Inverse"
             android:textSize="20sp"
             android:visibility="gone"
             tools:alpha="1"
+            tools:text="This a nice text"
         />
 
         <LinearLayout

@@ -12,6 +12,7 @@ import okhttp3.Credentials;
 import okhttp3.MediaType;
 import okhttp3.MultipartBody;
 import okhttp3.OkHttpClient;
+import okhttp3.Request;
 import okhttp3.RequestBody;
 import okhttp3.logging.HttpLoggingInterceptor;
 import retrofit2.Retrofit;
@@ -26,7 +27,7 @@ public class NetService {
 
     private static Retrofit retrofit;
 
-    private static OkHttpClient.Builder httpClient = new OkHttpClient.Builder();
+    private static OkHttpClient.Builder client = new OkHttpClient.Builder();
 
     private static Retrofit.Builder builder;
 
@@ -39,12 +40,26 @@ public class NetService {
         return createService(serviceClass, null, null);
     }
 
-    public static <T> T createServiceWithBaseUrl(Class<T> serviceClass, String baseUrl) {
+    public static <T> T createServiceWithBaseUrl(Class<T> apiClass, String baseUrl) {
+        HttpLoggingInterceptor logging = new HttpLoggingInterceptor();
+        logging.setLevel(BuildConfig.DEBUG ?
+                HttpLoggingInterceptor.Level.BASIC : HttpLoggingInterceptor.Level.NONE);
+        OkHttpClient client = new OkHttpClient.Builder()
+                .addInterceptor(chain -> {
+                    Request original = chain.request();
+                    Request request = original.newBuilder()
+                            .header("User-Agent", "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_10_3) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/55.0.2883.95 Safari/537.36")
+                            .method(original.method(), original.body())
+                            .build();
+                    return chain.proceed(request);
+                })
+                .addInterceptor(logging).build();
         builder = new Retrofit.Builder()
                 .baseUrl(baseUrl)
+                .client(client)
                 .addCallAdapterFactory(RxJavaCallAdapterFactory.create())
                 .addConverterFactory(GsonConverterFactory.create(GsonConfig.gson));
-        return createService(serviceClass, null);
+        return builder.build().create(apiClass);
     }
 
     private static <T> T createService(
@@ -67,26 +82,24 @@ public class NetService {
         if (!TextUtils.isEmpty(authToken)) {
             AuthenticationInterceptor interceptor =
                     new AuthenticationInterceptor(authToken);
-            if (!httpClient.interceptors().contains(interceptor)) {
-                httpClient.addInterceptor(interceptor);
+            if (!client.interceptors().contains(interceptor)) {
+                client.addInterceptor(interceptor);
             }
         }
-        //debug 模式开启log
+        HttpsUtils.SSLParams sslParams = HttpsUtils.getSslSocketFactory(null, null, null);
+        client.sslSocketFactory(sslParams.sSLSocketFactory, sslParams.trustManager);
         HttpLoggingInterceptor logging = new HttpLoggingInterceptor();
         logging.setLevel(BuildConfig.DEBUG ?
                 HttpLoggingInterceptor.Level.BODY : HttpLoggingInterceptor.Level.NONE);
-        httpClient.addInterceptor(logging);
-        HttpsUtils.SSLParams sslParams = HttpsUtils.getSslSocketFactory(null, null, null);
-        httpClient.sslSocketFactory(sslParams.sSLSocketFactory, sslParams.trustManager);
-        builder.client(httpClient.build());
-        retrofit = builder.build();
+        client.addInterceptor(logging);
+
+        retrofit = builder.client(client.build()).build();
         return retrofit.create(serviceClass);
     }
 
     public static TimeApi getTimeApi(String name, String password) {
-        if (api == null) {
-            api = createService(TimeApi.class, name, password);
-        }
+        Log.d("test", "getTimeApi: " + name);
+        api = createService(TimeApi.class, name, password);
         return api;
     }
 

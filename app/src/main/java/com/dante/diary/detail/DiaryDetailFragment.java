@@ -540,7 +540,6 @@ public class DiaryDetailFragment extends BaseFragment implements SwipeRefreshLay
                     editDiary();
                 } else if (which == 1) {
                     deleteDiary();
-
                 }
             }).show();
             return true;

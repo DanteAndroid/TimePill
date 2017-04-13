@@ -71,6 +71,12 @@ public class DataBase {
         realm.commitTransaction();
     }
 
+    public void clearAll() {
+        realm.beginTransaction();
+        realm.deleteAll();
+        realm.commitTransaction();
+    }
+
     public User findUser(int id) {
         return realm.where(User.class).equalTo(Constants.ID, id).findFirst();
     }

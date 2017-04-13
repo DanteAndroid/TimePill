@@ -21,6 +21,7 @@ import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.Spinner;
 
 import com.blankj.utilcode.utils.KeyboardUtils;
@@ -34,7 +35,9 @@ import com.dante.diary.draw.DrawActivity;
 import com.dante.diary.login.LoginManager;
 import com.dante.diary.model.Diary;
 import com.dante.diary.model.Notebook;
+import com.dante.diary.net.HttpErrorAction;
 import com.dante.diary.net.NetService;
+import com.dante.diary.utils.ImageProgresser;
 import com.dante.diary.utils.Imager;
 import com.dante.diary.utils.SpUtil;
 import com.dante.diary.utils.UiUtils;
@@ -76,6 +79,7 @@ public class EditDiaryActivity extends BaseActivity {
     private File photoFile;
     private boolean isEditMode;
     private Diary diary;
+    private ArrayList<Notebook> validSubjects = new ArrayList<>();
 
 
     @Override
@@ -141,7 +145,7 @@ public class EditDiaryActivity extends BaseActivity {
                 .setMessage(R.string.delete_photo_hint)
                 .setPositiveButton(R.string.delete, (dialog, which) -> {
                     attachPhoto.setVisibility(View.GONE);
-                    attachPhoto = null;
+                    photoFile = null;
                 }).show());
 
         photoFile = new File(path);
@@ -151,8 +155,8 @@ public class EditDiaryActivity extends BaseActivity {
     private void fetchDiary() {
         LoginManager.getApi().getDiaryDetail(diaryId)
                 .compose(applySchedulers())
-                .subscribe(diary1 -> {
-                    EditDiaryActivity.this.diary = diary1;
+                .subscribe(d -> {
+                    EditDiaryActivity.this.diary = d;
                     inflateDiary();
                 }, throwable -> {
                     UiUtils.showSnackLong(content, getString(R.string.cant_get_diary) + throwable.getMessage());
@@ -214,17 +218,8 @@ public class EditDiaryActivity extends BaseActivity {
                 .subscribe(notebooks -> {
                     this.notebooks = notebooks;
                     base.save(notebooks);
-                    List<String> subjects = new ArrayList<>();
-                    for (Notebook n : notebooks) {
-                        if (!n.isExpired()) {
-                            subjects.add(n.getSubject());
-                        }
-                    }
-                    if (subjects.isEmpty()) {
-                        KeyboardUtils.hideSoftInput(this);
-                        UiUtils.showSnackLong(subjectSpinner, getString(R.string.no_valid_notebook));
-                    }
-                    initSubjectSpinner(subjects);
+                    checkValidNotebooks(notebooks);
+                    initSubjectSpinner(validSubjects);
 
                 }, throwable -> UiUtils.showSnackLong(subjectSpinner, getString(R.string.unable_to_fetch_notebooks), R.string.create_notebook, v -> {
                     startActivity(new Intent(getApplicationContext(), EditNotebookActivity.class));
@@ -233,7 +228,26 @@ public class EditDiaryActivity extends BaseActivity {
 
     }
 
+    private void checkValidNotebooks(List<Notebook> notebooks) {
+        for (Notebook n : notebooks) {
+            if (!n.isExpired()) {
+                validSubjects.add(n);
+            }
+        }
+        if (validSubjects.isEmpty()) {
+            KeyboardUtils.hideSoftInput(this);
+            UiUtils.showSnackLong(subjectSpinner, getString(R.string.no_valid_notebook), R.string.create_notebook, new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    startActivity(new Intent(EditDiaryActivity.this, EditNotebookActivity.class));
+                    finish();
+                }
+            });
+        }
+    }
+
     private void send() {
+        ProgressBar progressBar = ImageProgresser.attachProgress(content);
         source()
                 .compose(applySchedulers())
                 .subscribe(notebook -> {
@@ -243,9 +257,16 @@ public class EditDiaryActivity extends BaseActivity {
                     setResult(RESULT_OK);
                     supportFinishAfterTransition();
 
-                }, throwable -> {
-                    KeyboardUtils.hideSoftInput(EditDiaryActivity.this);
-                    UiUtils.showSnackLong(subjectSpinner, getString(R.string.create_diary_failed) + throwable.getMessage());
+                }, new HttpErrorAction<Throwable>() {
+                    @Override
+                    public void call(Throwable throwable) {
+                        super.call(throwable);
+                        progressBar.setVisibility(View.GONE);
+                        KeyboardUtils.hideSoftInput(EditDiaryActivity.this);
+                        if (!TextUtils.isEmpty(errorMessage)) {
+                            UiUtils.showSnackLong(subjectSpinner, getString(R.string.create_diary_failed) + " " + errorMessage);
+                        }
+                    }
                 });
     }
 
@@ -259,14 +280,20 @@ public class EditDiaryActivity extends BaseActivity {
                         photoFile == null ? null : NetService.createMultiPart("photo", photoFile));
     }
 
-    private void initSubjectSpinner(List<String> list) {
-        ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, list);
+    private void initSubjectSpinner(List<Notebook> validNotebooks) {
+        List<String> subjects = new ArrayList<>();
+        for (Notebook s : validNotebooks) {
+            subjects.add(s.getSubject());
+        }
+
+
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, subjects);
         adapter.setDropDownViewResource(R.layout.spinner_subject_dropdown_item);
         subjectSpinner.setAdapter(adapter);
         subjectSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                notebookId = notebooks.get(position).getId();
+                notebookId = validNotebooks.get(position).getId();
                 invalidateOptionsMenu();
             }
 
