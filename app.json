@@ -5,5 +5,5 @@
 	"forceUpdate": true,
 	"message": " - Fix some bug;\n  - Code optimized.",
 	"share_app_description": "from：时间胶囊。http://www.coolapk.com/apk/com.dante.diary",
-	"apk_url":"http://www.coolapk.com/apk/com.dante.diary"
+	"apk_url":"https://github-cloud.s3.amazonaws.com/releases/83653432/c1a6781e-2034-11e7-8c32-e72e837cc7f5.apk?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIAISTNZFOVBIJMK3TQ%2F20170413%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Date=20170413T033030Z&X-Amz-Expires=300&X-Amz-Signature=3c63405f29269c1c0c7c24f32e274a2fc8bd7d4989746066a4af4dd59ee6232b&X-Amz-SignedHeaders=host&actor_id=10005563&response-content-disposition=attachment%3B%20filename%3Dapp-release.apk&response-content-type=application%2Fvnd.android.package-archive"
 }
