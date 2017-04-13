@@ -1,9 +1,9 @@
 {
-	"lastest_version": "v0.1",
-	"lastest_version_code": 2,
-	"former_version": "v0.1",
-	"forceUpdate": true,
-	"message": " - First release;\n  - Code optimized.",
-	"share_app_description": " 时间胶囊: 暂时没有下载地址。",
-	"apk_url":"https://github.com/DanteAndroid/TimeDiary/releases/download/v0.1/app-release.apk"
+	"lastest_version": "v1.0",
+	"lastest_version_code": 5,
+	"former_version": "v0.2",
+	"forceUpdate": false,
+	"message": " - Fix some bug;\n  - Code optimized.",
+	"share_app_description": "from：时间胶囊。http://www.coolapk.com/apk/com.dante.diary",
+	"apk_url":"https://github.com/DanteAndroid/TimePill/releases/download/v1.0/app-release.apk"
 }
