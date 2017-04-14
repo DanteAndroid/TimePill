@@ -6,7 +6,6 @@ import android.content.Context;
 
 import com.blankj.utilcode.utils.Utils;
 import com.bugtags.library.Bugtags;
-import com.dante.diary.BuildConfig;
 
 import io.realm.Realm;
 
@@ -32,9 +31,8 @@ public class App extends Application {
         Realm.init(this);
         Utils.init(this);
 
-        if (BuildConfig.DEBUG) {
-
-        }
+//        JPushInterface.setDebugMode(BuildConfig.DEBUG);
+//        JPushInterface.init(this);
 
     }
 }

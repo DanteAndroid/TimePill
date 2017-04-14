@@ -1,5 +1,6 @@
 package com.dante.diary.base;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.widget.TextView;
@@ -7,6 +8,7 @@ import android.widget.TextView;
 import com.dante.diary.BuildConfig;
 import com.dante.diary.R;
 import com.dante.diary.utils.AppUtil;
+import com.dante.diary.utils.UiUtils;
 
 import butterknife.BindView;
 
@@ -35,13 +37,13 @@ public class AboutActivity extends BaseActivity {
         donate.setOnClickListener(v -> AppUtil.donate(AboutActivity.this));
     }
 
-//    @Override
-//    public void startActivity(Intent intent) {
-//        if (AppUtil.isIntentSafe(intent)) {
-//            super.startActivity(intent);
-//        } else {
-//            UiUtils.showSnack(versionName, R.string.email_not_install);
-//        }
-//    }
+    @Override
+    public void startActivity(Intent intent) {
+        if (AppUtil.isIntentSafe(intent)) {
+            super.startActivity(intent);
+        } else {
+            UiUtils.showSnack(versionName, R.string.email_not_install);
+        }
+    }
 
 }

@@ -72,7 +72,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
-            android:lineSpacingMultiplier="1.2"
+            android:lineSpacingMultiplier="1.1"
             android:text="@string/tips_content"
             android:textSize="16sp"/>
 
@@ -88,7 +88,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
-            android:lineSpacingMultiplier="1.2"
+            android:lineSpacingMultiplier="1.1"
             android:text="@string/about_me_description"
             android:textSize="16sp"/>
 
@@ -114,7 +114,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
             android:autoLink="web"
-            android:lineSpacingMultiplier="1.2"
+            android:lineSpacingMultiplier="1.1"
             android:text="@string/license_description"
             android:textSize="16sp"/>
         <TextView
@@ -132,7 +132,7 @@
             android:layout_marginTop="8dp"
             android:autoLink="web"
             android:background="?attr/selectableItemBackground"
-            android:lineSpacingMultiplier="1.2"
+            android:lineSpacingMultiplier="1.1"
             android:text="@string/donate_description"
             android:textColor="@android:color/holo_red_light"
             android:textSize="16sp"/>

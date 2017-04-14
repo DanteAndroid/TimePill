@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest package="com.dante.diary"
-          xmlns:android="http://schemas.android.com/apk/res/android">
+          xmlns:android="http://schemas.android.com/apk/res/android"
+>
 
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
 
@@ -44,7 +45,7 @@
             android:theme="@style/AppTheme"/>
         <activity
             android:name=".login.LoginActivity"
-            android:theme="@style/AppTheme.NoActionBar.Placeholder"
+            android:theme="@style/ViewerTheme.TransNav.Placeholder"
             android:windowSoftInputMode="stateHidden|adjustPan">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
@@ -71,6 +72,20 @@
                 android:name="android.support.FILE_PROVIDER_PATHS"
                 android:resource="@xml/file_paths"/>
         </provider>
+
+        <!--<receiver-->
+        <!--android:name=".NotificationReceiver"-->
+        <!--android:enabled="true">-->
+        <!--<intent-filter>-->
+        <!--<action android:name="cn.jpush.android.intent.MESSAGE_RECEIVED" />-->
+        <!--<action android:name="cn.jpush.android.intent.NOTIFICATION_RECEIVED" />-->
+        <!--<action android:name="cn.jpush.android.intent.NOTIFICATION_OPENED" />-->
+        <!--<action android:name="cn.jpush.android.intent.NOTIFICATION_CLICK_ACTION" />-->
+        <!--<action android:name="cn.jpush.android.intent.CONNECTION" />-->
+        <!--<category android:name="${applicationId}" />-->
+        <!--</intent-filter>-->
+        <!--</receiver>-->
+
     </application>
 
 </manifest>

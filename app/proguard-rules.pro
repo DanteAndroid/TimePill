@@ -31,3 +31,12 @@
   -dontwarn org.apache.http.**
   -dontwarn android.net.http.AndroidHttpClient
   # End Bugtags
+  -dontoptimize
+
+  # jpush
+  -dontpreverify
+  -dontwarn cn.jpush.**
+  -keep class cn.jpush.** { *; }
+  -dontwarn cn.jiguang.**
+  -keep class cn.jiguang.** { *; }
+  # End jpush

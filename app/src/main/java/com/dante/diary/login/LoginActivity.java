@@ -44,7 +44,6 @@ import java.util.Date;
 import java.util.List;
 
 import butterknife.BindView;
-import rx.functions.Action1;
 import top.wefor.circularanim.CircularAnim;
 
 public class LoginActivity extends BaseActivity implements PatternLockViewListener {
@@ -219,15 +218,15 @@ public class LoginActivity extends BaseActivity implements PatternLockViewListen
             });
 
         });
-        pswEt.setOnEditorActionListener((textView, id1, keyEvent) -> {
-            if (id1 == R.id.login || id1 == EditorInfo.IME_NULL) {
+        pswEt.setOnEditorActionListener((textView, id, keyEvent) -> {
+            if (id == R.id.login || id == EditorInfo.IME_NULL) {
                 login();
                 return true;
             }
             return false;
         });
-        nameEt.setOnEditorActionListener((textView, id1, keyEvent) -> {
-            if (id1 == R.id.name || id1 == EditorInfo.IME_NULL) {
+        nameEt.setOnEditorActionListener((textView, id, keyEvent) -> {
+            if (id == R.id.name || id == EditorInfo.IME_NULL) {
                 register();
                 return true;
             }
@@ -394,12 +393,9 @@ public class LoginActivity extends BaseActivity implements PatternLockViewListen
         });
         LoginManager.login(emailAccount, password)
                 .compose(applySchedulers())
-                .subscribe(new Action1<User>() {
-                    @Override
-                    public void call(User user) {
-                        saveAccount(user);
-                        loginSuccess(login);
-                    }
+                .subscribe(user -> {
+                    saveAccount(user);
+                    loginSuccess(login);
                 }, new HttpErrorAction<Throwable>() {
                     @Override
                     public void call(Throwable throwable) {
@@ -440,11 +436,25 @@ public class LoginActivity extends BaseActivity implements PatternLockViewListen
     private void saveAccount(User user) {
         base.save(user);
         id = user.getId();
-        Log.d(TAG, "saveAccount: " + SpUtil.getString(Constants.ACCOUNT) + "   id: " + id);
+        Log.d(TAG, "saveAccount: " + user.toString());
 
         SpUtil.save(Constants.ACCOUNT, emailAccount);
         SpUtil.save(Constants.PASSWORD, password);
         SpUtil.save(Constants.ID, id);
+//        if (SpUtil.getBoolean("alias_set")){
+//            return;
+//        }
+//        JPushInterface.setAlias(this, String.valueOf(id), (code, alias, set) -> {
+//            if (code == 0) {
+//                SpUtil.save("alias_set", true);
+//            }else if (code ==6002){
+//                Log.e(TAG, "gotResult: set alias time out");
+//            }else {
+//                Log.e(TAG, "gotResult: set alias failed. Code: "+code);
+//            }
+//
+//
+//        });
     }
 
     @Override

@@ -1,12 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <style name="AppTheme.NoActionBar.Placeholder">
-        <item name="colorPrimary">@color/indigo_500</item>
-        <item name="colorPrimaryDark">@color/indigo_700</item>
-        <item name="colorAccent">@color/pink_200</item>
-        <item name="android:windowBackground">@drawable/holder_logo</item>
-    </style>
-
     <style name="AppTheme.CenterAnimation">
         <!--<item name="android:windowBackground">@drawable/ll_face_logo</item>-->
     </style>

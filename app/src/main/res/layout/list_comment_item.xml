@@ -49,6 +49,7 @@
             android:layout_height="wrap_content"
             android:layout_below="@+id/commentName"
             android:layout_marginTop="8dp"
+            android:autoLink="all"
             android:lineSpacingMultiplier="1.2"
             tools:text="@string/test_comment"/>
 

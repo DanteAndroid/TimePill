@@ -229,4 +229,5 @@
     <string name="thx_for_feedback">感謝您的反馈~ 您的支持会让app越来越好</string>
     <string name="go_market">去市场</string>
     <string name="share_url" translatable="false">http://coolapk.com/apk/com.dante.diary</string>
+    <string name="diary_has_no_comment">该日记没有评论。</string>
 </resources>

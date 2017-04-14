@@ -9,6 +9,10 @@
         <item name="android:statusBarColor">@android:color/transparent</item>
     </style>
 
+    <style name="ViewerTheme.TransNav.Placeholder">
+        <item name="android:windowBackground">@drawable/holder_logo</item>
+    </style>
+
     <style name="AppTheme.NoActionBar.Default">
         <item name="android:statusBarColor">@color/colorPrimaryDark</item>
     </style>

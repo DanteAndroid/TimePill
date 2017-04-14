@@ -24,7 +24,7 @@
         android:layout_gravity="center"
         android:gravity="center"
         android:minHeight="68dp"
-        android:text="该日记没有评论。"
+        android:text="@string/diary_has_no_comment"
         android:textColor="@color/mediumGrey"
         android:visibility="gone"
         tools:visibility="visible"/>

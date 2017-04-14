@@ -7,13 +7,18 @@
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
     </style>
-    <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar"/>
+
+
     <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light"/>
 
     <style name="AppTheme.NoActionBar">
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
         <!--<item name="android:windowBackground">@drawable/window_background</item>-->
+    </style>
+
+    <style name="ViewerTheme.TransNav.Placeholder">
+        <item name="android:windowBackground">@drawable/holder_logo</item>
     </style>
 
     <style name="ViewerTheme" parent="Theme.AppCompat.NoActionBar">
@@ -52,7 +57,7 @@
     <style name="BottomDialog" parent="@android:style/Theme.DeviceDefault.Light.Dialog">
         <item name="android:windowAnimationStyle">@style/BottomAnimationStyle</item>
     </style>
-    <style name="AppTheme.NoActionBar.AppBarOverlay"
+    <style name="AppTheme.AppBarOverlay"
            parent="ThemeOverlay.AppCompat.Dark.ActionBar"/>
     <style name="AppTheme.NoActionBar.PopupOverlay" parent="ThemeOverlay.AppCompat.Light"/>
 

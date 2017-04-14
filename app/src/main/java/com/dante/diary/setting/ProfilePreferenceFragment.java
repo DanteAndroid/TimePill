@@ -128,12 +128,7 @@ public class ProfilePreferenceFragment extends PreferenceFragment {
             subscription.add(update());
             return true;
         });
-        intro.setOnPreferenceChangeListener((preference, newValue) -> {
-            introduction = (String) newValue;
-            if (introduction.equals(user.getIntro())) return false;
-            subscription.add(update());
-            return true;
-        });
+
         avatar.setOnPreferenceClickListener(preference -> {
             startActivityForResult(new Intent(getActivity(), PickPictureActivity.class), REQUEST_PICK_PICTURE);
             return true;

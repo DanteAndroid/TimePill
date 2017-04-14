@@ -18,6 +18,12 @@ android {
             abiFilters 'armeabi-v7a', 'x86'
         }
         vectorDrawables.useSupportLibrary = true
+
+        manifestPlaceholders = [
+                JPUSH_PKGNAME: applicationId,
+                JPUSH_APPKEY : "70d144d8fc0f4ea9c50f4f32",
+                JPUSH_CHANNEL: "developer-default", //暂时填写默认值即可.
+        ]
     }
     buildTypes {
         release {
@@ -44,6 +50,7 @@ android {
             include 'armeabi-v7a'
         }
     }
+
 }
 
 bugtags {
@@ -73,9 +80,9 @@ dependencies {
     //https://github.com/rubensousa/FloatingToolbar
     //https://github.com/qyxxjd/MultipleStatusView
     //    debugCompile 'com.squareup.leakcanary:leakcanary-android:1.5'
+//    compile 'cn.jiguang.sdk:jpush:3.0.3'
+//    compile 'cn.jiguang.sdk:jcore:1.1.1'
 
-//    compile 'com.jakewharton:process-phoenix:2.0.0'
-    compile 'com.borjabravo:readmoretextview:2.0.1'
     compile 'com.github.oxoooo:touch-image-view:1.0.1'
     compile 'com.andrognito.patternlockview:patternlockview:1.0.0'
     compile 'com.github.antwankakki:FabricView:latest'
@@ -86,8 +93,7 @@ dependencies {
     compile 'io.github.yavski:fab-speed-dial:1.0.6'
     compile 'com.github.jaouan:revealator:1.2.1'
     compile 'com.classic.common:multiple-status-view:1.2'
-    compile 'com.github.developer-shivam:crescento:1.1.0'
-    compile 'com.github.rubensousa:floatingtoolbar:1.4.4'
+//    compile 'com.github.developer-shivam:crescento:1.1.0'
     compile 'com.github.jaychang0917:SimpleText:1.2.1'
     compile 'com.bugtags.library:bugtags-lib:latest.integration'
     compile 'com.github.bumptech.glide:glide:3.7.0'
