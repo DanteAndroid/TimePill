@@ -1,5 +1,7 @@
 package com.dante.diary.base;
 
+import android.animation.Animator;
+import android.animation.AnimatorListenerAdapter;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -30,6 +32,8 @@ public class BottomBarActivity extends BaseActivity implements FragNavController
     @BindView(R.id.bottomBar)
     public BottomBar bottomBar;
     private int MAIN = FragNavController.TAB1;
+    private boolean isHiding;
+    private boolean isShowing;
 
     @Override
     protected void initViews(@Nullable Bundle savedInstanceState) {
@@ -54,15 +58,36 @@ public class BottomBarActivity extends BaseActivity implements FragNavController
     }
 
     public void hideBottomBar() {
+        if (isHiding) {
+            return;
+        }
         bottomBar.animate().translationY(bottomBar.getHeight())
                 .setDuration(200)
+                .setListener(new AnimatorListenerAdapter() {
+                    @Override
+                    public void onAnimationEnd(Animator animation) {
+                        isHiding = false;
+                    }
+                })
                 .start();
+        isHiding = true;
     }
 
     public void showBottomBar() {
+        if (isShowing) {
+            return;
+        }
         bottomBar.animate().translationY(0)
                 .setDuration(200)
+                .setListener(new AnimatorListenerAdapter() {
+                    @Override
+                    public void onAnimationEnd(Animator animation) {
+                        isShowing = false;
+                    }
+                })
                 .start();
+        isShowing = true;
+
     }
 
     private void initBottomBar() {
@@ -87,7 +112,7 @@ public class BottomBarActivity extends BaseActivity implements FragNavController
         });
         bottomBar.setOnTabReselectListener(tabId -> {
             controller.clearStack();
-            scrollToTop();
+//            scrollToTop();
         });
     }
 

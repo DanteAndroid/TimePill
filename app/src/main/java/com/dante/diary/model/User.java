@@ -43,6 +43,20 @@ public class User extends RealmObject {
     @SerializedName("iconUrl")
     private String avatarUrl;
 
+    public User() {
+
+    }
+
+    public User(int id) {
+        this.id = id;
+    }
+
+    public User(int id, String name, String avatarUrl) {
+        this.id = id;
+        this.name = name;
+        this.avatarUrl = avatarUrl;
+    }
+
     @Override
     public String toString() {
         return "User{" +

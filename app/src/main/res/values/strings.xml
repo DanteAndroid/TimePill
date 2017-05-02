@@ -230,4 +230,8 @@
     <string name="go_market">去市场</string>
     <string name="share_url" translatable="false">http://coolapk.com/apk/com.dante.diary</string>
     <string name="diary_has_no_comment">该日记没有评论。</string>
+    <string name="pm">私信</string>
+    <string name="unspport_message_type">暂不支持此消息类型</string>
+    <string name="chat">私信</string>
+    <string name="edit_topic_diary">创建话题日记</string>
 </resources>

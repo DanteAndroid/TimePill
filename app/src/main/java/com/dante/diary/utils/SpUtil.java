@@ -5,6 +5,8 @@ import android.preference.PreferenceManager;
 
 import com.dante.diary.base.App;
 
+import java.util.Set;
+
 
 /**
  * Helps with shared preference.
@@ -16,6 +18,11 @@ public class SpUtil {
 
     public static void save(String key, String value) {
         editor.putString(key, value);
+        editor.apply();
+    }
+
+    public static void save(String key, Set<String> value) {
+        editor.putStringSet(key, value);
         editor.apply();
     }
 
@@ -39,6 +46,10 @@ public class SpUtil {
 
     public static String getString(String key) {
         return sp.getString(key, "");
+    }
+
+    public static Set<String> getStringSet(String key) {
+        return sp.getStringSet(key, null);
     }
 
     public static int getInt(String key) {

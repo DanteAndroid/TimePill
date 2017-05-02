@@ -61,6 +61,8 @@
     <string name="license_description">Please do not edit this app personally. If you got any
         advice, let me know
     </string>
+    <string name="edit_topic_diary">Create topic diary</string>
+
     <string name="login">Login</string>
     <string name="login_failed">Login failed, please try later</string>
     <string name="login_success">Login success</string>

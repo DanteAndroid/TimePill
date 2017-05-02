@@ -15,6 +15,8 @@ import android.text.TextUtils;
 import android.transition.Explode;
 import android.transition.Transition;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
@@ -28,6 +30,7 @@ import com.dante.diary.base.BaseFragment;
 import com.dante.diary.base.Constants;
 import com.dante.diary.base.RecyclerFragment;
 import com.dante.diary.base.TabPagerAdapter;
+import com.dante.diary.chat.ChatService;
 import com.dante.diary.edit.EditDiaryActivity;
 import com.dante.diary.edit.EditNotebookActivity;
 import com.dante.diary.login.LoginManager;
@@ -132,6 +135,7 @@ public class ProfileFragment extends BaseFragment {
     @Override
     protected void initViews() {
         id = getArguments().getInt(Constants.ID);
+        setHasOptionsMenu(!LoginManager.isMe(id));
         meAsHome = SpUtil.getBoolean(SettingFragment.MY_HOME);
         if (meAsHome && LoginManager.isMe(id)) {
             initFab();
@@ -164,12 +168,6 @@ public class ProfileFragment extends BaseFragment {
                 .subscribe(responseBodyResponse -> {
                     changeFollowState(false);
                     UiUtils.showSnack(rootView, getString(R.string.unfollow_success));
-
-                    try {
-                        log("" + responseBodyResponse.body().string());
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
                 });
         compositeSubscription.add(subscription);
     }
@@ -304,7 +302,7 @@ public class ProfileFragment extends BaseFragment {
 
     private void initFragments() {
         titles = new String[]{getString(R.string.my_diary), getString(R.string.my_notebook)};
-        fragments.add(DiaryListFragment.newInstance(id, null));
+        fragments.add(DiaryListFragment.newInstance(id, DiaryListFragment.OTHER, null));
         fragments.add(NoteBookListFragment.newInstance(id));
         adapter.setFragments(fragments, titles);
     }
@@ -354,6 +352,21 @@ public class ProfileFragment extends BaseFragment {
                 return true;
             }
         });
+    }
 
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+        if (id == R.id.action_pm) {
+            ChatService.send(100158434, "send to 100158434: " + System.currentTimeMillis());
+        }
+        return true;
+    }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        super.onCreateOptionsMenu(menu, inflater);
+        inflater.inflate(R.menu.menu_pm, menu);
     }
 }

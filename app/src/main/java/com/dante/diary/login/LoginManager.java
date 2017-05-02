@@ -2,11 +2,11 @@ package com.dante.diary.login;
 
 import android.app.AlertDialog;
 import android.content.Context;
-import android.util.Log;
 
 import com.blankj.utilcode.utils.AppUtils;
 import com.dante.diary.R;
 import com.dante.diary.base.Constants;
+import com.dante.diary.main.MainDiaryFragment;
 import com.dante.diary.model.Diary;
 import com.dante.diary.model.User;
 import com.dante.diary.net.NetService;
@@ -18,7 +18,6 @@ import java.util.List;
 import rx.Observable;
 
 import static com.blankj.utilcode.utils.Utils.getContext;
-import static it.sephiroth.android.library.imagezoom.ImageViewTouchBase.TAG;
 
 /**
  * Created by yons on 17/3/6.
@@ -29,7 +28,6 @@ public class LoginManager {
     private static TimeApi api;
     private static boolean isLogin;
 
-
     public static boolean isLogin() {
         String name = SpUtil.getString(Constants.ACCOUNT);
         String psw = SpUtil.getString(Constants.PASSWORD);
@@ -39,14 +37,12 @@ public class LoginManager {
     }
 
     public static Observable<TimeApi.DiariesResult<List<Diary>>> login() {
-        return api.allTodayDiaries(1, 20);
+        return api.allTodayDiaries(1, MainDiaryFragment.FETCH_DIARY_SIZE);
     }
 
     public static TimeApi getApi() {
         if (api == null) {
             if (isLogin()) {
-                Log.d(TAG, "getApi: " + SpUtil.getString(Constants.ACCOUNT));
-
                 api = NetService.getTimeApi(SpUtil.getString(Constants.ACCOUNT), SpUtil.getString(Constants.PASSWORD));
             }
         }

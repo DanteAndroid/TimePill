@@ -40,3 +40,11 @@
   -dontwarn cn.jiguang.**
   -keep class cn.jiguang.** { *; }
   # End jpush
+
+    -keep class com.alibaba.** {*;}
+    -dontwarn com.alibaba.**
+    -keep class com.avos.**{*;}
+    -dontwarn com.avos.**
+#For design support library
+-keep class android.support.design.widget.** { *; }
+-keep interface android.support.design.widget.** { *; }

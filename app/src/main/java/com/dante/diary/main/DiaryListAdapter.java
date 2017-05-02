@@ -1,7 +1,6 @@
 package com.dante.diary.main;
 
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
@@ -30,15 +29,6 @@ public class DiaryListAdapter extends BaseQuickAdapter<Diary, BaseViewHolder> {
 
     public DiaryListAdapter(int itemLayoutId, List<Diary> data) {
         super(itemLayoutId, data);
-    }
-
-    @Override
-    public long getItemId(int position) {
-        try {
-            return getItem(position).getId();
-        } catch (ArrayIndexOutOfBoundsException e) {
-            return position;
-        }
     }
 
     public void setIsFromNotebook(boolean isFromNotebook) {

@@ -13,6 +13,7 @@ import com.dante.diary.base.BaseFragment;
 import com.dante.diary.base.Constants;
 import com.dante.diary.base.RecyclerFragment;
 import com.dante.diary.base.TabPagerAdapter;
+import com.dante.diary.login.LoginManager;
 import com.dante.diary.notification.NotificationListFragment;
 import com.dante.diary.profile.DiaryListFragment;
 
@@ -21,7 +22,6 @@ import java.util.List;
 
 import butterknife.BindView;
 
-import static android.R.attr.id;
 import static com.dante.diary.base.App.context;
 
 /**
@@ -114,7 +114,7 @@ public class TabsFragment extends BaseFragment {
         assert titles != null;
 
         if (titles[0].equals(getString(R.string.my_following_diary))) {
-            fragments.add(DiaryListFragment.newInstance(id, DiaryListFragment.FOLLOWING));//关注的日记
+            fragments.add(DiaryListFragment.newInstance(LoginManager.getMyId(), DiaryListFragment.FOLLOWING, null));//关注的日记
 
         } else if (titles[0].equals(getString(R.string.my_notifications))) {
             fragments.add(new NotificationListFragment());//我的通知

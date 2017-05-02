@@ -1,5 +1,6 @@
 package com.dante.diary.utils;
 
+import android.app.Activity;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.support.v4.app.Fragment;
@@ -39,6 +40,8 @@ public class Imager {
     }
 
     public static void load(final Context context, String url, ImageView target) {
+        if (checkContext(context)) return;
+
         Glide.with(context)
                 .load(url)
                 .placeholder(R.drawable.image_place_holder)
@@ -70,9 +73,20 @@ public class Imager {
     }
 
     public static void loadAvatar(Context context, String url, ImageView avatarView) {
+        if (checkContext(context)) return;
         Glide.with(context).load(url)
                 .bitmapTransform(new CropCircleTransformation(context))
                 .into(avatarView);
+    }
+
+    private static boolean checkContext(Context context) {
+        if (context instanceof Activity) {
+            Activity activity = (Activity) context;
+            if (activity.isFinishing() || activity.isDestroyed()) {
+                return true;
+            }
+        }
+        return false;
     }
 
 }

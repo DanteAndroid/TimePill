@@ -1,10 +1,11 @@
 package com.dante.diary.profile;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v7.widget.LinearLayoutManager;
-import android.text.TextUtils;
-import android.util.Log;
+import android.support.v7.widget.RecyclerView;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -23,18 +24,23 @@ import com.dante.diary.base.Constants;
 import com.dante.diary.base.RecyclerFragment;
 import com.dante.diary.base.ViewActivity;
 import com.dante.diary.detail.DiariesViewerActivity;
+import com.dante.diary.edit.EditDiaryActivity;
 import com.dante.diary.login.LoginManager;
 import com.dante.diary.main.DiaryListAdapter;
+import com.dante.diary.main.MainDiaryFragment;
 import com.dante.diary.model.Diary;
+import com.dante.diary.model.Topic;
 import com.dante.diary.utils.ImageProgresser;
 import com.dante.diary.utils.SpUtil;
 import com.dante.diary.utils.TransitionHelper;
+import com.google.gson.Gson;
 
 import java.util.List;
 
 import butterknife.BindView;
 import io.realm.Sort;
 import rx.Observable;
+import top.wefor.circularanim.CircularAnim;
 
 /**
  * Created by yons on 17/3/9.
@@ -44,22 +50,31 @@ public class DiaryListFragment extends RecyclerFragment {
     public static final int DIARY_LIST_TYPE_USER = 0;
     public static final int DIARY_LIST_TYPE_NOTEBOOK = 1;
     public static final String FOLLOWING = "following";
+    public static final String TOPIC = "topic";
+    public static final String NOTEBOOK = "notebook";
+    public static final String OTHER = "other";
+
+
     private static final String TAG = "DiaryListFragment";
     DiaryListAdapter adapter;
     @BindView(R.id.stateText)
     TextView stateText;
+    @BindView(R.id.createTopicDiary)
+    FloatingActionButton fab;
     private List<Diary> diaries;
     private int page = 1;
     private int id;
-    private String subject;
+    private String data;
     private boolean isFromNotebook;
     private boolean isTimeReversed;
+    private String type;
 
     //id可以是用户id，也可以是notebook的id
-    public static DiaryListFragment newInstance(int id, String notebookSubject) {
+    public static DiaryListFragment newInstance(int id, String type, String data) {
         Bundle args = new Bundle();
         args.putInt(Constants.ID, id);
-        args.putString(Constants.DATA, notebookSubject);
+        args.putString(Constants.DATA, data);
+        args.putString(Constants.TYPE, type);
         DiaryListFragment fragment = new DiaryListFragment();
         fragment.setArguments(args);
         return fragment;
@@ -67,7 +82,7 @@ public class DiaryListFragment extends RecyclerFragment {
 
     @Override
     protected int initLayoutId() {
-        return R.layout.fragment_diary_main;
+        return R.layout.fragment_diary_list;
     }
 
 
@@ -77,13 +92,15 @@ public class DiaryListFragment extends RecyclerFragment {
         if (getArguments() != null) {
             //有参数则获取参数id
             id = getArguments().getInt(Constants.ID);
-            subject = getArguments().getString(Constants.DATA);
+            data = getArguments().getString(Constants.DATA);
+            type = getArguments().getString(Constants.TYPE);
+
         } else {
             //我的日记列表
             id = SpUtil.getInt(Constants.ID);
         }
         adapter = new DiaryListAdapter(null);
-        if (!TextUtils.isEmpty(subject) && !subject.equals(FOLLOWING)) {
+        if (type.equals(NOTEBOOK)) {
             isFromNotebook = true;
             setHasOptionsMenu(true);
             adapter = new DiaryListAdapter(R.layout.list_diary_item_expired, null);
@@ -161,18 +178,60 @@ public class DiaryListFragment extends RecyclerFragment {
         super.initData();
         if (isFromNotebook) {
             initAppBar();
-            toolbar.setTitle(subject);
+            toolbar.setTitle(data);
             toolbar.setVisibility(View.VISIBLE);
             adapter.setIsFromNotebook(isFromNotebook);
-        }
 
+        } else if (type.equals(TOPIC)) {
+            Topic topic = new Gson().fromJson(data, Topic.class);
+            initAppBar();
+            toolbar.setTitle("话题：" + topic.getTitle());
+            toolbar.setSubtitle(topic.getIntro());
+            toolbar.setVisibility(View.VISIBLE);
+            fab.show();
+            fab.setOnClickListener(v -> {
+                Intent intent = new Intent(getContext(), EditDiaryActivity.class);
+                intent.putExtra("isTopic", true);
+                CircularAnim.fullActivity(getActivity(), fab)
+                        .colorOrImageRes(R.color.colorAccent)
+                        .duration(400)
+                        .go(() -> startActivityForResult(intent, 0));
+            });
+
+            recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+                @Override
+                public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+                    super.onScrolled(recyclerView, dx, dy);
+                    if (dy > 5) {
+                        fab.hide();
+                    } else if (dy < -10) {
+                        fab.show();
+                    }
+                }
+            });
+        }
+        adapter.setOnLoadMoreListener(() -> fetch(), recyclerView);
+        toolbar.setOnClickListener(v -> scrollToTop());
         fetch();
     }
 
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == 0) {
+            getActivity();
+            if (resultCode == Activity.RESULT_OK) {
+                onRefresh();
+            }
+        }
+    }
+
     protected void fetch() {
+        log("fetch page=" + page);
         changeRefresh(true);
 
         subscription = diariesSource()
+                .distinct()
                 .compose(applySchedulers())
                 .subscribe(diaries -> {
                     if (isFromNotebook) {
@@ -183,27 +242,27 @@ public class DiaryListFragment extends RecyclerFragment {
                         stateText.setText(R.string.no_today_diary);
                         stateText.setVisibility(View.VISIBLE);
                     } else {
-                        adapter.setNewData(diaries);
-                        page++;
+                        if (diaries.isEmpty()) {
+                            adapter.loadMoreEnd();
+                        } else {
+                            adapter.addData(diaries);
+                            adapter.loadMoreComplete();
+                            page++;
+                        }
                     }
-
                     changeRefresh(false);
-                }, throwable -> Log.e("test", "fetch: " + throwable.getMessage()));
+                }, throwable -> changeRefresh(false));
     }
 
     private Observable<List<Diary>> diariesSource() {
-        if (!TextUtils.isEmpty(subject)) {
-            if (subject.equals(FOLLOWING)) {
-                return LoginManager.getApi().getFollowingDiaries().map(listResult -> listResult.diaries);
-            }
+        if (type.equals(FOLLOWING)) {
+            return LoginManager.getApi().getFollowingDiaries(page, MainDiaryFragment.FETCH_DIARY_SIZE).map(result -> result.diaries);
+        } else if (type.equals(TOPIC)) {
+            return LoginManager.getApi().getTopicDiaries(page, MainDiaryFragment.FETCH_DIARY_SIZE).map(result -> result.diaries);
+        } else if (type.equals(NOTEBOOK)) {
             //notebook的日记返回格式跟全站的不太一样，需要留意
-            List<Diary> diaries = base.findDiariesOfNotebook(id);
-            if (diaries.isEmpty()) {
-                return LoginManager.getApi().getDiariesOfNotebook(id, page)
-                        .map(listItemResult -> listItemResult.items);
-            } else {
-                return Observable.just(diaries);
-            }
+            return LoginManager.getApi().getDiariesOfNotebook(id, page, MainDiaryFragment.FETCH_DIARY_SIZE)
+                    .map(listItemResult -> listItemResult.items);
         }
         return LoginManager.getApi()
                 .getTodayDiaries(id);
@@ -246,4 +305,6 @@ public class DiaryListFragment extends RecyclerFragment {
         super.onCreateOptionsMenu(menu, inflater);
         inflater.inflate(R.menu.menu_order, menu);
     }
+
+
 }

@@ -4,8 +4,12 @@ import android.annotation.SuppressLint;
 import android.app.Application;
 import android.content.Context;
 
+import com.avos.avoscloud.AVOSCloud;
+import com.avos.avoscloud.im.v2.AVIMMessageManager;
+import com.avos.avoscloud.im.v2.messages.AVIMTextMessage;
 import com.blankj.utilcode.utils.Utils;
 import com.bugtags.library.Bugtags;
+import com.dante.diary.chat.PMMessageHandler;
 
 import io.realm.Realm;
 
@@ -13,6 +17,9 @@ import io.realm.Realm;
  * Created by yons on 17/3/3.
  */
 public class App extends Application {
+    public static final String LEAN_APP_ID = "Q2ysC4w6hRbP6Pe25BcC6sRH-gzGzoHsz";
+    public static final String LEAN_APP_KEY = "ITS9V1T9DSWIGXA2Ljw2nL9e";
+    public static final String BUGTAGS_APP_KEY = "6db43944fc0b79dce98107999a23f486";
     @SuppressLint("StaticFieldLeak")
     public static Context context;
 //    private RefWatcher refWatcher;
@@ -27,12 +34,12 @@ public class App extends Application {
         super.onCreate();
         context = this;
 //        refWatcher = LeakCanary.install(this);
-        Bugtags.start("6db43944fc0b79dce98107999a23f486", this, Bugtags.BTGInvocationEventNone);
+        Bugtags.start(BUGTAGS_APP_KEY, this, Bugtags.BTGInvocationEventNone);
+        AVOSCloud.initialize(this, LEAN_APP_ID, LEAN_APP_KEY);
+//        AVOSCloud.setDebugLogEnabled(BuildConfig.DEBUG);
+        AVIMMessageManager.registerMessageHandler(AVIMTextMessage.class, new PMMessageHandler());
+
         Realm.init(this);
         Utils.init(this);
-
-//        JPushInterface.setDebugMode(BuildConfig.DEBUG);
-//        JPushInterface.init(this);
-
     }
 }

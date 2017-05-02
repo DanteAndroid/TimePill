@@ -4,7 +4,6 @@ package com.dante.diary.follow;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
-import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -28,9 +27,11 @@ import rx.Observable;
 public class FollowListFragment extends RecyclerFragment {
     public static final String FOLLOWING = "following";
     public static final String FOLLOWER = "follower";
+    private static final int FETCH_FOLLOW_SIZE = 20;
     FollowListAdapter adapter;
     String type;
     private LinearLayoutManager layoutManager;
+    private int page = 1;
 
     public static FollowListFragment newInstance(String type) {
         Bundle args = new Bundle();
@@ -75,6 +76,7 @@ public class FollowListFragment extends RecyclerFragment {
     @Override
     protected void initData() {
         super.initData();
+        adapter.setOnLoadMoreListener(() -> fetch(), recyclerView);
     }
 
     protected void fetch() {
@@ -83,23 +85,29 @@ public class FollowListFragment extends RecyclerFragment {
         subscription = followSource()
                 .map(listUsersResult -> listUsersResult.users).compose(applySchedulers())
                 .subscribe(users -> {
-                    adapter.setNewData(users);
+                    if (users.isEmpty()) {
+                        adapter.loadMoreEnd();
+                    } else {
+                        adapter.addData(users);
+                        adapter.loadMoreComplete();
+                        page++;
+                    }
                     changeRefresh(false);
 
                 }, throwable -> {
-                    UiUtils.showSnack(rootView, getString(R.string.cant_get_following));
-                    Log.e("test", "fetch: " + throwable.getMessage());
+                    changeRefresh(false);
+                    UiUtils.showSnack(rootView, getString(R.string.cant_get_following) + throwable.getMessage());
                 });
 
     }
 
     private Observable<TimeApi.UsersResult<List<User>>> followSource() {
         if (type.equals(FOLLOWER)) {
-            return LoginManager.getApi().getMyFollowers();
+            return LoginManager.getApi().getMyFollowers(page, FETCH_FOLLOW_SIZE);
         }
 
         return LoginManager.getApi()
-                .getFollowings();
+                .getFollowings(page, FETCH_FOLLOW_SIZE);
     }
 
     @Override

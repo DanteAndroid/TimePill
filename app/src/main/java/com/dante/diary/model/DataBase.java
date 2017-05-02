@@ -66,6 +66,7 @@ public class DataBase {
     }
 
     public void clearAllDiaries() {
+        if (realm.isClosed()) return;
         realm.beginTransaction();
         realm.delete(Diary.class);
         realm.commitTransaction();

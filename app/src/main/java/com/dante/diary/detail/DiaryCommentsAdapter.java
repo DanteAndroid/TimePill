@@ -61,12 +61,7 @@ public class DiaryCommentsAdapter extends BaseQuickAdapter<Comment, BaseViewHold
 
             SimpleText sText = SimpleText.create(helper.itemView.getContext(), content)
                     .first(recipient)
-                    .pressedTextColor(R.color.btg_global_text_blue)
-                    .onClick((charSequence, range, o) -> {
-                        if (listener != null) {
-                            listener.onItemClick(helper.getAdapterPosition());
-                        }
-                    });
+                    .pressedTextColor(R.color.btg_global_text_blue);
             sText.linkify(commentContent);
             commentContent.setText(sText);
         }

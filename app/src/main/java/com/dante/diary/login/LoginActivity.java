@@ -436,8 +436,6 @@ public class LoginActivity extends BaseActivity implements PatternLockViewListen
     private void saveAccount(User user) {
         base.save(user);
         id = user.getId();
-        Log.d(TAG, "saveAccount: " + user.toString());
-
         SpUtil.save(Constants.ACCOUNT, emailAccount);
         SpUtil.save(Constants.PASSWORD, password);
         SpUtil.save(Constants.ID, id);

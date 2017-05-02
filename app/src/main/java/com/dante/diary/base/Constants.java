@@ -30,4 +30,6 @@ public class Constants {
     public static final String EXPIRED = "expired";
     public static final String CREATED = "created";
     public static final String NOTEBOOK_ID = "notebookId";
+    public static final String CONVERSATION_ID = "conversation_id";
+    public static final String FROM_ID = "from_id";
 }

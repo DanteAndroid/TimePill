@@ -6,6 +6,7 @@ import com.dante.diary.model.Comment;
 import com.dante.diary.model.Diary;
 import com.dante.diary.model.Notebook;
 import com.dante.diary.model.TipResult;
+import com.dante.diary.model.Topic;
 import com.dante.diary.model.User;
 
 import java.util.List;
@@ -34,6 +35,12 @@ import rx.Observable;
 
 public interface TimeApi {
 
+    @GET("topic")
+    Observable<Topic> getTopic();
+
+    @GET("topic/diaries")
+    Observable<DiariesResult<List<Diary>>> getTopicDiaries(@Query("page") int page, @Query("page_size") int pageSize);
+
     @GET("diaries/today")
     Observable<DiariesResult<List<Diary>>> allTodayDiaries(@Query("page") int page, @Query("page_size") int pageSize);
 
@@ -41,13 +48,13 @@ public interface TimeApi {
     Observable<List<Diary>> getTodayDiaries(@Path("user_id") int userId);
 
     @GET("diaries/follow")
-    Observable<DiariesResult<List<Diary>>> getFollowingDiaries();
+    Observable<DiariesResult<List<Diary>>> getFollowingDiaries(@Query("page") int page, @Query("page_size") int pageSize);
 
     @GET("relation")
-    Observable<UsersResult<List<User>>> getFollowings();
+    Observable<UsersResult<List<User>>> getFollowings(@Query("page") int page, @Query("page_size") int pageSize);
 
     @GET("relation/reverse")
-    Observable<UsersResult<List<User>>> getMyFollowers();
+    Observable<UsersResult<List<User>>> getMyFollowers(@Query("page") int page, @Query("page_size") int pageSize);
 
     @POST("relation/{user_id}")
     Observable<Response<ResponseBody>> follow(@Path("user_id") int userId);
@@ -81,7 +88,7 @@ public interface TimeApi {
     Observable<List<Notebook>> getMyNotebooks(@Path("user_id") int userId);
 
     @GET("notebooks/{notebook_id}/diaries")
-    Observable<NotebooksResult<List<Diary>>> getDiariesOfNotebook(@Path("notebook_id") int notebookId, @Query("page") int page);
+    Observable<NotebooksResult<List<Diary>>> getDiariesOfNotebook(@Path("notebook_id") int notebookId, @Query("page") int page, @Query("page_size") int pageSize);
 
     @FormUrlEncoded
     @PUT("notebooks/{id}")
@@ -97,7 +104,9 @@ public interface TimeApi {
 
     @Multipart
     @POST("notebooks/{book_id}/diaries")
-    Observable<Diary> createDiary(@Path("book_id") int notebookId, @Part("content") RequestBody content, @Nullable @Part MultipartBody.Part file);
+    Observable<Diary> createDiary(@Path("book_id") int notebookId, @Part("content") RequestBody content, @Part("join_topic") RequestBody topicState,
+                                  @Nullable @Part MultipartBody.Part file);
+
 
     @DELETE("diaries/{id}")
     Observable<Response<ResponseBody>> deleteDiary(@Path("id") int diaryId);
@@ -119,9 +128,11 @@ public interface TimeApi {
     @FormUrlEncoded
     @PUT("users")
     Observable<User> updateUserInfo(@Nullable @Field("name") String name, @Field("intro") String intro);
+
     @Multipart
     @POST("users/icon")
     Observable<User> setUserIcon(@Part MultipartBody.Part file);
+
 
     class DiariesResult<T> {
         public int count;

@@ -105,7 +105,7 @@ public abstract class RecyclerFragment extends BaseFragment implements SwipeRefr
 
     public void scrollToTop() {
         if (layoutManager instanceof LinearLayoutManager) {
-            int index = ((LinearLayoutManager) layoutManager).findLastVisibleItemPosition();
+            int index = ((LinearLayoutManager) layoutManager).findFirstCompletelyVisibleItemPosition();
             scrollToTop(index);
         } else {
             recyclerView.scrollToPosition(0);

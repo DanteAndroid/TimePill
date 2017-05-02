@@ -80,6 +80,7 @@ public class EditDiaryActivity extends BaseActivity {
     private boolean isEditMode;
     private Diary diary;
     private ArrayList<Notebook> validSubjects = new ArrayList<>();
+    private boolean isTopic;
 
 
     @Override
@@ -92,18 +93,27 @@ public class EditDiaryActivity extends BaseActivity {
         super.initViews(savedInstanceState);
         if (getIntent().getExtras() != null) {
             diaryId = getIntent().getIntExtra(Constants.ID, 0);
-            isEditMode = diaryId > 0;
-            diary = base.findDiary(diaryId);
-            if (diary == null) {
-                fetchDiary();
-            } else {
-                inflateDiary();
+            isTopic = getIntent().getBooleanExtra("isTopic", false);
+            Log.d(TAG, "initViews: isTopic " + isTopic);
+
+            if (isTopic) {
+                toolbar.setTitle(R.string.edit_topic_diary);
             }
-            toolbar.setTitle(R.string.edit_diary);
+            isEditMode = diaryId > 0;
+            if (isEditMode) {
+                diary = base.findDiary(diaryId);
+                if (diary == null) {
+                    fetchDiary();
+                } else {
+                    inflateDiary();
+                }
+                toolbar.setTitle(R.string.edit_diary);
+            }
         }
         fetchSubjects();
         initEditText();
         initTools();
+        setSupportActionBar(toolbar);
     }
 
     private void initTools() {
@@ -276,9 +286,10 @@ public class EditDiaryActivity extends BaseActivity {
         }
 
         return LoginManager.getApi()
-                .createDiary(notebookId, NetService.getRequestBody(diaryContent),
+                .createDiary(notebookId, NetService.getRequestBody(diaryContent), isTopic ? null : NetService.getRequestBody("1"),
                         photoFile == null ? null : NetService.createMultiPart("photo", photoFile));
     }
+
 
     private void initSubjectSpinner(List<Notebook> validNotebooks) {
         List<String> subjects = new ArrayList<>();

@@ -193,7 +193,7 @@ public class DiaryDetailFragment extends BaseFragment implements SwipeRefreshLay
                 if (id == R.id.commentAvatar || id == R.id.commentName) {
                     goProfile(comment.getUserId());
                 } else if (id == R.id.commentContent) {
-//                    comment(comment.getUserId(), comment.getFollowUser().getName());
+                    comment(comment.getUserId(), comment.getUser().getName());
                 }
             }
 
@@ -284,8 +284,6 @@ public class DiaryDetailFragment extends BaseFragment implements SwipeRefreshLay
                             post(comment, 0);
                         }
                     });
-//                    new Handler().postDelayed(() -> KeyboardUtils.showSoftInput(commentEt), 400);
-
                 }).listenDismiss(dialog -> {
                     if (!TextUtils.isEmpty(commentTemp)) {
                         UiUtils.showSnack(rootView, getString(R.string.content_saved_as_draft));

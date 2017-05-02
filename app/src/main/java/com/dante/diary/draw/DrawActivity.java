@@ -216,8 +216,8 @@ public class DrawActivity extends BaseActivity {
     }
 
     private void saveDraw() {
-        Bitmap draw = (Bitmap) mDrawView.createCapture(DrawingCapture.BITMAP);
-        File file = BitmapUtil.writeToFile(draw);
+        Object[] draw = mDrawView.createCapture(DrawingCapture.BITMAP);
+        File file = BitmapUtil.writeToFile((Bitmap) draw[0]);
         if (file.exists()) {
             Snackbar.make(fabMenu, R.string.draw_saved_success, Snackbar.LENGTH_SHORT).show();
         }

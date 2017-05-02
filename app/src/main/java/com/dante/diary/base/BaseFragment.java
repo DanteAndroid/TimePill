@@ -140,6 +140,9 @@ public abstract class BaseFragment extends Fragment {
     }
 
     public int getStackCount() {
+        if (getActivity() == null) {
+            return 0;
+        }
         return getActivity().getSupportFragmentManager().getBackStackEntryCount();
     }
 

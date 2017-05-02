@@ -16,5 +16,4 @@ public class GsonConfig {
             .setDateFormat("yyyy-MM-dd HH:mm:ss")
             .create();
 
-
 }

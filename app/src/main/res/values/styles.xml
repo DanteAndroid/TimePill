@@ -14,7 +14,7 @@
     <style name="AppTheme.NoActionBar">
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
-        <!--<item name="android:windowBackground">@drawable/window_background</item>-->
+        <item name="android:windowBackground">@color/whiteBackground</item>
     </style>
 
     <style name="ViewerTheme.TransNav.Placeholder">

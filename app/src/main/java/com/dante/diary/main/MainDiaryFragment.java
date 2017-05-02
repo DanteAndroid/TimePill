@@ -1,18 +1,24 @@
 package com.dante.diary.main;
 
 
+import android.animation.Animator;
+import android.animation.AnimatorListenerAdapter;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.internal.NavigationMenu;
+import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CoordinatorLayout;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.resource.drawable.GlideDrawable;
@@ -25,24 +31,32 @@ import com.dante.diary.base.BaseActivity;
 import com.dante.diary.base.BottomBarActivity;
 import com.dante.diary.base.Constants;
 import com.dante.diary.base.RecyclerFragment;
+import com.dante.diary.base.ViewActivity;
+import com.dante.diary.chat.ChatService;
 import com.dante.diary.custom.Updater;
 import com.dante.diary.detail.DiariesViewerActivity;
 import com.dante.diary.edit.EditDiaryActivity;
 import com.dante.diary.edit.EditNotebookActivity;
 import com.dante.diary.login.LoginManager;
 import com.dante.diary.model.Diary;
+import com.dante.diary.model.Topic;
+import com.dante.diary.net.HttpErrorAction;
 import com.dante.diary.setting.SettingActivity;
 import com.dante.diary.setting.SettingFragment;
 import com.dante.diary.utils.ImageProgresser;
+import com.dante.diary.utils.Imager;
 import com.dante.diary.utils.Share;
 import com.dante.diary.utils.SpUtil;
 import com.dante.diary.utils.TransitionHelper;
 import com.dante.diary.utils.UiUtils;
 import com.dante.diary.utils.WrapContentLinearLayoutManager;
+import com.google.gson.Gson;
+import com.hendraanggrian.widget.SubtitleCollapsingToolbarLayout;
 
 import java.util.List;
 
 import butterknife.BindView;
+import butterknife.Unbinder;
 import io.github.yavski.fabspeeddial.FabSpeedDial;
 import io.github.yavski.fabspeeddial.SimpleMenuListenerAdapter;
 import io.realm.OrderedCollectionChangeSet;
@@ -55,9 +69,9 @@ import top.wefor.circularanim.CircularAnim;
 
 
 public class MainDiaryFragment extends RecyclerFragment implements OrderedRealmCollectionChangeListener<RealmResults<Diary>> {
+    public static final int FETCH_DIARY_SIZE = 20;
     private static final String TAG = "MainDiaryFragment";
     private static final String INDEX = "INDEX";
-    private static final int FETCH_DIARY_COUNT = 20;
     String url;
     boolean isFetching;
     String title;
@@ -69,9 +83,24 @@ public class MainDiaryFragment extends RecyclerFragment implements OrderedRealmC
     FabSpeedDial fabMenu;
     @BindView(R.id.shadowView)
     View shadowView;
+    @BindView(R.id.topicImage)
+    ImageView topicImage;
+    @BindView(R.id.topicTitle)
+    TextView topicTitle;
+    Unbinder unbinder;
+    @BindView(R.id.toolbar_layout)
+    SubtitleCollapsingToolbarLayout toolbarLayout;
+    Unbinder unbinder1;
+    @BindView(R.id.appBar)
+    AppBarLayout appBar;
+    Unbinder unbinder2;
 
 
     private Intent intent;
+    private boolean collapsed;
+    private Topic topic;
+    private boolean isHiding;
+    private boolean isShowing;
 
     public MainDiaryFragment() {
         // Required empty public constructor
@@ -193,15 +222,41 @@ public class MainDiaryFragment extends RecyclerFragment implements OrderedRealmC
             @Override
             public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
                 if (dy > 5) {
-                    CoordinatorLayout.LayoutParams layoutParams = (CoordinatorLayout.LayoutParams) fabMenu.getLayoutParams();
-                    int fab_bottomMargin = layoutParams.bottomMargin;
-                    fabMenu.animate().translationY(fabMenu.getHeight() + fab_bottomMargin).setDuration(400).start();
+                    hideFabMenu();
                 } else if (dy < -30) {
-                    fabMenu.animate().translationY(0).setDuration(400).start();
+                    showFabMenu();
                 }
             }
         });
 
+    }
+
+    private void showFabMenu() {
+        if (isShowing) {
+            return;
+        }
+        fabMenu.animate().translationY(0).setListener(new AnimatorListenerAdapter() {
+            @Override
+            public void onAnimationEnd(Animator animation) {
+                isShowing = false;
+            }
+        }).setDuration(250).start();
+        isShowing = true;
+    }
+
+    private void hideFabMenu() {
+        if (isHiding) {
+            return;
+        }
+        CoordinatorLayout.LayoutParams layoutParams = (CoordinatorLayout.LayoutParams) fabMenu.getLayoutParams();
+        int fab_bottomMargin = layoutParams.bottomMargin;
+        fabMenu.animate().translationY(fabMenu.getHeight() + fab_bottomMargin).setListener(new AnimatorListenerAdapter() {
+            @Override
+            public void onAnimationEnd(Animator animation) {
+                isHiding = false;
+            }
+        }).setDuration(300).start();
+        isHiding = true;
     }
 
     @SuppressWarnings("unchecked")
@@ -209,7 +264,6 @@ public class MainDiaryFragment extends RecyclerFragment implements OrderedRealmC
         Intent intent = new Intent(context.getApplicationContext(), DiariesViewerActivity.class);
         intent.putExtra(Constants.POSITION, i);
         startActivity(intent);
-
 //        ImageView avatar = (ImageView) view.findViewById(R.id.avatar);
 //        int id = adapter.getItem(i).getId();
 //        ViewCompat.setTransitionName(avatar, String.valueOf(id));
@@ -253,10 +307,14 @@ public class MainDiaryFragment extends RecyclerFragment implements OrderedRealmC
 
     @Override
     protected void initData() {
+        ChatService.loginChatServer();
+        appBar.addOnOffsetChangedListener((appBarLayout, verticalOffset) -> {
+            collapsed = verticalOffset == 0;
+        });
         toolbar.setVisibility(View.VISIBLE);
-        toolbar.setTitle(getString(R.string.app_name));
+        toolbarLayout.setOnClickListener(v -> goTopic());
         toolbar.setOnClickListener(v -> {
-            scrollToTop();
+            goTopic();
         });
         if (LoginManager.getApi() == null) {
             LoginManager.showGetLoginInfoError(getContext());
@@ -278,9 +336,20 @@ public class MainDiaryFragment extends RecyclerFragment implements OrderedRealmC
         changeRefresh(true);
     }
 
+    private void goTopic() {
+        int index = ((LinearLayoutManager) layoutManager).findFirstVisibleItemPosition();
+        if (index == 0) {
+            ViewActivity.viewTopicDiaries(getActivity(), new Gson().toJson(topic));
+        } else {
+            scrollToTop();
+        }
+    }
+
     protected void fetch() {
+        fetchTopic();
+
         subscription = LoginManager.getApi()
-                .allTodayDiaries(page, FETCH_DIARY_COUNT)
+                .allTodayDiaries(page, FETCH_DIARY_SIZE)
                 .compose(applySchedulers())
                 .map(listResult -> listResult.diaries)
                 .flatMap(new Func1<List<Diary>, Observable<Diary>>() {
@@ -330,6 +399,28 @@ public class MainDiaryFragment extends RecyclerFragment implements OrderedRealmC
 
     }
 
+    private void fetchTopic() {
+        subscription = LoginManager.getApi().getTopic()
+                .compose(applySchedulers())
+                .subscribe(topic -> {
+                    this.topic = topic;
+                    toolbarLayout.setTitle("今日话题：" + topic.getTitle());
+                    Imager.load(MainDiaryFragment.this, topic.getImageUrl(), topicImage);
+
+                }, new HttpErrorAction<Throwable>() {
+                    @Override
+                    public void call(Throwable throwable) {
+                        super.call(throwable);
+                        if (!errorMessage.isEmpty()) {
+                            UiUtils.showSnack(rootView, errorMessage);
+                        }
+                    }
+                });
+
+        compositeSubscription.add(subscription);
+
+    }
+
     @Override
     public void onRefresh() {
         if (adapter.isLoading() || isFetching) {
@@ -365,7 +456,6 @@ public class MainDiaryFragment extends RecyclerFragment implements OrderedRealmC
             adapter.notifyItemRangeInserted(range.startIndex, range.length);
             if (page == 1) {
                 scrollToTop(range.length);
-//                recyclerView.scrollToPosition(0);
             }
         }
 
@@ -383,8 +473,6 @@ public class MainDiaryFragment extends RecyclerFragment implements OrderedRealmC
             startActivity(new Intent(getContext(), SettingActivity.class));
         } else if (id == R.id.action_share) {
             String text = SpUtil.get(Updater.SHARE_APP, getString(R.string.share_app_description));
-            Log.d("test", "check: get " + text);
-
             Share.shareText(getContext(), text);
         } else if (id == 0) {
 

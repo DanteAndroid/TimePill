@@ -13,8 +13,10 @@ import com.dante.diary.profile.ProfileFragment;
 
 public class ViewActivity extends BaseActivity {
     public static final String TYPE_PROFILE = "profile";
+
     public static final String TYPE_DIARY_LIST = "diary_list";
     public static final String TYPE_DETAIL = "diary_detail";
+    public static final String TYPE_TOPIC = "diary_topic";
     private static final String TAG = "ViewerActivity";
     private String type;
     private Fragment fragment;
@@ -26,6 +28,13 @@ public class ViewActivity extends BaseActivity {
         intent.putExtra(Constants.ID, id);
         intent.putExtra(Constants.TYPE, TYPE_DIARY_LIST);
         intent.putExtra(Constants.DATA, notebookSubject);
+        context.startActivity(intent);
+    }
+
+    public static void viewTopicDiaries(Context context, String topic) {
+        Intent intent = new Intent(context, ViewActivity.class);
+        intent.putExtra(Constants.DATA, topic);
+        intent.putExtra(Constants.TYPE, TYPE_TOPIC);
         context.startActivity(intent);
     }
 
@@ -54,10 +63,6 @@ public class ViewActivity extends BaseActivity {
 
         type = getIntent().getStringExtra(Constants.TYPE);
         id = getIntent().getIntExtra(Constants.ID, 0);
-        if (id == 0) {
-            finish();
-            return;
-        }
 
         switch (type) {
             case TYPE_DETAIL:
@@ -68,7 +73,11 @@ public class ViewActivity extends BaseActivity {
                 break;
             case TYPE_DIARY_LIST:
                 String subject = getIntent().getStringExtra(Constants.DATA);
-                fragment = DiaryListFragment.newInstance(id, subject);
+                fragment = DiaryListFragment.newInstance(id, DiaryListFragment.NOTEBOOK, subject);
+                break;
+            case TYPE_TOPIC:
+                String topic = getIntent().getStringExtra(Constants.DATA);
+                fragment = DiaryListFragment.newInstance(id, DiaryListFragment.TOPIC, topic);
                 break;
         }
 
