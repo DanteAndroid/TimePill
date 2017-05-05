@@ -1,6 +1,6 @@
 {
 	"lastest_version": "v1.5",
-	"lastest_version_code": 6,
+	"lastest_version_code": 7,
 	"former_version": "v1.0",
 	"forceUpdate": false,
 	"message": " - 添加话题;\n  - 添加私信(可能有bug);\n - 其他bug修复",
