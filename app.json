@@ -1,6 +1,6 @@
 {
-	"lastest_version": "v1.6",
-	"lastest_version_code": 10,
+	"lastest_version": "v1.6.1",
+	"lastest_version_code": 11,
 	"former_version": "v1.5.1",
 	"forceUpdate": false,
 	"message": "- 紧急修复私信消息左右位置错乱问题\n- 调整大量ui细节（站长的建议）;\n- 添加取消关注、取消被关注功能（长按）",
