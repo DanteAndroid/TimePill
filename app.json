@@ -1,9 +1,9 @@
 {
-	"lastest_version": "v1.0",
-	"lastest_version_code": 6,
-	"former_version": "v0.2",
-	"forceUpdate": true,
-	"message": " - 修复创建日记失败的bug;\n  - 一些细节修复.",
+	"lastest_version": "v1.6.1",
+	"lastest_version_code": 11,
+	"former_version": "v1.5.1",
+	"forceUpdate": false,
+	"message": "- 紧急修复私信消息左右位置错乱问题\n- 调整大量ui细节（站长的建议）;\n- 添加取消关注、取消被关注功能（长按）",
 	"share_app_description": "from 时间胶囊：http://www.coolapk.com/apk/com.dante.diary",
-	"apk_url":"https://github.com/DanteAndroid/TimePill/releases/download/v1.0/app-release.apk"
+	"apk_url":"https://github.com/DanteAndroid/TimePill/releases/download/v1.6/app-release.apk"
 }
