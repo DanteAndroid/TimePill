@@ -1,9 +1,9 @@
 {
 	"lastest_version": "v1.6",
-	"lastest_version_code": 9,
+	"lastest_version_code": 10,
 	"former_version": "v1.5.1",
 	"forceUpdate": false,
-	"message": " - 修复私信发不了的问题，如果是时间胶囊客户端则会提示可以发私信\n  - 调整大量ui细节（站长的建议）;\n - 添加取消关注、取消被关注功能（长按）",
+	"message": " - 紧急修复私信消息左右位置错乱问题\n  - 调整大量ui细节（站长的建议）;\n - 添加取消关注、取消被关注功能（长按）",
 	"share_app_description": "from 时间胶囊：http://www.coolapk.com/apk/com.dante.diary",
 	"apk_url":"https://github.com/DanteAndroid/TimePill/releases/download/v1.6/app-release.apk"
 }
