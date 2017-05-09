@@ -14,12 +14,11 @@
         android:fitsSystemWindows="true"
         android:theme="@style/AppTheme.AppBarOverlay">
 
-        <com.hendraanggrian.widget.SubtitleCollapsingToolbarLayout
+        <android.support.design.widget.CollapsingToolbarLayout
             android:id="@+id/toolbar_layout"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             app:contentScrim="?attr/colorPrimary"
-            app:expandedSubtitleTextAppearance="@style/TextAppearance.AppCompat.Title"
             app:expandedTitleTextAppearance="@style/TextAppearance.AppCompat.Headline"
             app:layout_scrollFlags="scroll|exitUntilCollapsed|snap">
 
@@ -50,12 +49,9 @@
                     android:visibility="gone"
                     tools:text="This is topic title"/>
             </FrameLayout>
-            <android.support.v7.widget.Toolbar
-                android:id="@+id/toolbar"
-                android:layout_width="match_parent"
-                android:layout_height="?attr/actionBarSize"
-                app:popupTheme="@style/AppTheme.PopupOverlay"/>
-        </com.hendraanggrian.widget.SubtitleCollapsingToolbarLayout>
+            <include layout="@layout/common_toolbar"/>
+
+        </android.support.design.widget.CollapsingToolbarLayout>
 
     </android.support.design.widget.AppBarLayout>
 

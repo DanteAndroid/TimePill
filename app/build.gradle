@@ -11,14 +11,14 @@ android {
         applicationId "com.dante.diary"
         minSdkVersion 19
         targetSdkVersion 25
-        versionCode 6
-        versionName "1.0"
+        versionCode 11
+        versionName "1.6.1"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         ndk {
             abiFilters 'armeabi-v7a', 'x86'
         }
         vectorDrawables.useSupportLibrary = true
-
+        multiDexEnabled true
         manifestPlaceholders = [
                 JPUSH_PKGNAME: applicationId,
                 JPUSH_APPKEY : "70d144d8fc0f4ea9c50f4f32",
@@ -73,64 +73,60 @@ dependencies {
     compile('com.github.ozodrukh:CircularReveal:1.3.1@aar') {
         transitive = true;
     }
-    //============== debug ==============
 
     //============== common ==============
-
-    //============== custom ==============
-
-    //============== Rxjava ==============
-
-    //============== official ==============
-
-    //https://github.com/qyxxjd/MultipleStatusView
-    //    debugCompile 'com.squareup.leakcanary:leakcanary-android:1.5'
-//    compile 'cn.jiguang.sdk:jpush:3.0.3'
-//    compile 'cn.jiguang.sdk:jcore:1.1.1'
-    compile 'com.hendraanggrian:collapsingtoolbarlayout-subtitle:0.3.1'
-    // LeanCloud 基础包
-    compile('cn.leancloud.android:avoscloud-sdk:v3.+')
-    // 推送与实时聊天需要的包
-    compile('cn.leancloud.android:avoscloud-push:v3.+@aar') { transitive = true }
-
-    compile 'com.github.stfalcon:chatkit:0.2.0'
-    compile 'com.github.oxoooo:touch-image-view:1.0.1'
-    compile 'com.andrognito.patternlockview:patternlockview:1.0.0'
-    compile 'com.github.antwankakki:FabricView:latest'
-    compile 'com.byox.drawview:drawview:1.2.6'
+    compile 'com.tbruyelle.rxpermissions:rxpermissions:0.9.0@aar'
     compile 'moe.feng:AlipayZeroSdk:1.1'
-    compile 'com.github.andremion:louvre:1.0.1'
-    compile 'com.github.XunMengWinter:CircularAnim:0.3.4'
-    compile 'io.github.yavski:fab-speed-dial:1.0.6'
-    compile 'com.github.jaouan:revealator:1.2.1'
-    compile 'com.classic.common:multiple-status-view:1.2'
     compile 'com.github.jaychang0917:SimpleText:1.2.1'
     compile 'com.bugtags.library:bugtags-lib:latest.integration'
     compile 'com.github.bumptech.glide:glide:3.7.0'
-    compile 'jp.wasabeef:glide-transformations:2.0.1'
     compile 'com.jakewharton:butterknife:8.5.1'
     compile 'com.google.code.gson:gson:2.8.0'
     compile 'com.blankj:utilcode:1.3.6'
     compile 'com.hwangjr.proguard:proguardconfig:1.0.1@aar'
     compile 'com.github.CymChad:BaseRecyclerViewAdapterHelper:2.9.2'
+    compile 'com.yqritc:recyclerview-flexibledivider:1.4.0'
+    compile 'com.hendraanggrian:collapsingtoolbarlayout-subtitle:0.3.1'
     compile 'com.ncapdevi:frag-nav:1.4.0'
     compile 'com.roughike:bottom-bar:2.1.1'
-    compile 'com.yqritc:recyclerview-flexibledivider:1.4.0'
+    compile 'org.greenrobot:eventbus:3.0.0'
+
+    //============== Rxjava ==============
+    compile 'com.artemzin.rxjava:proguard-rules:1.1.0.0'
+    compile 'io.reactivex:rxandroid:1.2.1'
+    compile 'com.squareup.retrofit2:adapter-rxjava:2.1.0'
     compile 'com.squareup.retrofit2:retrofit:2.1.0'
     compile 'com.squareup.retrofit2:converter-gson:2.1.0'
-    compile 'com.squareup.retrofit2:adapter-rxjava:2.1.0'
-    compile 'io.reactivex:rxandroid:1.2.1'
-    compile 'com.artemzin.rxjava:proguard-rules:1.1.0.0'
-    compile 'com.tbruyelle.rxpermissions:rxpermissions:0.9.0@aar'
     compile 'com.squareup.okhttp3:logging-interceptor:3.5.0'
+
+    //============== custom ==============
+    compile 'com.github.stfalcon:chatkit:0.2.1'
+    compile 'com.github.oxoooo:touch-image-view:1.0.1'
+    compile 'com.andrognito.patternlockview:patternlockview:1.0.0'
+    compile 'com.byox.drawview:drawview:1.2.11'
+    compile 'com.github.andremion:louvre:1.0.1'
+    compile 'com.github.XunMengWinter:CircularAnim:0.3.4'
+    compile 'io.github.yavski:fab-speed-dial:1.0.6'
+    compile 'com.classic.common:multiple-status-view:1.2'
+    compile 'jp.wasabeef:glide-transformations:2.0.1'
+    compile('cn.leancloud.android:avoscloud-sdk:v3.+')
+    compile('cn.leancloud.android:avoscloud-push:v3.+@aar') { transitive = true }// 推送与实时聊天需要的包
+
+    //============== official ==============
     compile 'com.android.support:design:25.3.1'
     compile 'com.android.support:appcompat-v7:25.3.1'
     compile 'com.android.support:support-v4:25.3.1'
     compile 'com.android.support:cardview-v7:25.3.1'
     compile 'com.android.support:recyclerview-v7:25.3.1'
     compile 'com.android.support.constraint:constraint-layout:1.0.2'
+
+    //============== debug ==============
+//    compile 'cn.jiguang.sdk:jpush:3.0.3'
+//    compile 'cn.jiguang.sdk:jcore:1.1.1'
     compile 'com.android.support:support-vector-drawable:25.3.1'
     testCompile 'junit:junit:4.12'
     annotationProcessor 'com.jakewharton:butterknife-compiler:8.5.1'
     releaseCompile 'com.squareup.leakcanary:leakcanary-android-no-op:1.5'
+    //    debugCompile 'com.squareup.leakcanary:leakcanary-android:1.5'
+
 }

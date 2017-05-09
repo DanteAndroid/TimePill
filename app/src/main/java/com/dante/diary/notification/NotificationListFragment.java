@@ -102,14 +102,9 @@ public class NotificationListFragment extends RecyclerFragment implements IOnIte
                 .tipsRead(ids.toString())
                 .compose(applySchedulers())
                 .subscribe(responseBodyResponse -> {
+                    adapter.notifyItemRangeRemoved(0, adapter.getData().size());
                     UiUtils.showSnack(rootView, getString(R.string.all_marked_readed));
                     fab.hide();
-
-                    try {
-                        log("" + responseBodyResponse.body().string());
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
                 }, throwable -> {
                     UiUtils.showSnack(rootView, getString(R.string.cant_connect_net) + throwable.getMessage());
                 });

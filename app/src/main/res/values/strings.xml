@@ -138,7 +138,7 @@
     <string name="email_not_install">未安装邮件客户端</string>
     <string name="version">版本号</string>
     <string name="tips">提示</string>
-    <string name="tips_content">点击标签或者标题可跳转到顶部</string>
+    <string name="tips_content">- 任意地方点击标题可跳转到顶部\n- 资料页点击头像可以发私信</string>
     <string name="about_me">关于我</string>
     <string name="about_me_description">我是个热爱 Google 的 Android 开发者，现在上海，如果有好的职位可以推荐给我~</string>
     <string name="my_email" translatable="false">danteandroi@gmail.com</string>
@@ -234,4 +234,16 @@
     <string name="unspport_message_type">暂不支持此消息类型</string>
     <string name="chat">私信</string>
     <string name="edit_topic_diary">创建话题日记</string>
+    <string name="hint_enter_message">输入内容</string>
+    <string name="message_sent">已发送</string>
+    <string name="conversation_is_empty">对话列表为空</string>
+    <string name="cancel_followed_failed">取消被关注失败</string>
+    <string name="no_topic_today">今天没有话题哦</string>
+    <string name="cant_pm_to_self">不能给自己发私信，除非你有多重人格:P</string>
+    <string name="cancel_followed_message">取消他对你的关注？他将无法在关注的日记里看到你的日记。</string>
+    <string name="cancel_followed">取消关注</string>
+    <string name="nope">不用了</string>
+    <string name="timepill_user_hint">该用户也使用时间胶囊客户端，您可以点击右上角发送私信</string>
+    <string name="unfollow_message">确定要取消对其关注？</string>
+    <string name="dont_hint_update">不再提示</string>
 </resources>

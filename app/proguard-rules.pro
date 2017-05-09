@@ -15,7 +15,7 @@
 #-keepclassmembers class fqcn.of.javascript.interfaces.for.webview {
 #   public *;
 #}
-  -dontwarn com.dante.diary.main.**
+  -dontwarn com.dante.diary.**
   -keep class com.dante.diary.main.MainDiaryFragment { *; }
   -keep class android.support.v7.widget.ShareActionProvider { *; }
   -keep class com.dante.diary.net.** { *; }
@@ -48,3 +48,9 @@
 #For design support library
 -keep class android.support.design.widget.** { *; }
 -keep interface android.support.design.widget.** { *; }
+
+-keepattributes *Annotation*
+-keepclassmembers class ** {
+    @org.greenrobot.eventbus.Subscribe <methods>;
+}
+-keep enum org.greenrobot.eventbus.ThreadMode { *; }

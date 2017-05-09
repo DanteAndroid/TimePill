@@ -74,7 +74,7 @@ public class SettingFragment extends PreferenceFragment implements Preference.On
     private Preference theme;
     private CheckBoxPreference shortSplash;
     private BottomDialogFragment patternDialog;
-    private boolean hasPassword = true;
+    private boolean hasPassword = false;
 
 
     @Override
@@ -187,6 +187,7 @@ public class SettingFragment extends PreferenceFragment implements Preference.On
                                 hasPassword = true;
                                 SpUtil.save(SettingFragment.PATTERN_LOCK_PSW, PatternLockUtils.patternToString(patternLockView, patternLockView.getPattern()));
                                 patternDialog.dismiss();
+                                shortSplash.setEnabled(true);
                             }
                         }
 

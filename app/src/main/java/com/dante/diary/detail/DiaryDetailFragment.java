@@ -484,6 +484,7 @@ public class DiaryDetailFragment extends BaseFragment implements SwipeRefreshLay
         fetch();
     }
 
+    //沒用到
     @Override
     public void onItemClick(int position) {
         goProfile(adapter.getItem(position).getRecipientId());//这里点击的是回复人的名字

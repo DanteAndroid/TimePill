@@ -25,9 +25,9 @@
         android:layout_height="match_parent">
         <ImageView
             android:id="@+id/avatar"
-            android:layout_width="50dp"
-            android:layout_height="50dp"
-            android:layout_marginRight="12dp"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_marginRight="13dp"
             android:foreground="?attr/selectableItemBackground"
             android:textAppearance="?attr/textAppearanceListItem"
             tools:src="@mipmap/ic_launcher"/>

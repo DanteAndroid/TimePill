@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">时间胶囊</string>
-    <string name="about">about</string>
+    <string name="app_name">TimePill</string>
+    <string name="about">About</string>
     <string name="about_me">About me</string>
     <string name="about_me_description">I\'m an Android developer in ShangHai, if you got any job,
         you can recommend to me
@@ -228,5 +228,25 @@
     <string name="time_order_reverse">Time order reverse</string>
 
     <string name="pref_id">User ID</string>
+    <string name="chat">私信</string>
+    <string name="conversation_is_empty">Conversation is empty</string>
+    <string name="diary_has_no_comment">This diary has no comment.</string>
+    <string name="message_sent">Message sent</string>
+    <string name="pm">PM</string>
+    <string name="unspport_message_type">Not supported message type</string>
+    <string name="hint_enter_message">Enter message</string>
+    <string name="cancel_followed_failed">取消被关注失败</string>
+    <string name="no_topic_today">Today has no topic</string>
+    <string name="cancel_followed">Cancel followed</string>
+    <string name="cancel_followed_message">Delete his following to you? He would not see your
+        diaries in following diaries
+    </string>
+    <string name="cant_pm_to_self">You can\'t send pm to your self :P</string>
+    <string name="nope">Nope</string>
+    <string name="unfollow_message">Are you sure to unfollow him?</string>
+    <string name="timepill_user_hint">This user is using timepill client as well, click profile to
+        send pm
+    </string>
+    <string name="dont_hint_update">"Don't hint "</string>
 
 </resources>

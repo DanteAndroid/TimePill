@@ -26,7 +26,7 @@ public class HttpErrorAction<T> implements Action1<Throwable> {
             try {
                 String errorResponse = e.response().errorBody().string();
                 JSONObject jsonObject = new JSONObject(errorResponse);
-                errorMessage = jsonObject.getString("message");
+                errorMessage = jsonObject.optString("message");
 
             } catch (IOException | JSONException e1) {
                 e1.printStackTrace();

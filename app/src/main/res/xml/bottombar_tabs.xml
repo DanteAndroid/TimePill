@@ -3,7 +3,7 @@
     <tab
         icon="@drawable/home"
         id="@+id/main"
-        title="最新日记"/>
+        title="最新"/>
     <tab
         icon="@drawable/favorite"
         id="@+id/following"

@@ -2,11 +2,13 @@ package com.dante.diary.login;
 
 import android.app.AlertDialog;
 import android.content.Context;
+import android.util.Log;
 
 import com.blankj.utilcode.utils.AppUtils;
 import com.dante.diary.R;
 import com.dante.diary.base.Constants;
 import com.dante.diary.main.MainDiaryFragment;
+import com.dante.diary.model.DataBase;
 import com.dante.diary.model.Diary;
 import com.dante.diary.model.User;
 import com.dante.diary.net.NetService;
@@ -18,6 +20,7 @@ import java.util.List;
 import rx.Observable;
 
 import static com.blankj.utilcode.utils.Utils.getContext;
+import static com.bumptech.glide.gifdecoder.GifHeaderParser.TAG;
 
 /**
  * Created by yons on 17/3/6.
@@ -64,6 +67,16 @@ public class LoginManager {
 
     public static int getMyId() {
         return SpUtil.getInt(Constants.ID);
+    }
+
+    public static User getMyUser() {
+        User me = DataBase.getInstance().findUser(getMyId());
+        Log.d(TAG, "get Account: " + me.getId());
+        return me;
+    }
+
+    public static String getMyStringId() {
+        return String.valueOf(SpUtil.getInt(Constants.ID));
     }
 
     public static void showGetLoginInfoError(Context context) {

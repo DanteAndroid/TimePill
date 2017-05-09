@@ -3,11 +3,17 @@ package com.dante.diary.main;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.Nullable;
+import android.util.Log;
 
 import com.dante.diary.R;
 import com.dante.diary.base.BottomBarActivity;
+import com.dante.diary.base.EventMessage;
 import com.dante.diary.custom.Updater;
 import com.dante.diary.utils.UiUtils;
+
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 
 public class MainActivity extends BottomBarActivity {
     private static final String TAG = "MainActivity";
@@ -18,6 +24,7 @@ public class MainActivity extends BottomBarActivity {
     protected void initViews(@Nullable Bundle savedInstanceState) {
         super.initViews(savedInstanceState);
         initUpdater();
+        EventBus.getDefault().register(this);
     }
 
     @Override
@@ -29,15 +36,22 @@ public class MainActivity extends BottomBarActivity {
     private void initUpdater() {
         updater = Updater.getInstance(this);
         updater.check();
+
     }
 
     @Override
     protected void onDestroy() {
         updater.release();
+        EventBus.getDefault().unregister(this);
         super.onDestroy();
     }
 
     private void doublePressBackToQuit() {
+        if (!isBarShown) {
+            showBottomBar();
+            return;
+        }
+
         if (backPressed) {
             super.onBackPressed();
             return;
@@ -51,8 +65,16 @@ public class MainActivity extends BottomBarActivity {
     public void onBackPressed() {
         if (getSupportFragmentManager().getBackStackEntryCount() > 0) {
             super.onBackPressed();
-        }else {
+        } else {
             doublePressBackToQuit();
+        }
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onMessage(EventMessage message) {
+        Log.e(TAG, "onMessage: event" + message.event);
+        if (message.event.equals("restart")) {
+            finish();
         }
     }
 }

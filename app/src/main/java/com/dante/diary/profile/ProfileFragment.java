@@ -23,17 +23,21 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.dante.diary.R;
+import com.dante.diary.base.App;
 import com.dante.diary.base.BaseFragment;
 import com.dante.diary.base.Constants;
 import com.dante.diary.base.RecyclerFragment;
 import com.dante.diary.base.TabPagerAdapter;
-import com.dante.diary.chat.ChatService;
+import com.dante.diary.chat.ConversationActivity;
 import com.dante.diary.edit.EditDiaryActivity;
 import com.dante.diary.edit.EditNotebookActivity;
+import com.dante.diary.interfaces.UserExistCallback;
 import com.dante.diary.login.LoginManager;
+import com.dante.diary.model.DataBase;
 import com.dante.diary.model.User;
 import com.dante.diary.setting.SettingFragment;
 import com.dante.diary.utils.DateUtil;
@@ -56,6 +60,7 @@ import top.wefor.circularanim.CircularAnim;
  */
 public class ProfileFragment extends BaseFragment {
     private static final String TAG = "ProfileFragment";
+    private static final int SHORT_INTRO_LENGTH = 50;
     @BindView(R.id.shadowView)
     View shadowView;
     @BindView(R.id.avatar)
@@ -135,11 +140,9 @@ public class ProfileFragment extends BaseFragment {
     @Override
     protected void initViews() {
         id = getArguments().getInt(Constants.ID);
-        setHasOptionsMenu(!LoginManager.isMe(id));
         meAsHome = SpUtil.getBoolean(SettingFragment.MY_HOME);
         if (meAsHome && LoginManager.isMe(id)) {
             initFab();
-//            setHasOptionsMenu(true);//填充menu（执行onCreateOptionsMenu）
         }
         if (getArguments() != null) {
             isOther = true;
@@ -192,6 +195,32 @@ public class ProfileFragment extends BaseFragment {
                 .bitmapTransform(new RoundedCornersTransformation(getContext(), 5, 0))
                 .into(avatar);
 
+        if (!LoginManager.isMe(id)) {
+            DataBase.findTimePillUser(id, new UserExistCallback() {
+                @Override
+                public void onExist() {
+                    if (App.shouldShowHint) {
+                        Toast.makeText(App.context, R.string.timepill_user_hint, Toast.LENGTH_SHORT).show();
+                        App.shouldShowHint = false;
+                    }
+                    toolbarLayout.setOnClickListener(v -> pm());
+                    setHasOptionsMenu(true);
+                    getActivity().invalidateOptionsMenu();
+                }
+
+                @Override
+                public void notExist() {
+
+                }
+            });
+        }
+
+//        boolean isIntroShort = user.getIntro() == null || user.getIntro().length() < SHORT_INTRO_LENGTH;
+//        if (isIntroShort) {
+//            ViewGroup.LayoutParams params = toolbarLayout.getLayoutParams();
+//            params.height = (int) getResources().getDimension(R.dimen.app_bar_height);
+//            toolbarLayout.setLayoutParams(params);
+//        }
         toolbarLayout.setTitle(user.getName());
 
         intro.setText(user.getIntro());
@@ -302,7 +331,7 @@ public class ProfileFragment extends BaseFragment {
 
     private void initFragments() {
         titles = new String[]{getString(R.string.my_diary), getString(R.string.my_notebook)};
-        fragments.add(DiaryListFragment.newInstance(id, DiaryListFragment.OTHER, null));
+        fragments.add(DiaryListFragment.newInstance(id, DiaryListFragment.TODAY_DIARIES, null));
         fragments.add(NoteBookListFragment.newInstance(id));
         adapter.setFragments(fragments, titles);
     }
@@ -359,9 +388,17 @@ public class ProfileFragment extends BaseFragment {
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
         if (id == R.id.action_pm) {
-            ChatService.send(100158434, "send to 100158434: " + System.currentTimeMillis());
+            pm();
         }
         return true;
+    }
+
+    private void pm() {
+        if (LoginManager.isMe(id)) {
+            Toast.makeText(App.context, R.string.cant_pm_to_self, Toast.LENGTH_SHORT).show();
+            return;
+        }
+        ConversationActivity.chat(getActivity(), id);
     }
 
     @Override

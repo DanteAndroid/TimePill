@@ -6,7 +6,6 @@ import com.dante.diary.model.Comment;
 import com.dante.diary.model.Diary;
 import com.dante.diary.model.Notebook;
 import com.dante.diary.model.TipResult;
-import com.dante.diary.model.Topic;
 import com.dante.diary.model.User;
 
 import java.util.List;
@@ -36,7 +35,7 @@ import rx.Observable;
 public interface TimeApi {
 
     @GET("topic")
-    Observable<Topic> getTopic();
+    Observable<Response<ResponseBody>> getTopic();
 
     @GET("topic/diaries")
     Observable<DiariesResult<List<Diary>>> getTopicDiaries(@Query("page") int page, @Query("page_size") int pageSize);
@@ -133,6 +132,8 @@ public interface TimeApi {
     @POST("users/icon")
     Observable<User> setUserIcon(@Part MultipartBody.Part file);
 
+    @DELETE("relation/reverse/{id}")
+    Observable<Response<ResponseBody>> cancelFollowed(@Path("id") int id);
 
     class DiariesResult<T> {
         public int count;

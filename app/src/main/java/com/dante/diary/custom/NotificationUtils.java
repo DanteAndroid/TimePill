@@ -10,6 +10,7 @@ import android.content.Intent;
 import com.avos.avospush.notification.NotificationCompat;
 import com.dante.diary.R;
 import com.dante.diary.chat.ConversationActivity;
+import com.dante.diary.utils.SpUtil;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -39,11 +40,6 @@ public class NotificationUtils {
         }
     }
 
-    /**
-     * 在 tag list 中 remove 该 tag
-     *
-     * @param tag
-     */
     public static void removeTag(String tag) {
         notificationTagList.remove(tag);
     }
@@ -61,9 +57,12 @@ public class NotificationUtils {
                 new NotificationCompat.Builder(context)
                         .setSmallIcon(R.drawable.notification_icon)
                         .setAutoCancel(true)
+                        .setDefaults(Notification.DEFAULT_SOUND)
                         .setContentTitle(title)
-                        .setDefaults(Notification.DEFAULT_VIBRATE)
                         .setContentText(content);
+        if (SpUtil.getBoolean("notifications_new_message_vibrate")) {
+            mBuilder.setDefaults(Notification.DEFAULT_VIBRATE);
+        }
 
         TaskStackBuilder builder = TaskStackBuilder.create(context)
                 .addParentStack(ConversationActivity.class)

@@ -20,6 +20,8 @@ public class App extends Application {
     public static final String LEAN_APP_ID = "Q2ysC4w6hRbP6Pe25BcC6sRH-gzGzoHsz";
     public static final String LEAN_APP_KEY = "ITS9V1T9DSWIGXA2Ljw2nL9e";
     public static final String BUGTAGS_APP_KEY = "6db43944fc0b79dce98107999a23f486";
+    public static boolean isRunning;
+    public static boolean shouldShowHint = true;
     @SuppressLint("StaticFieldLeak")
     public static Context context;
 //    private RefWatcher refWatcher;
@@ -33,6 +35,7 @@ public class App extends Application {
     public void onCreate() {
         super.onCreate();
         context = this;
+        isRunning = true;
 //        refWatcher = LeakCanary.install(this);
         Bugtags.start(BUGTAGS_APP_KEY, this, Bugtags.BTGInvocationEventNone);
         AVOSCloud.initialize(this, LEAN_APP_ID, LEAN_APP_KEY);

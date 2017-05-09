@@ -31,5 +31,6 @@ public class Constants {
     public static final String CREATED = "created";
     public static final String NOTEBOOK_ID = "notebookId";
     public static final String CONVERSATION_ID = "conversation_id";
-    public static final String FROM_ID = "from_id";
+    public static final String OTHER_ID = "from_id";
+    public static final String TP_USER = "tp_user";
 }

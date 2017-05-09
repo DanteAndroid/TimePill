@@ -1,7 +1,12 @@
 package com.dante.diary.model;
 
 
+import com.avos.avoscloud.AVException;
+import com.avos.avoscloud.AVObject;
+import com.avos.avoscloud.AVQuery;
+import com.avos.avoscloud.FindCallback;
 import com.dante.diary.base.Constants;
+import com.dante.diary.interfaces.UserExistCallback;
 import com.dante.diary.utils.DateUtil;
 
 import java.util.Date;
@@ -34,6 +39,21 @@ public class DataBase {
         return realm;
     }
 
+    public static void findTimePillUser(int id, UserExistCallback callback) {
+        AVQuery<AVObject> query = new AVQuery<>(Constants.TP_USER);
+        query.whereEqualTo(Constants.ID, id);
+        query.findInBackground(new FindCallback<AVObject>() {
+            @Override
+            public void done(List<AVObject> list, AVException e) {
+                if (list == null || list.isEmpty()) {
+                    callback.notExist();
+                } else {
+                    callback.onExist();
+                }
+            }
+        });
+    }
+
     public Diary getById(int id) {
         return getById(id, Diary.class);
     }
@@ -56,8 +76,6 @@ public class DataBase {
     public Diary getByUrl(String url) {
         return realm.where(Diary.class).equalTo(Constants.URL, url).findFirst();
     }
-
-
 
     public RealmResults<Diary> findFavoriteDiaries() {
         return realm.where(Diary.class)

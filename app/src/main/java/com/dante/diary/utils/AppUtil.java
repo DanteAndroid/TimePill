@@ -10,7 +10,10 @@ import com.blankj.utilcode.utils.ClipboardUtils;
 import com.dante.diary.BuildConfig;
 import com.dante.diary.R;
 import com.dante.diary.base.Constants;
-import com.dante.diary.main.MainActivity;
+import com.dante.diary.base.EventMessage;
+import com.dante.diary.login.LoginActivity;
+
+import org.greenrobot.eventbus.EventBus;
 
 import java.util.List;
 
@@ -63,10 +66,14 @@ public class AppUtil {
     }
 
     public static void restartApp(Activity activity) {
-        activity.finishAndRemoveTask();
-        Intent intent = new Intent(activity, MainActivity.class);
+        Intent intent = new Intent(activity, LoginActivity.class);
         intent.addFlags(FLAG_ACTIVITY_NEW_TASK);
         intent.addFlags(FLAG_ACTIVITY_CLEAR_TOP);
         activity.startActivity(intent);
+
+        EventBus.getDefault().post(new EventMessage("restart"));
+        activity.finish();
     }
+
+
 }

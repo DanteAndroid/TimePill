@@ -3,7 +3,6 @@ package com.dante.diary.custom;
 import android.Manifest;
 import android.app.Activity;
 import android.app.AlertDialog;
-import android.util.Log;
 
 import com.dante.diary.BuildConfig;
 import com.dante.diary.R;
@@ -25,9 +24,11 @@ import rx.schedulers.Schedulers;
 
 public class Updater {
     public static final String SHARE_APP = "share_app";
+    public static final String SHOULD_SHOW_UPDATE = "shouldShow";
     private static Subscription subscription;
     private final Activity context;
     private DownloadHelper helper;
+    private String formerVer;
 
     private Updater(Activity context) {
         this.context = context;
@@ -51,7 +52,6 @@ public class Updater {
     }
 
     public void check() {
-        Log.d("test", "check: ");
         NetService.createServiceWithBaseUrl(AppApi.class, API.GITHUB_RAW).getAppInfo()
                 .filter(appInfo -> {
                     SpUtil.save(Updater.SHARE_APP, appInfo.getShareApp());
@@ -59,7 +59,13 @@ public class Updater {
                 })
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(this::showDialog, Throwable::printStackTrace);
+                .subscribe(appInfo -> {
+                    formerVer = appInfo.getFormerVersion();
+                    boolean shouldShowUpdate = SpUtil.getBoolean(appInfo.getVersion() + SHOULD_SHOW_UPDATE, true);
+                    if (shouldShowUpdate) {
+                        showDialog(appInfo);
+                    }
+                }, throwable -> throwable.printStackTrace());
     }
 
     private void showDialog(final AppInfo appInfo) {
@@ -68,7 +74,9 @@ public class Updater {
                 .setCancelable(!needUpdate)//需要更新就不可取消
                 .setMessage(String.format(context.getString(R.string.update_message), appInfo.getMessage()))
                 .setPositiveButton(R.string.update, (dialog, which) -> downloadAndInstall(appInfo))
-                .setNegativeButton(R.string.go_market, (dialog, which) -> AppUtil.goMarket(context))
+                .setNeutralButton(R.string.go_market, (dialog, which) -> AppUtil.goMarket(context))
+                .setNegativeButton(R.string.dont_hint_update,
+                        (dialog, which) -> SpUtil.save(appInfo.getVersion() + SHOULD_SHOW_UPDATE, false))
                 .show();
     }
 
@@ -77,6 +85,7 @@ public class Updater {
     }
 
     public void release() {
+        SpUtil.remove(formerVer + SHOULD_SHOW_UPDATE);
         if (helper != null) {
             helper.release();
         }

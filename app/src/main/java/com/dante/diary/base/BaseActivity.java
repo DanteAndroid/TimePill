@@ -27,9 +27,9 @@ public abstract class BaseActivity extends AppCompatActivity {
     private static final String TAG = "BaseActivity";
     public DataBase base;
     public Toolbar toolbar;
+    public CompositeSubscription compositeSubscription = new CompositeSubscription();
     private boolean isShowToolbar = true;
     private ProgressDialog dialog;
-    public CompositeSubscription compositeSubscription = new CompositeSubscription();
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -38,6 +38,7 @@ public abstract class BaseActivity extends AppCompatActivity {
     }
 
     protected abstract int initLayoutId();
+
 
     @CallSuper
     protected void initViews(@Nullable Bundle savedInstanceState) {

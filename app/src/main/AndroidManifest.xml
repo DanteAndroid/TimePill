@@ -18,7 +18,6 @@
         android:theme="@style/AppTheme.NoActionBar">
         <activity
             android:name=".main.MainActivity"
-            android:alwaysRetainTaskState="true"
             android:launchMode="singleTop">
         </activity>
         <activity android:name=".base.BottomBarActivity"/>

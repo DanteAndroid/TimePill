@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -52,7 +53,7 @@ public class DiaryListFragment extends RecyclerFragment {
     public static final String FOLLOWING = "following";
     public static final String TOPIC = "topic";
     public static final String NOTEBOOK = "notebook";
-    public static final String OTHER = "other";
+    public static final String TODAY_DIARIES = "other";
 
 
     private static final String TAG = "DiaryListFragment";
@@ -210,7 +211,10 @@ public class DiaryListFragment extends RecyclerFragment {
                 }
             });
         }
-        adapter.setOnLoadMoreListener(() -> fetch(), recyclerView);
+        if (!type.equals(TODAY_DIARIES)) {
+            Log.d(TAG, "initData: loadmore listen");
+            adapter.setOnLoadMoreListener(() -> fetch(), recyclerView);
+        }
         toolbar.setOnClickListener(v -> scrollToTop());
         fetch();
     }
@@ -227,7 +231,6 @@ public class DiaryListFragment extends RecyclerFragment {
     }
 
     protected void fetch() {
-        log("fetch page=" + page);
         changeRefresh(true);
 
         subscription = diariesSource()
@@ -245,8 +248,12 @@ public class DiaryListFragment extends RecyclerFragment {
                         if (diaries.isEmpty()) {
                             adapter.loadMoreEnd();
                         } else {
-                            adapter.addData(diaries);
-                            adapter.loadMoreComplete();
+                            if (page <= 1) {
+                                adapter.setNewData(diaries);
+                            } else {
+                                adapter.addData(diaries);
+                                adapter.loadMoreComplete();
+                            }
                             page++;
                         }
                     }

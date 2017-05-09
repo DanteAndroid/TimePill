@@ -27,12 +27,15 @@ import android.widget.TextView;
 
 import com.andrognito.patternlockview.PatternLockView;
 import com.andrognito.patternlockview.listener.PatternLockViewListener;
+import com.avos.avoscloud.AVObject;
 import com.blankj.utilcode.utils.KeyboardUtils;
 import com.dante.diary.R;
 import com.dante.diary.base.BaseActivity;
 import com.dante.diary.base.Constants;
 import com.dante.diary.custom.LockPatternUtil;
+import com.dante.diary.interfaces.UserExistCallback;
 import com.dante.diary.main.MainActivity;
+import com.dante.diary.model.DataBase;
 import com.dante.diary.model.User;
 import com.dante.diary.net.HttpErrorAction;
 import com.dante.diary.setting.SettingFragment;
@@ -128,9 +131,11 @@ public class LoginActivity extends BaseActivity implements PatternLockViewListen
         isLogin = LoginManager.isLogin();
         hasPassword = SpUtil.getBoolean(SettingFragment.HAS_PATTERN_LOCK);
         if (isLogin && SpUtil.getBoolean(SettingFragment.SHORT_SPLASH)) {
-            slogan.setText(R.string.app_name);
-            Log.d(TAG, "animate: " + SpUtil.getBoolean(SettingFragment.HAS_PATTERN_LOCK));
-            new Handler().postDelayed(() -> loginSuccess(slogan), 600);
+            slogan.setVisibility(View.GONE);
+            new Handler().postDelayed(() -> {
+                startActivity(new Intent(getApplicationContext(), MainActivity.class));
+                finish();
+            }, 400);
             return;
         }
 
@@ -196,7 +201,7 @@ public class LoginActivity extends BaseActivity implements PatternLockViewListen
         accountEt.setText(emailAccount);
         pswEt.setText(password);
         login.setOnClickListener(v -> {
-            moveSlogan(LOGO_TRANSLATION_Y - 200);
+            moveSlogan();
             CircularAnim.show(reveal).triggerView(login).duration(300).go(() -> {
                 login.setEnabled(!loginInfoInvalid());
                 KeyboardUtils.showSoftInput(accountEt);
@@ -205,7 +210,7 @@ public class LoginActivity extends BaseActivity implements PatternLockViewListen
             });
         });
         register.setOnClickListener(v -> {
-            moveSlogan(LOGO_TRANSLATION_Y - 450);
+            moveSlogan();
             nameWrapper.setVisibility(View.VISIBLE);
             loginLayout.setVisibility(View.INVISIBLE);
             pswEt.setImeActionLabel(getString(R.string.nextAction), EditorInfo.IME_ACTION_NEXT);
@@ -313,12 +318,14 @@ public class LoginActivity extends BaseActivity implements PatternLockViewListen
         });
     }
 
-    private void moveSlogan(int y) {
-        timePill.animate().translationY(y)
-                .setDuration(100)
-                .start();
-        slogan.animate().translationY(y)
-                .setDuration(100)
+    private void moveSlogan() {
+//        timePill.animate().scaleX(0)
+//                .scaleY(0)
+//                .setDuration(400)
+//                .start();
+        slogan.animate().alpha(0)
+                .setStartDelay(450)
+                .setDuration(400)
                 .start();
     }
 
@@ -395,6 +402,7 @@ public class LoginActivity extends BaseActivity implements PatternLockViewListen
                 .compose(applySchedulers())
                 .subscribe(user -> {
                     saveAccount(user);
+                    loginAVCloud();
                     loginSuccess(login);
                 }, new HttpErrorAction<Throwable>() {
                     @Override
@@ -424,6 +432,22 @@ public class LoginActivity extends BaseActivity implements PatternLockViewListen
                 });
     }
 
+    private void loginAVCloud() {
+        DataBase.findTimePillUser(id, new UserExistCallback() {
+            @Override
+            public void onExist() {
+
+            }
+
+            @Override
+            public void notExist() {
+                AVObject user = new AVObject(Constants.TP_USER);
+                user.put(Constants.ID, id);
+                user.saveEventually();
+            }
+        });
+    }
+
     private void eraseMemory() {
         String today = DateUtil.getDisplayDay(new Date());
         String lastDate = SpUtil.getString(Constants.DATE);
@@ -434,6 +458,7 @@ public class LoginActivity extends BaseActivity implements PatternLockViewListen
     }
 
     private void saveAccount(User user) {
+        Log.d(TAG, "saveAccount: " + user.getId());
         base.save(user);
         id = user.getId();
         SpUtil.save(Constants.ACCOUNT, emailAccount);

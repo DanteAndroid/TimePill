@@ -174,6 +174,11 @@ public class DrawActivity extends BaseActivity {
                 });
                 requestTextDialog.show(getSupportFragmentManager(), "requestText");
             }
+
+            @Override
+            public void onAllMovesPainted() {
+
+            }
         });
 
 

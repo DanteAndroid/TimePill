@@ -3,6 +3,7 @@ package com.dante.diary.follow;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,6 +18,7 @@ import com.dante.diary.model.User;
 import com.dante.diary.net.TimeApi;
 import com.dante.diary.utils.UiUtils;
 
+import java.io.IOException;
 import java.util.List;
 
 import rx.Observable;
@@ -46,25 +48,58 @@ public class FollowListFragment extends RecyclerFragment {
         super.initViews();
         adapter = new FollowListAdapter(null);
         adapter.setEmptyView(R.layout.empty_following, (ViewGroup) rootView);
+        adapter.disableLoadMoreIfNotFullPage(recyclerView);
         layoutManager = new LinearLayoutManager(barActivity);
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setAdapter(adapter);
+        type = getArguments().getString(Constants.TYPE);
 
         recyclerView.addOnItemTouchListener(new OnItemClickListener() {
             @Override
             public void onSimpleItemClick(BaseQuickAdapter baseQuickAdapter, View view, int i) {
                 goProfile(adapter.getItem(i).getId());
-
             }
 
             @Override
-            public void onItemLongClick(BaseQuickAdapter adapter, View view, int position) {
-                log("onSimpleItemClick~~~~~~~~~~~~~~");
+            public void onItemLongClick(BaseQuickAdapter baseQuickAdapter, View view, int position) {
+                new AlertDialog.Builder(getActivity())
+                        .setMessage(type.equals(FOLLOWING) ? R.string.unfollow_message : R.string.cancel_followed_message)
+                        .setPositiveButton(R.string.cancel_followed, (dialog, which) -> {
+                            if (type.equals(FOLLOWING)) {
+                                unFollow(position);
+                            } else {
+                                cancelFollowed(position);
+                            }
+                        })
+                        .setNegativeButton(R.string.nope, null).show();
+
             }
         });
-        type = getArguments().getString(Constants.TYPE);
-
         fetch();
+    }
+
+    private void unFollow(int position) {
+        subscription = LoginManager.getApi().unfollow(adapter.getItem(position).getId())
+                .compose(applySchedulers())
+                .subscribe(responseBodyResponse -> {
+                    adapter.notifyItemRemoved(position);
+                    UiUtils.showSnack(rootView, getString(R.string.unfollow_success));
+                });
+        compositeSubscription.add(subscription);
+    }
+
+    private void cancelFollowed(int position) {
+        int id = adapter.getItem(position).getId();
+        subscription = LoginManager.getApi().cancelFollowed(id)
+                .compose(applySchedulers())
+                .subscribe(responseBodyResponse -> {
+                    adapter.notifyItemRemoved(position);
+                    try {
+                        log("cancel followed" + responseBodyResponse.body().string());
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }, throwable -> UiUtils.showSnack(rootView, getString(R.string.cancel_followed_failed) + " " + throwable.getMessage()));
     }
 
     @Override
@@ -88,8 +123,12 @@ public class FollowListFragment extends RecyclerFragment {
                     if (users.isEmpty()) {
                         adapter.loadMoreEnd();
                     } else {
-                        adapter.addData(users);
-                        adapter.loadMoreComplete();
+                        if (page == 1) {
+                            adapter.setNewData(users);
+                        } else {
+                            adapter.addData(users);
+                            adapter.loadMoreComplete();
+                        }
                         page++;
                     }
                     changeRefresh(false);
@@ -112,6 +151,7 @@ public class FollowListFragment extends RecyclerFragment {
 
     @Override
     public void onRefresh() {
+        page = 1;
         fetch();
     }
 }

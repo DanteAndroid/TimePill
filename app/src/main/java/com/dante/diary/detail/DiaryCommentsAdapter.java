@@ -33,7 +33,6 @@ public class DiaryCommentsAdapter extends BaseQuickAdapter<Comment, BaseViewHold
     TextView time;
     @BindView(R.id.content)
     TextView content;
-    private IOnItemClickListener listener;
 
     public DiaryCommentsAdapter(List<Comment> data) {
         super(R.layout.list_comment_item, data);
@@ -41,7 +40,6 @@ public class DiaryCommentsAdapter extends BaseQuickAdapter<Comment, BaseViewHold
 
     public DiaryCommentsAdapter(List<Comment> data, IOnItemClickListener l) {
         super(R.layout.list_comment_item, data);
-        listener = l;
     }
 
     @Override
@@ -57,7 +55,7 @@ public class DiaryCommentsAdapter extends BaseQuickAdapter<Comment, BaseViewHold
         } else {
             //评论内容前面加上"回复 接收人："
             String recipient = item.getRecipient().getName();
-            content = String.format("回复 %s ：", recipient) + content;
+            content = String.format("回复 %s：", recipient) + content;
 
             SimpleText sText = SimpleText.create(helper.itemView.getContext(), content)
                     .first(recipient)

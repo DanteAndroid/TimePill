@@ -6,12 +6,13 @@ import android.animation.AnimatorListenerAdapter;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.design.internal.NavigationMenu;
 import android.support.design.widget.AppBarLayout;
+import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -19,6 +20,7 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.resource.drawable.GlideDrawable;
@@ -51,8 +53,8 @@ import com.dante.diary.utils.TransitionHelper;
 import com.dante.diary.utils.UiUtils;
 import com.dante.diary.utils.WrapContentLinearLayoutManager;
 import com.google.gson.Gson;
-import com.hendraanggrian.widget.SubtitleCollapsingToolbarLayout;
 
+import java.io.IOException;
 import java.util.List;
 
 import butterknife.BindView;
@@ -89,11 +91,9 @@ public class MainDiaryFragment extends RecyclerFragment implements OrderedRealmC
     TextView topicTitle;
     Unbinder unbinder;
     @BindView(R.id.toolbar_layout)
-    SubtitleCollapsingToolbarLayout toolbarLayout;
-    Unbinder unbinder1;
+    CollapsingToolbarLayout toolbarLayout;
     @BindView(R.id.appBar)
     AppBarLayout appBar;
-    Unbinder unbinder2;
 
 
     private Intent intent;
@@ -308,9 +308,6 @@ public class MainDiaryFragment extends RecyclerFragment implements OrderedRealmC
     @Override
     protected void initData() {
         ChatService.loginChatServer();
-        appBar.addOnOffsetChangedListener((appBarLayout, verticalOffset) -> {
-            collapsed = verticalOffset == 0;
-        });
         toolbar.setVisibility(View.VISIBLE);
         toolbarLayout.setOnClickListener(v -> goTopic());
         toolbar.setOnClickListener(v -> {
@@ -339,7 +336,11 @@ public class MainDiaryFragment extends RecyclerFragment implements OrderedRealmC
     private void goTopic() {
         int index = ((LinearLayoutManager) layoutManager).findFirstVisibleItemPosition();
         if (index == 0) {
-            ViewActivity.viewTopicDiaries(getActivity(), new Gson().toJson(topic));
+            if (topic == null) {
+                Toast.makeText(context, R.string.no_topic_today, Toast.LENGTH_SHORT).show();
+            } else {
+                ViewActivity.viewTopicDiaries(getActivity(), new Gson().toJson(topic));
+            }
         } else {
             scrollToTop();
         }
@@ -379,7 +380,6 @@ public class MainDiaryFragment extends RecyclerFragment implements OrderedRealmC
                     public void onError(Throwable e) {
                         adapter.loadMoreFail();
                         changeState(false);
-                        Log.e("test", "fetch: " + e.getMessage());
                     }
 
                     @Override
@@ -396,17 +396,34 @@ public class MainDiaryFragment extends RecyclerFragment implements OrderedRealmC
         }
 
         compositeSubscription.add(subscription);
-
     }
 
     private void fetchTopic() {
         subscription = LoginManager.getApi().getTopic()
                 .compose(applySchedulers())
-                .subscribe(topic -> {
-                    this.topic = topic;
-                    toolbarLayout.setTitle("今日话题：" + topic.getTitle());
-                    Imager.load(MainDiaryFragment.this, topic.getImageUrl(), topicImage);
+                .subscribe(response -> {
+                    String result;
+                    try {
+                        result = response.body().string();
+                        recyclerView.setNestedScrollingEnabled(false);
+                        new Handler().postDelayed(() -> appBar.setExpanded(false), 400);
+                        if (result.isEmpty()) {
+                            return;
+                        } else {
+                            appBar.setExpanded(true);
+                            recyclerView.setNestedScrollingEnabled(true);
+                            appBar.addOnOffsetChangedListener((appBarLayout, verticalOffset) -> {
+                                collapsed = verticalOffset == 0;
+                            });
+                        }
+                        Topic topic = new Gson().fromJson(result, Topic.class);
+                        MainDiaryFragment.this.topic = topic;
+                        toolbarLayout.setTitle("今日话题：" + topic.getTitle());
+                        Imager.load(MainDiaryFragment.this, topic.getImageUrl(), topicImage);
 
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
                 }, new HttpErrorAction<Throwable>() {
                     @Override
                     public void call(Throwable throwable) {
@@ -416,7 +433,6 @@ public class MainDiaryFragment extends RecyclerFragment implements OrderedRealmC
                         }
                     }
                 });
-
         compositeSubscription.add(subscription);
 
     }
@@ -451,6 +467,7 @@ public class MainDiaryFragment extends RecyclerFragment implements OrderedRealmC
             log("no notifyItemRangeRemoved " + range.startIndex + " to " + range.length);
             adapter.notifyItemRangeRemoved(range.startIndex, range.length);
         }
+
         OrderedCollectionChangeSet.Range[] insertions = changeSet.getInsertionRanges();
         for (OrderedCollectionChangeSet.Range range : insertions) {
             adapter.notifyItemRangeInserted(range.startIndex, range.length);

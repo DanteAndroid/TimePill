@@ -64,6 +64,10 @@ public class SpUtil {
         return sp.getBoolean(key, false);
     }
 
+    public static boolean getBoolean(String key, boolean def) {
+        return sp.getBoolean(key, def);
+    }
+
     public static void clear() {
         editor.clear().apply();
     }

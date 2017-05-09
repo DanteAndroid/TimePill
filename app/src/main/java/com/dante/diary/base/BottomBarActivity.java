@@ -31,6 +31,7 @@ public class BottomBarActivity extends BaseActivity implements FragNavController
     public FragNavController controller;
     @BindView(R.id.bottomBar)
     public BottomBar bottomBar;
+    public boolean isBarShown;
     private int MAIN = FragNavController.TAB1;
     private boolean isHiding;
     private boolean isShowing;
@@ -67,6 +68,8 @@ public class BottomBarActivity extends BaseActivity implements FragNavController
                     @Override
                     public void onAnimationEnd(Animator animation) {
                         isHiding = false;
+                        isBarShown = false;
+
                     }
                 })
                 .start();
@@ -83,11 +86,11 @@ public class BottomBarActivity extends BaseActivity implements FragNavController
                     @Override
                     public void onAnimationEnd(Animator animation) {
                         isShowing = false;
+                        isBarShown = true;
                     }
                 })
                 .start();
         isShowing = true;
-
     }
 
     private void initBottomBar() {

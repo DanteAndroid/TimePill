@@ -11,16 +11,7 @@
         android:layout_height="wrap_content"
         android:theme="@style/AppTheme.AppBarOverlay">
 
-        <android.support.v7.widget.Toolbar
-            android:id="@+id/toolbar"
-            android:layout_width="match_parent"
-            android:layout_height="?actionBarSize"
-            android:background="?attr/colorPrimary"
-            android:clickable="true"
-            android:focusableInTouchMode="true"
-            android:minHeight="48dp"
-            app:layout_scrollFlags="scroll|enterAlwaysCollapsed"
-            app:popupTheme="@style/AppTheme.PopupOverlay"/>
+        <include layout="@layout/common_toolbar"/>
 
     </android.support.design.widget.AppBarLayout>
 

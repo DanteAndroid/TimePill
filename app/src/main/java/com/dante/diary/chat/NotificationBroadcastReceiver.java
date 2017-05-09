@@ -43,7 +43,7 @@ class NotificationBroadcastReceiver extends BroadcastReceiver {
     private void goChatActivity(Context context, Intent intent) {
         Intent startActivityIntent = new Intent(context, ConversationActivity.class);
         startActivityIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        startActivityIntent.putExtra(Constants.FROM_ID, intent.getStringExtra(Constants.FROM_ID));
+        startActivityIntent.putExtra(Constants.OTHER_ID, intent.getStringExtra(Constants.OTHER_ID));
         context.startActivity(startActivityIntent);
     }
 }

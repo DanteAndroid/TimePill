@@ -286,7 +286,7 @@ public class EditDiaryActivity extends BaseActivity {
         }
 
         return LoginManager.getApi()
-                .createDiary(notebookId, NetService.getRequestBody(diaryContent), isTopic ? null : NetService.getRequestBody("1"),
+                .createDiary(notebookId, NetService.getRequestBody(diaryContent), isTopic ? NetService.getRequestBody("1") : null,
                         photoFile == null ? null : NetService.createMultiPart("photo", photoFile));
     }
 
@@ -296,7 +296,6 @@ public class EditDiaryActivity extends BaseActivity {
         for (Notebook s : validNotebooks) {
             subjects.add(s.getSubject());
         }
-
 
         ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, subjects);
         adapter.setDropDownViewResource(R.layout.spinner_subject_dropdown_item);
