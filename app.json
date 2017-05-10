@@ -1,6 +1,6 @@
 {
-	"lastest_version": "v1.6.2",
-	"lastest_version_code": 11,
+	"lastest_version": "v1.6.3",
+	"lastest_version_code": 13,
 	"former_version": "v1.6.1",
 	"forceUpdate": false,
 	"message": "- 添加夜间模式（仅支持Android M+）;\n- 修复新建日记在有虚拟键的机型上图片按钮被隐藏的问题",
