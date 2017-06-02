@@ -5,6 +5,7 @@ import android.util.Log;
 
 import com.blankj.utilcode.utils.TimeUtils;
 
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
@@ -15,12 +16,22 @@ import java.util.Locale;
  */
 public class DateUtil {
     public static final String LAST_DATE = "lastDate";
-    public final static long minute = 60 * 1000;// 1分钟
-    public final static long hour = 60 * minute;// 1小时
-    public final static long day = 24 * hour;// 1天
-    public final static long month = 31 * day;// 月
-    public final static long year = 12 * month;// 年
+    public final static long MINUTE = 60 * 1000;// 1分钟
+    public final static long HOUR = 60 * MINUTE;// 1小时
+    public final static long DAY = 24 * HOUR;// 1天
+    public final static long MONTH = 31 * DAY;// 月
+    public final static long YEAR = 12 * MONTH;// 年
     private static final String TAG = "DateUtil";
+
+    public static Date parseStandardDate(String date) {
+        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss", Locale.getDefault());
+        try {
+            return formatter.parse(date);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
 
     public static String getDisplayTime(Date date) {
         SimpleDateFormat formatter = new SimpleDateFormat("hh:mm:ss", Locale.getDefault());
@@ -65,7 +76,7 @@ public class DateUtil {
     }
 
     public static Date nextMonthDateOfToday() {
-        Date today= new Date();
+        Date today = new Date();
         Calendar calendar = Calendar.getInstance();
         calendar.setTime(today);
         calendar.add(Calendar.MONTH, 1);
@@ -73,10 +84,18 @@ public class DateUtil {
     }
 
     public static Date nextWeekDateOfToday() {
-        Date today= new Date();
+        Date today = new Date();
         Calendar calendar = Calendar.getInstance();
         calendar.setTime(today);
         calendar.add(Calendar.DAY_OF_WEEK_IN_MONTH, 1);
+        return calendar.getTime();
+    }
+
+    public static Date tomorrowDate() {
+        Date today = new Date();
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(today);
+        calendar.add(Calendar.DAY_OF_WEEK, 1);
         return calendar.getTime();
     }
 
@@ -87,29 +106,30 @@ public class DateUtil {
 
     /**
      * 把Date转换为 "几分钟前"、"几小时前"
+     *
      * @param date 需要格式化的时间
      */
     public static String getTimeText(@NonNull Date date) {
         long diff = new Date().getTime() - date.getTime();
         long r = 0;
-        if (diff > year) {
-            r = (diff / year);
+        if (diff > YEAR) {
+            r = (diff / YEAR);
             return r + "年前";
         }
-        if (diff > month) {
-            r = (diff / month);
+        if (diff > MONTH) {
+            r = (diff / MONTH);
             return r + "个月前";
         }
-        if (diff > day) {
-            r = (diff / day);
+        if (diff > DAY) {
+            r = (diff / DAY);
             return r + "天前";
         }
-        if (diff > hour) {
-            r = (diff / hour);
+        if (diff > HOUR) {
+            r = (diff / HOUR);
             return r + "个小时前";
         }
-        if (diff > minute) {
-            r = (diff / minute);
+        if (diff > MINUTE) {
+            r = (diff / MINUTE);
             return r + "分钟前";
         }
         return "刚刚";

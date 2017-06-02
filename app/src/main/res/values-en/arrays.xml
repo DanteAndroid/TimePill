@@ -17,6 +17,7 @@
     <string-array name="draw_tools">
         <item>PEN</item>
         <item>LINE</item>
+        <item>ARROW</item>
         <item>RECTANGLE</item>
         <item>CIRCLE</item>
         <item>ELLIPSE</item>
@@ -25,5 +26,12 @@
         <item>DRAW</item>
         <item>TEXT</item>
         <item>ERASER</item>
+    </string-array>
+    <string-array name="create_diary_hints">
+        <item>What\'s your feeling now</item>
+        <item>What\'s up</item>
+        <item>Anything new?</item>
+        <item>Any idea today?</item>
+        <item>How is your day?</item>
     </string-array>
 </resources>

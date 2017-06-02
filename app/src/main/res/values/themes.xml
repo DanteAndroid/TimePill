@@ -12,8 +12,8 @@
         <item name="colorControlHighlight">@color/colorPrimary</item>
         <item name="colorButtonNormal">@color/colorPrimaryLight</item>
     </style>
-    <style name="FlatButton" parent="Theme.AppCompat.Light">
-        <item name="colorControlNormal">@color/colorPrimary</item>
-        <item name="colorControlHighlight">?attr/colorAccent</item>
+    <style name="FlatButton" parent="Theme.AppCompat">
+        <item name="colorControlHighlight">@color/red</item>
+        <item name="colorButtonNormal">@color/red_dark</item>
     </style>
 </resources>

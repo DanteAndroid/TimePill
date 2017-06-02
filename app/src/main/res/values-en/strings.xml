@@ -150,7 +150,7 @@
     </string>
     <string name="intro_hint">Talk about yourself</string>
 
-    <string name="share_app_description">TimePill: https://github.com/DanteAndroid/TimeDiary
+    <string name="share_app_description">TimePill: http://coolapk.com/apk/com.dante.diary
     </string>
     <string name="update">Update</string>
     <string name="update_message">Update log: \n\n %s</string>
@@ -180,6 +180,7 @@
     <string name="set_my_home">Me as home</string>
     <string name="set_my_home_desc">Set tab Me as home page</string>
     <string name="file_name">File name</string>
+    <string name="type_hint">Tired of typing? Why not try voice input</string>
 
     <string name="stroke_width">Stroke width: %1$d</string>
     <string name="opacity">Opacity: %1$d</string>
@@ -248,5 +249,36 @@
         send pm
     </string>
     <string name="dont_hint_update">"Don't hint "</string>
+    <string name="android_version_is_old">Android versiont too old, function not supported</string>
+    <string name="auto_night_mode">Auto Night-mode</string>
+    <string name="day_mode">Day</string>
+    <string name="night_mode">Night</string>
+    <string name="notification_hint">Disable notification will make notifications silent, and no red
+        badges
+    </string>
+    <string name="notification_vibrate_hint">Vibrate when receiving pm</string>
+    <string name="I_created_a_timepill">I created a timepill, KEY is %s, go check it out</string>
+    <string name="cant_find_timepill">Hmm.. Can\'t find this timepill on Earth</string>
+    <string name="go_wechat">Go wechat</string>
+    <string name="open_time">Open time(can\'t open before this time)</string>
+    <string name="open_timepill_hint">Hint message(will see this if you try to open before
+        open-time)
+    </string>
+    <string name="time_pill_add">Add time pill</string>
+    <string name="time_pill_not_expired">You can\'t open this timepill before %s. Hint message:
+    </string>
+    <string name="time_pill_open">Open timepill</string>
+    <string name="timepill_created">Timepill created, KEY is copied</string>
+    <string name="timepill_key_copied">KEY is copied, go to share?</string>
+    <string name="xxx_says_at_xxx">says to you at %s:</string>
+    <string name="your_name">Your name</string>
+    <string name="extract">Extract</string>
+    <string name="input_key">Input timepill KEY</string>
+    <string name="input_correct_opentime">Enter right open time, please</string>
+    <string name="invalid_timepill_key">Invalid KEY, please input again</string>
+    <string name="opentime_too_early">Open time is too early</string>
+    <string name="what_is_timepill">What is TimePill?</string>
+    <string name="timepill_content_hint">Leave some words to yourself or him in the future</string>
+    <string name="timepill_create_failed">Timepill create failed</string>
 
 </resources>

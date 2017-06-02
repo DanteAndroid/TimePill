@@ -1,8 +1,8 @@
 package com.dante.diary.profile;
 
 
-import android.app.Dialog;
 import android.content.Intent;
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.design.internal.NavigationMenu;
 import android.support.design.widget.CollapsingToolbarLayout;
@@ -15,8 +15,6 @@ import android.text.TextUtils;
 import android.transition.Explode;
 import android.transition.Transition;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
@@ -35,7 +33,7 @@ import com.dante.diary.base.TabPagerAdapter;
 import com.dante.diary.chat.ConversationActivity;
 import com.dante.diary.edit.EditDiaryActivity;
 import com.dante.diary.edit.EditNotebookActivity;
-import com.dante.diary.interfaces.UserExistCallback;
+import com.dante.diary.interfaces.QueryResultCallback;
 import com.dante.diary.login.LoginManager;
 import com.dante.diary.model.DataBase;
 import com.dante.diary.model.User;
@@ -139,6 +137,7 @@ public class ProfileFragment extends BaseFragment {
 
     @Override
     protected void initViews() {
+        setHasOptionsMenu(true);
         id = getArguments().getInt(Constants.ID);
         meAsHome = SpUtil.getBoolean(SettingFragment.MY_HOME);
         if (meAsHome && LoginManager.isMe(id)) {
@@ -196,16 +195,10 @@ public class ProfileFragment extends BaseFragment {
                 .into(avatar);
 
         if (!LoginManager.isMe(id)) {
-            DataBase.findTimePillUser(id, new UserExistCallback() {
+            DataBase.findTimePillUser(id, new QueryResultCallback() {
                 @Override
                 public void onExist() {
-                    if (App.shouldShowHint) {
-                        Toast.makeText(App.context, R.string.timepill_user_hint, Toast.LENGTH_SHORT).show();
-                        App.shouldShowHint = false;
-                    }
-                    toolbarLayout.setOnClickListener(v -> pm());
-                    setHasOptionsMenu(true);
-                    getActivity().invalidateOptionsMenu();
+                    toolbar.inflateMenu(R.menu.menu_pm);
                 }
 
                 @Override
@@ -223,14 +216,10 @@ public class ProfileFragment extends BaseFragment {
 //        }
         toolbarLayout.setTitle(user.getName());
 
-        intro.setText(user.getIntro());
+        intro.setText(TextUtils.isEmpty(user.getIntro()) ? "该用户简介为空" : user.getIntro());
+
         intro.setOnClickListener(v -> {
-            Dialog dialog = new Dialog(getActivity());
-            dialog.setContentView(R.layout.intro_detail);
-            dialog.show();
-            TextView textView = (TextView) dialog.findViewById(R.id.introduction);
-            textView.setOnClickListener(v1 -> dialog.dismiss());
-            textView.setText(user.getIntro());
+            UiUtils.showDetailDialog(getActivity(), user.getIntro());
 
         });
         created.setText(String.format("%s 加入胶囊",
@@ -302,12 +291,14 @@ public class ProfileFragment extends BaseFragment {
             public void onTabSelected(TabLayout.Tab tab) {
                 TextView icon = (TextView) tab.getCustomView();
                 icon.setTextColor(ContextCompat.getColor(getContext(), android.R.color.white));
+                icon.setTypeface(null, Typeface.BOLD);
             }
 
             @Override
             public void onTabUnselected(TabLayout.Tab tab) {
                 TextView icon = (TextView) tab.getCustomView();
                 icon.setTextColor(ContextCompat.getColor(getContext(), R.color.grey));
+                icon.setTypeface(null, Typeface.NORMAL);
             }
 
             @Override
@@ -400,10 +391,10 @@ public class ProfileFragment extends BaseFragment {
         }
         ConversationActivity.chat(getActivity(), id);
     }
-
-    @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        super.onCreateOptionsMenu(menu, inflater);
-        inflater.inflate(R.menu.menu_pm, menu);
-    }
+//
+//    @Override
+//    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+//        super.onCreateOptionsMenu(menu, inflater);
+//        inflater.inflate(R.menu.menu_pm, menu);
+//    }
 }

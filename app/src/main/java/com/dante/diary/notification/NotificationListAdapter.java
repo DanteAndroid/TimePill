@@ -75,6 +75,6 @@ public class NotificationListAdapter extends BaseMultiItemQuickAdapter<TipResult
     }
 
     private void onNotificationClick(TextView textView) {
-        textView.setTextColor(ContextCompat.getColor(mContext, R.color.mediumGrey));
+        textView.setTextColor(ContextCompat.getColor(mContext, R.color.tertiaryText));
     }
 }

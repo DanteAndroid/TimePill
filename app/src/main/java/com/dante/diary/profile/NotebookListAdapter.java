@@ -43,7 +43,7 @@ class NotebookListAdapter extends BaseQuickAdapter<Notebook, BaseViewHolder> {
         TextView expireState = helper.getView(R.id.expireState);
         if (item.isExpired()) {
             expireState.setText("已过期");
-            expireState.setTextColor(ContextCompat.getColor(context, R.color.mediumGrey));
+            expireState.setTextColor(ContextCompat.getColor(context, R.color.tertiaryText));
         } else {
             expireState.setText("未过期");
             expireState.setTextColor(ContextCompat.getColor(context, R.color.secondText));

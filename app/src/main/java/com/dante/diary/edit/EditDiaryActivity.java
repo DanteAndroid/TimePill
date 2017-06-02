@@ -12,7 +12,6 @@ import android.support.annotation.Nullable;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -45,6 +44,7 @@ import com.dante.diary.utils.UiUtils;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 import butterknife.BindView;
 import rx.Observable;
@@ -94,8 +94,6 @@ public class EditDiaryActivity extends BaseActivity {
         if (getIntent().getExtras() != null) {
             diaryId = getIntent().getIntExtra(Constants.ID, 0);
             isTopic = getIntent().getBooleanExtra("isTopic", false);
-            Log.d(TAG, "initViews: isTopic " + isTopic);
-
             if (isTopic) {
                 toolbar.setTitle(R.string.edit_topic_diary);
             }
@@ -110,10 +108,10 @@ public class EditDiaryActivity extends BaseActivity {
                 toolbar.setTitle(R.string.edit_diary);
             }
         }
+
         fetchSubjects();
         initEditText();
         initTools();
-        setSupportActionBar(toolbar);
     }
 
     private void initTools() {
@@ -193,6 +191,8 @@ public class EditDiaryActivity extends BaseActivity {
             SpUtil.remove("draft");
             UiUtils.showSnack(content, getString(R.string.draft_restored));
         }
+        String[] hints = getResources().getStringArray(R.array.create_diary_hints);
+        content.setHint(hints[new Random().nextInt(hints.length)]);
         content.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -207,11 +207,14 @@ public class EditDiaryActivity extends BaseActivity {
             @Override
             public void afterTextChanged(Editable s) {
                 diaryContent = s.toString().trim();
-                if (diaryContent.length() <= DIARY_CONTENT_TEXT_LIMIT) {
+                if (diaryContent.length() < DIARY_CONTENT_TEXT_LIMIT) {
 //                    contentWrapper.setError(getString(R.string.say_more));
                 } else {
-//                    contentWrapper.setError("");
                     SpUtil.save("draft", diaryContent);
+                    if (!SpUtil.getBoolean("type_hint")) {
+                        SpUtil.save("type_hint", true);
+                        UiUtils.showSnack(content, R.string.type_hint);
+                    }
                 }
                 invalidateOptionsMenu();
             }
@@ -246,22 +249,22 @@ public class EditDiaryActivity extends BaseActivity {
         }
         if (validSubjects.isEmpty()) {
             KeyboardUtils.hideSoftInput(this);
-            UiUtils.showSnackLong(subjectSpinner, getString(R.string.no_valid_notebook), R.string.create_notebook, new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    startActivity(new Intent(EditDiaryActivity.this, EditNotebookActivity.class));
-                    finish();
-                }
+            UiUtils.showSnackLong(subjectSpinner, getString(R.string.no_valid_notebook), R.string.create_notebook, v -> {
+                startActivity(new Intent(EditDiaryActivity.this, EditNotebookActivity.class));
+                finish();
             });
         }
     }
 
     private void send() {
+        if (diaryContent == null || diaryContent.length() < DIARY_CONTENT_TEXT_LIMIT) {
+            UiUtils.showSnack(content, R.string.say_more);
+            return;
+        }
+
         ProgressBar progressBar = ImageProgresser.attachProgress(content);
-        source()
-                .compose(applySchedulers())
+        source().compose(applySchedulers())
                 .subscribe(notebook -> {
-                    Log.d(TAG, "call: " + notebook.getContent());
                     UiUtils.showSnack(subjectSpinner, isEditMode ? R.string.diary_update_success : R.string.create_diary_success);
                     SpUtil.remove("draft");
                     setResult(RESULT_OK);
@@ -312,17 +315,16 @@ public class EditDiaryActivity extends BaseActivity {
                 UiUtils.showSnack(subjectSpinner, getString(R.string.choose_notebook_hint));
             }
         });
-        subjectSpinner.animate().alpha(1).setStartDelay(300).start();
+        subjectSpinner.animate().alpha(1).start();
     }
 
     @Override
     public boolean onPrepareOptionsMenu(Menu menu) {
         boolean enabled;
         if (isEditMode && diaryContent != null && diary != null) {
-            enabled = (!diaryContent.equals(diary.getContent()) && diaryContent.length() > DIARY_CONTENT_TEXT_LIMIT) || notebookId != diary.getNotebookId();
+            enabled = (!diaryContent.equals(diary.getContent())) || notebookId != diary.getNotebookId();
         } else {
-            enabled = !TextUtils.isEmpty(diaryContent)
-                    && diaryContent.length() > DIARY_CONTENT_TEXT_LIMIT;
+            enabled = !TextUtils.isEmpty(diaryContent);
         }
         if (photoFile != null && photoFile.exists()) {
             enabled = true;

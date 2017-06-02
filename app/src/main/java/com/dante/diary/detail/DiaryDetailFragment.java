@@ -60,7 +60,6 @@ import com.dante.diary.utils.UiUtils;
 import com.dante.diary.utils.WrapContentLinearLayoutManager;
 import com.jaychang.st.SimpleText;
 
-import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 
@@ -203,6 +202,17 @@ public class DiaryDetailFragment extends BaseFragment implements SwipeRefreshLay
                 comment(comment.getUserId(), comment.getUser().getName());
             }
         });
+        scrollView.setOnScrollChangeListener(new NestedScrollView.OnScrollChangeListener() {
+            @Override
+            public void onScrollChange(NestedScrollView v, int scrollX, int scrollY, int oldScrollX, int oldScrollY) {
+                int dy = scrollY - oldScrollY;
+                if (dy > 5) {
+                    fab.hide();
+                } else if (dy < -5) {
+                    fab.show();
+                }
+            }
+        });
     }
 
     private void reportComment(int id, int position) {
@@ -214,13 +224,6 @@ public class DiaryDetailFragment extends BaseFragment implements SwipeRefreshLay
                 .compose(applySchedulers())
                 .subscribe(responseBodyResponse -> {
                     adapter.remove(position);
-                    String r = null;
-                    try {
-                        r = responseBodyResponse.body().string();
-                        //nothing here
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
                 }, throwable -> {
                     UiUtils.showSnack(rootView, R.string.delete_comment_failed + throwable.getMessage());
                 });
@@ -408,9 +411,7 @@ public class DiaryDetailFragment extends BaseFragment implements SwipeRefreshLay
         myName.setText(sText);
 
         time.setText(DateUtil.getDisplayTime(diary.getCreated()));
-
         initPicture();
-
     }
 
     private void initPicture() {
@@ -439,13 +440,12 @@ public class DiaryDetailFragment extends BaseFragment implements SwipeRefreshLay
     }
 
     private void initFab() {
-        new Handler().postDelayed(() -> fab.show(), 400);
+        new Handler().postDelayed(() -> fab.show(), 200);
         fab.setOnClickListener(v -> comment());
     }
 
 
     private void inflate(List<Comment> comments) {
-
         inflateDiary();
         initFab();
         inflateComments(comments);

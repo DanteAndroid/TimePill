@@ -2,15 +2,15 @@
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
              android:layout_width="match_parent"
              android:layout_height="wrap_content"
+             android:background="@color/item_background"
              android:foreground="?attr/selectableItemBackground"
-             android:background="@color/btg_global_light_white"
              android:padding="@dimen/activity_horizontal_margin">
     <TextView
         android:id="@+id/notification"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textColor="@color/primaryText"
-        android:text="二狗子 关注了你"/>
+        android:text="二狗子 关注了你"
+        android:textColor="@color/primaryText"/>
 
     <ImageView
         android:id="@+id/done"

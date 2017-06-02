@@ -1,14 +1,17 @@
 package com.dante.diary.utils;
 
 import android.app.Activity;
+import android.app.UiModeManager;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.net.Uri;
+import android.widget.Toast;
 
 import com.blankj.utilcode.utils.ClipboardUtils;
 import com.dante.diary.BuildConfig;
 import com.dante.diary.R;
+import com.dante.diary.base.App;
 import com.dante.diary.base.Constants;
 import com.dante.diary.base.EventMessage;
 import com.dante.diary.login.LoginActivity;
@@ -19,6 +22,7 @@ import java.util.List;
 
 import moe.feng.alipay.zerosdk.AlipayZeroSdk;
 
+import static android.content.Context.UI_MODE_SERVICE;
 import static android.content.Intent.FLAG_ACTIVITY_CLEAR_TOP;
 import static android.content.Intent.FLAG_ACTIVITY_NEW_TASK;
 import static com.dante.diary.base.App.context;
@@ -51,7 +55,7 @@ public class AppUtil {
             Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=" + BuildConfig.APPLICATION_ID));
             activity.startActivity(intent);
         } catch (android.content.ActivityNotFoundException anfe) {
-            Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("www.coolapk.com/apk/" + BuildConfig.APPLICATION_ID));
+            Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("http://www.coolapk.com/apk/" + BuildConfig.APPLICATION_ID));
             activity.startActivity(intent);
         }
     }
@@ -75,5 +79,24 @@ public class AppUtil {
         activity.finish();
     }
 
+    public static void toggleNightMode() {
+        UiModeManager modeManager = (UiModeManager) context.getSystemService(UI_MODE_SERVICE);
+        boolean enable = !(modeManager.getNightMode() == UiModeManager.MODE_NIGHT_YES);
+        modeManager.setNightMode(enable ? UiModeManager.MODE_NIGHT_YES : UiModeManager.MODE_NIGHT_NO);
+    }
 
+    public static void autoNightMode() {
+        UiModeManager modeManager = (UiModeManager) context.getSystemService(UI_MODE_SERVICE);
+        modeManager.setNightMode(UiModeManager.MODE_NIGHT_AUTO);
+    }
+
+    public static void goWechat() {
+        PackageManager packageManager = App.context.getPackageManager();
+        Intent intent = packageManager.getLaunchIntentForPackage("com.tencent.mm");
+        try {
+            App.context.startActivity(intent);
+        } catch (Exception e) {
+            Toast.makeText(App.context, "微信未安装", Toast.LENGTH_SHORT).show();
+        }
+    }
 }

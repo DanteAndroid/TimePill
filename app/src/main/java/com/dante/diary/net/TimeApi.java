@@ -58,6 +58,7 @@ public interface TimeApi {
     @POST("relation/{user_id}")
     Observable<Response<ResponseBody>> follow(@Path("user_id") int userId);
 
+
     @GET("relation/{user_id}")
     Observable<Response<ResponseBody>> hasfollow(@Path("user_id") int userId);
 

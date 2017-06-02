@@ -4,7 +4,10 @@ package com.dante.diary.main;
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.app.Activity;
+import android.app.UiModeManager;
+import android.content.Context;
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.design.internal.NavigationMenu;
@@ -101,6 +104,7 @@ public class MainDiaryFragment extends RecyclerFragment implements OrderedRealmC
     private Topic topic;
     private boolean isHiding;
     private boolean isShowing;
+    private boolean enableNight;
 
     public MainDiaryFragment() {
         // Required empty public constructor
@@ -126,6 +130,16 @@ public class MainDiaryFragment extends RecyclerFragment implements OrderedRealmC
 //        setEnterTransition(new Slide(Gravity.RIGHT));
 //        setExitTransition(initTransitions());
 //    }
+
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        log(" onStart...");
+        if (topic == null) {
+            appBar.setExpanded(false);
+        }
+    }
 
     @Override
     protected void initViews() {
@@ -156,7 +170,6 @@ public class MainDiaryFragment extends RecyclerFragment implements OrderedRealmC
                 } else if (id == R.id.attachPicture) {
                     onPictureClicked(view, i);
                 }
-
             }
         });
 
@@ -323,18 +336,16 @@ public class MainDiaryFragment extends RecyclerFragment implements OrderedRealmC
 
         adapter.setOnLoadMoreListener(() -> {
             page = SpUtil.getInt(Constants.PAGE, 1);
-            log("load more " + page);
             page++;
             fetch();
         }, recyclerView);
         adapter.disableLoadMoreIfNotFullPage();
-
         fetch();
         changeRefresh(true);
     }
 
     private void goTopic() {
-        int index = ((LinearLayoutManager) layoutManager).findFirstVisibleItemPosition();
+        int index = ((LinearLayoutManager) layoutManager).findFirstCompletelyVisibleItemPosition();
         if (index == 0) {
             if (topic == null) {
                 Toast.makeText(context, R.string.no_topic_today, Toast.LENGTH_SHORT).show();
@@ -405,9 +416,9 @@ public class MainDiaryFragment extends RecyclerFragment implements OrderedRealmC
                     String result;
                     try {
                         result = response.body().string();
-                        recyclerView.setNestedScrollingEnabled(false);
-                        new Handler().postDelayed(() -> appBar.setExpanded(false), 400);
                         if (result.isEmpty()) {
+                            recyclerView.setNestedScrollingEnabled(false);
+                            new Handler().postDelayed(() -> appBar.setExpanded(false), 400);
                             return;
                         } else {
                             appBar.setExpanded(true);
@@ -475,7 +486,6 @@ public class MainDiaryFragment extends RecyclerFragment implements OrderedRealmC
                 scrollToTop(range.length);
             }
         }
-
 //        OrderedCollectionChangeSet.Range[] modifications = changeSet.getChangeRanges();
 //        for (OrderedCollectionChangeSet.Range range : modifications) {
 //            log("notifyItemRangeChanged " + range.startIndex + " to " + (range.startIndex + range.length));
@@ -489,10 +499,19 @@ public class MainDiaryFragment extends RecyclerFragment implements OrderedRealmC
         if (id == R.id.action_settings) {
             startActivity(new Intent(getContext(), SettingActivity.class));
         } else if (id == R.id.action_share) {
+
             String text = SpUtil.get(Updater.SHARE_APP, getString(R.string.share_app_description));
             Share.shareText(getContext(), text);
-        } else if (id == 0) {
 
+        } else if (id == R.id.night_mode) {
+            if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
+                UiUtils.showSnack(rootView, R.string.android_version_is_old);
+            } else {
+                UiModeManager modeManager = (UiModeManager) context.getSystemService(Context.UI_MODE_SERVICE);
+                enableNight = !(modeManager.getNightMode() == UiModeManager.MODE_NIGHT_YES);
+                modeManager.setNightMode(enableNight ? UiModeManager.MODE_NIGHT_YES : UiModeManager.MODE_NIGHT_NO);
+                SpUtil.save(Constants.IS_NIGHT, enableNight);
+            }
         }
         return true;
     }
@@ -500,7 +519,12 @@ public class MainDiaryFragment extends RecyclerFragment implements OrderedRealmC
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
-        inflater.inflate(R.menu.menu_setting, menu);
+        inflater.inflate(SpUtil.getBoolean("auto_night_mode") ?
+                R.menu.menu_setting_basic : R.menu.menu_setting, menu);
+        MenuItem item = menu.findItem(R.id.night_mode);
+        if (item != null) {
+            item.setTitle(SpUtil.getBoolean(Constants.IS_NIGHT) ? R.string.day_mode : R.string.night_mode);
+        }
     }
 
 }

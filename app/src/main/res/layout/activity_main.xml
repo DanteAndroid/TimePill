@@ -23,7 +23,7 @@
         android:layout_width="match_parent"
         android:layout_height="56dp"
         android:layout_gravity="bottom"
-        android:background="@color/white"
+        android:background="@color/bar_background"
         app:bb_activeTabColor="@color/secondText"
         app:bb_behavior="shifting"
         app:bb_inActiveTabColor="@color/greyer"

@@ -2,7 +2,8 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
       xmlns:app="http://schemas.android.com/apk/res-auto">
     <item android:id="@+id/action_pm"
+          android:icon="@drawable/ic_mail_outline_black_18px"
           android:orderInCategory="0"
           android:title="@string/pm"
-          app:showAsAction="never"/>
+          app:showAsAction="ifRoom"/>
 </menu>

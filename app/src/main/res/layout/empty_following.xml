@@ -2,14 +2,16 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
               android:layout_width="match_parent"
               android:layout_height="match_parent"
+              android:background="@color/grey_background"
               android:orientation="vertical">
 
     <TextView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_gravity="center"
-        android:textSize="20sp"
         android:gravity="center"
-        android:text="您没有关注任何人"/>
+        android:text="您没有关注任何人"
+        android:textColor="@color/secondText"
+        android:textSize="20sp"/>
 
 </LinearLayout>

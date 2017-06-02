@@ -55,7 +55,6 @@ public abstract class RecyclerFragment extends BaseFragment implements SwipeRefr
                 ContextCompat.getColor(getContext(), R.color.colorAccent), ContextCompat.getColor(getContext(), R.color.indigo_500));
         swipeRefresh.setOnRefreshListener(this);
         recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
-
             @Override
             public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
                 if (dy > 5) {
@@ -85,7 +84,6 @@ public abstract class RecyclerFragment extends BaseFragment implements SwipeRefr
     public void onResume() {
         super.onResume();
         int viewPosition = SpUtil.getInt(Constants.VIEW_POSITION);
-
         if (viewPosition > 0) {
             recyclerView.scrollToPosition(viewPosition);
             SpUtil.remove(Constants.VIEW_POSITION);

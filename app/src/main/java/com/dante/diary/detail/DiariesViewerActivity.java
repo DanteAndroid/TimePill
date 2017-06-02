@@ -20,6 +20,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
+import io.realm.Sort;
 
 public class DiariesViewerActivity extends BaseActivity {
 
@@ -32,6 +33,7 @@ public class DiariesViewerActivity extends BaseActivity {
     private DetailPagerAdapter adapter;
     private long start;
     private int notebookId;
+    private boolean isTimeReversed;
 
     @Override
     protected void onPause() {
@@ -59,7 +61,9 @@ public class DiariesViewerActivity extends BaseActivity {
 
         List<Fragment> fragments = new ArrayList<>();
         if (notebookId > 0) {
-            diaries = base.findDiariesOfNotebook(notebookId);
+            isTimeReversed = getIntent().getBooleanExtra(Constants.TIME_REVERSE, false);
+            diaries = base.findDiariesOfNotebook(notebookId)
+                    .sort(Constants.CREATED, isTimeReversed ? Sort.DESCENDING : Sort.ASCENDING);
 
         } else {
             diaries = base.findTodayDiaries();

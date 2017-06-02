@@ -3,6 +3,7 @@ package com.dante.diary.setting;
 import android.app.AlertDialog;
 import android.app.Fragment;
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.preference.CheckBoxPreference;
@@ -31,11 +32,14 @@ import com.dante.diary.R;
 import com.dante.diary.base.AboutActivity;
 import com.dante.diary.base.App;
 import com.dante.diary.base.BaseActivity;
+import com.dante.diary.base.EventMessage;
 import com.dante.diary.custom.BottomDialogFragment;
 import com.dante.diary.custom.LockPatternUtil;
 import com.dante.diary.utils.AppUtil;
 import com.dante.diary.utils.SpUtil;
 import com.dante.diary.utils.UiUtils;
+
+import org.greenrobot.eventbus.EventBus;
 
 import java.io.File;
 import java.util.List;
@@ -59,10 +63,11 @@ public class SettingFragment extends PreferenceFragment implements Preference.On
     public static final String SHORT_SPLASH = "short_splash";
     public static final String HAS_PATTERN_LOCK = "pattern_lock";
     public static final String PATTERN_LOCK_PSW = "pattern_lock_psw";
+    public static final String AUTO_NIGHT_MODE = "auto_night_mode";
     private static final long DURATION = 300;
     private Preference clearCache;
     private Preference feedback;
-    private Preference version;
+    private SwitchPreference night;
     private CheckBoxPreference my;
     private SwitchPreference patternLock;
     private Preference about;
@@ -83,9 +88,22 @@ public class SettingFragment extends PreferenceFragment implements Preference.On
         addPreferencesFromResource(R.xml.preferences);
         clearCache = findPreference(LOG_OFF);
         feedback = findPreference(FEED_BACK);
+        night = (SwitchPreference) findPreference(AUTO_NIGHT_MODE);
         my = (CheckBoxPreference) findPreference(MY_HOME);
         shortSplash = (CheckBoxPreference) findPreference(SHORT_SPLASH);
         about = findPreference(ABOUT);
+
+        night.setOnPreferenceChangeListener((preference, newValue) -> {
+            if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
+                UiUtils.showSnack(rootView, R.string.android_version_is_old);
+                return false;
+            }
+            if ((boolean) newValue) {
+                AppUtil.autoNightMode();
+            }
+            EventBus.getDefault().post(new EventMessage("invalidateOptionsMenu"));
+            return true;
+        });
         patternLock = (SwitchPreference) findPreference(HAS_PATTERN_LOCK);
         patternLock.setOnPreferenceChangeListener((preference, newValue) -> {
             boolean enable = (boolean) newValue;
@@ -115,6 +133,8 @@ public class SettingFragment extends PreferenceFragment implements Preference.On
             startActivity(new Intent(getActivity().getApplicationContext(), AboutActivity.class));
             return true;
         });
+
+
         clearCache.setOnPreferenceClickListener(this);
         feedback.setOnPreferenceClickListener(this);
         my.setOnPreferenceChangeListener((preference, newValue) -> {

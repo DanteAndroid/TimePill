@@ -1,5 +1,6 @@
 package com.dante.diary.follow;
 
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
 import android.support.v4.content.ContextCompat;
@@ -80,12 +81,16 @@ public class TabsFragment extends BaseFragment {
             @Override
             public void onTabSelected(TabLayout.Tab tab) {
                 TextView icon = (TextView) tab.getCustomView();
+                assert icon != null;
+                icon.setTypeface(null, Typeface.BOLD);
                 icon.setTextColor(ContextCompat.getColor(getContext(), android.R.color.white));
             }
 
             @Override
             public void onTabUnselected(TabLayout.Tab tab) {
                 TextView icon = (TextView) tab.getCustomView();
+                assert icon != null;
+                icon.setTypeface(null, Typeface.NORMAL);
                 icon.setTextColor(ContextCompat.getColor(getContext(), R.color.grey));
             }
 

@@ -5,9 +5,7 @@
               android:layout_height="wrap_content"
               android:layout_marginBottom="8dp"
               android:layout_marginTop="8dp"
-              android:background="?attr/selectableItemBackground"
-              android:paddingLeft="@dimen/activity_horizontal_margin"
-              android:paddingRight="@dimen/activity_horizontal_margin">
+              android:foreground="?attr/selectableItemBackground">
 
     <ImageView
         android:id="@+id/commentAvatar"
@@ -40,6 +38,7 @@
             android:layout_alignRight="@+id/commentContent"
             android:layout_marginLeft="8dp"
             android:layout_marginStart="8dp"
+            android:textColor="@color/tertiaryText"
             android:textSize="14sp"
             tools:text="23:33:33"/>
 
@@ -51,6 +50,7 @@
             android:layout_marginTop="8dp"
             android:autoLink="all"
             android:lineSpacingMultiplier="1.2"
+            android:textColor="@color/secondText"
             tools:text="@string/test_comment"/>
 
     </RelativeLayout>

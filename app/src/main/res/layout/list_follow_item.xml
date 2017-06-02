@@ -4,7 +4,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="1dp"
-                android:background="@color/btg_global_light_white"
+                android:background="@color/item_background"
                 android:padding="@dimen/activity_horizontal_margin">
 
     <ImageView
@@ -30,6 +30,7 @@
         android:layout_alignBaseline="@+id/name"
         android:layout_alignParentEnd="true"
         android:layout_marginLeft="@dimen/activity_horizontal_margin"
+        android:textColor="@color/tertiaryText"
         tools:text="2010-03-17 加入"/>
 
     <TextView
@@ -41,8 +42,9 @@
         android:layout_marginTop="10dp"
         android:layout_toRightOf="@+id/avatar"
         android:ellipsize="end"
-        android:maxLines="2"
+        android:lineSpacingMultiplier="1.1"
+        android:maxLines="3"
         android:textColor="@color/secondText"
-        tools:text="我是一个个性开朗的中二小伙子~~~~~~~~~~~ 希望大家能够喜欢wwwwwwwwwwwww"/>
+        tools:text="我是一个个性开朗的中二小伙子~~~~~~~~~~~ 希望大家能够喜欢希望大家能够喜欢希望大家能够喜欢希望大家能够喜欢wwwwwwwwwwwww"/>
 
 </RelativeLayout>

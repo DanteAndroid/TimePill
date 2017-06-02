@@ -56,14 +56,13 @@ public class DiaryListAdapter extends BaseQuickAdapter<Diary, BaseViewHolder> {
         } else {
             attach.setVisibility(View.GONE);//一定要加，否则会出现图片重复
         }
-
         RelativeLayout.LayoutParams timeParams = (RelativeLayout.LayoutParams) time.getLayoutParams();
         if (item.getUser() == null) {
             //没有user对象，则是获取用户的日记列表
             name.setVisibility(View.GONE);
             String displayDay = DateUtil.getDisplayDay(item.getCreated());
             date.setText(displayDay);
-            date.setVisibility(displayDay.equals(lastDate) ? View.GONE : View.VISIBLE);
+            date.setVisibility(displayDay.equals(lastDate) || displayDay.equals(DateUtil.getDisplayDay(new Date())) ? View.GONE : View.VISIBLE);
             avatarView.setVisibility(View.GONE);
             lastDate = displayDay;
             timeParams.addRule(RelativeLayout.ALIGN_BASELINE, R.id.notebookSubject);
@@ -93,7 +92,7 @@ public class DiaryListAdapter extends BaseQuickAdapter<Diary, BaseViewHolder> {
         content.setLayoutParams(params);
 
         //日记本名字、内容、时间，必填
-        helper.setText(R.id.notebookSubject, String.format("《" + "%s" + "》",
+        helper.setText(R.id.notebookSubject, String.format("《%s》",
                 item.getNotebookSubject()))
                 .setText(R.id.content, item.getContent())
                 .setText(R.id.time, DateUtil.getTimeText(item.getCreated()));

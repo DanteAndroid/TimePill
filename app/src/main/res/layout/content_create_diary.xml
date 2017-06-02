@@ -6,16 +6,21 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:layout_margin="@dimen/activity_horizontal_margin"
+    android:background="@color/item_background"
     android:orientation="vertical"
+    android:padding="@dimen/activity_horizontal_margin"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
     tools:context="com.dante.diary.edit.EditDiaryActivity"
     tools:showIn="@layout/activity_create_diary">
+
     <Spinner
         android:id="@+id/subjectSpinner"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:alpha="0">
+        android:layout_marginBottom="8dp"
+        android:alpha="0"
+        android:background="@color/item_background"
+        android:minHeight="34dp">
     </Spinner>
 
     <FrameLayout
@@ -32,6 +37,7 @@
             android:hint="@string/create_diary_hint"
             android:lineSpacingMultiplier="1.2"
             android:padding="6dp"
+            android:textColorHint="@color/tertiaryText"
         />
 
         <ImageView
@@ -58,28 +64,30 @@
             android:layout_height="wrap_content"
             android:background="?attr/selectableItemBackgroundBorderless"
             android:clickable="true"
-            android:padding="8dp"
+            android:paddingBottom="8dp"
+            android:paddingTop="8dp"
             android:src="@drawable/ic_mood_black_24px"
             android:visibility="gone"
             tools:visibility="visible"/>
 
         <ImageView
             android:id="@+id/photo"
-            android:layout_width="56dp"
+            android:layout_width="54dp"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="8dp"
             android:background="?attr/selectableItemBackgroundBorderless"
             android:clickable="true"
-            android:padding="8dp"
+            android:paddingBottom="8dp"
+            android:paddingTop="8dp"
             android:src="@drawable/ic_insert_photo_black_24px"/>
 
         <ImageView
             android:id="@+id/palette"
-            android:layout_width="56dp"
+            android:layout_width="54dp"
             android:layout_height="wrap_content"
             android:background="?attr/selectableItemBackgroundBorderless"
             android:clickable="true"
-            android:padding="8dp"
+            android:paddingBottom="8dp"
+            android:paddingTop="8dp"
             android:src="@drawable/ic_brush_black_24px"/>
 
     </LinearLayout>

@@ -1,5 +1,6 @@
 package com.dante.diary.main;
 
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.Nullable;
@@ -9,6 +10,8 @@ import com.dante.diary.R;
 import com.dante.diary.base.BottomBarActivity;
 import com.dante.diary.base.EventMessage;
 import com.dante.diary.custom.Updater;
+import com.dante.diary.utils.AppUtil;
+import com.dante.diary.utils.SpUtil;
 import com.dante.diary.utils.UiUtils;
 
 import org.greenrobot.eventbus.EventBus;
@@ -20,9 +23,19 @@ public class MainActivity extends BottomBarActivity {
     private Updater updater;
     private boolean backPressed;
 
+    public static void initUI() {
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
+            return;
+        }
+        if (SpUtil.getBoolean("auto_night_mode")) {
+            AppUtil.autoNightMode();
+        }
+    }
+
     @Override
     protected void initViews(@Nullable Bundle savedInstanceState) {
         super.initViews(savedInstanceState);
+        initUI();
         initUpdater();
         EventBus.getDefault().register(this);
     }
@@ -36,7 +49,6 @@ public class MainActivity extends BottomBarActivity {
     private void initUpdater() {
         updater = Updater.getInstance(this);
         updater.check();
-
     }
 
     @Override
@@ -72,9 +84,17 @@ public class MainActivity extends BottomBarActivity {
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onMessage(EventMessage message) {
-        Log.e(TAG, "onMessage: event" + message.event);
-        if (message.event.equals("restart")) {
-            finish();
+        String event = message.event;
+        switch (event) {
+            case "restart":
+                finish();
+                break;
+            case "invalidateOptionsMenu":
+                invalidateOptionsMenu();
+                break;
+            default:
+                Log.d(TAG, "onMessage: " + event);
+                break;
         }
     }
 }

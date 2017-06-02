@@ -34,6 +34,7 @@ import com.dante.diary.model.Topic;
 import com.dante.diary.utils.ImageProgresser;
 import com.dante.diary.utils.SpUtil;
 import com.dante.diary.utils.TransitionHelper;
+import com.dante.diary.utils.UiUtils;
 import com.google.gson.Gson;
 
 import java.util.List;
@@ -62,13 +63,13 @@ public class DiaryListFragment extends RecyclerFragment {
     TextView stateText;
     @BindView(R.id.createTopicDiary)
     FloatingActionButton fab;
-    private List<Diary> diaries;
-    private int page = 1;
+    private int page;
     private int id;
     private String data;
     private boolean isFromNotebook;
     private boolean isTimeReversed;
     private String type;
+    private Topic topic;
 
     //id可以是用户id，也可以是notebook的id
     public static DiaryListFragment newInstance(int id, String type, String data) {
@@ -163,6 +164,7 @@ public class DiaryListFragment extends RecyclerFragment {
         if (isFromNotebook) {
             Intent intent = new Intent(getContext().getApplicationContext(), DiariesViewerActivity.class);
             intent.putExtra(Constants.POSITION, i);
+            intent.putExtra(Constants.TIME_REVERSE, isTimeReversed);
             intent.putExtra(Constants.NOTEBOOK_ID, adapter.getItem(i).getNotebookId());
             startActivity(intent);
 
@@ -177,6 +179,7 @@ public class DiaryListFragment extends RecyclerFragment {
     @Override
     protected void initData() {
         super.initData();
+        page = 1;
         if (isFromNotebook) {
             initAppBar();
             toolbar.setTitle(data);
@@ -184,7 +187,7 @@ public class DiaryListFragment extends RecyclerFragment {
             adapter.setIsFromNotebook(isFromNotebook);
 
         } else if (type.equals(TOPIC)) {
-            Topic topic = new Gson().fromJson(data, Topic.class);
+            topic = new Gson().fromJson(data, Topic.class);
             initAppBar();
             toolbar.setTitle("话题：" + topic.getTitle());
             toolbar.setSubtitle(topic.getIntro());
@@ -212,10 +215,21 @@ public class DiaryListFragment extends RecyclerFragment {
             });
         }
         if (!type.equals(TODAY_DIARIES)) {
-            Log.d(TAG, "initData: loadmore listen");
             adapter.setOnLoadMoreListener(() -> fetch(), recyclerView);
         }
-        toolbar.setOnClickListener(v -> scrollToTop());
+        toolbar.setOnClickListener(v -> {
+            if (type.equals(TOPIC)) {
+                int i = ((LinearLayoutManager) layoutManager).findFirstCompletelyVisibleItemPosition();
+                if (i == 0 && topic != null) {
+                    UiUtils.showDetailDialog(getActivity(), topic.getIntro());
+                } else {
+                    scrollToTop();
+                }
+
+            } else {
+                scrollToTop();
+            }
+        });
         fetch();
     }
 
@@ -278,6 +292,8 @@ public class DiaryListFragment extends RecyclerFragment {
     @Override
     public void onRefresh() {
         page = 1;
+        Log.d(TAG, "onRefresh: ");
+
         fetch();
     }
 
@@ -297,6 +313,7 @@ public class DiaryListFragment extends RecyclerFragment {
     }
 
     private void reverseDiary() {
+        List<Diary> diaries;
         if (isTimeReversed) {
             diaries = base.findDiariesOfNotebook(id).sort(Constants.CREATED, Sort.ASCENDING);
             isTimeReversed = false;

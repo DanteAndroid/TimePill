@@ -57,11 +57,16 @@ public class NotificationUtils {
                 new NotificationCompat.Builder(context)
                         .setSmallIcon(R.drawable.notification_icon)
                         .setAutoCancel(true)
-                        .setDefaults(Notification.DEFAULT_SOUND)
+
                         .setContentTitle(title)
                         .setContentText(content);
-        if (SpUtil.getBoolean("notifications_new_message_vibrate")) {
-            mBuilder.setDefaults(Notification.DEFAULT_VIBRATE);
+
+        if (SpUtil.getBoolean("notifications_new_message", true)) {
+            if (SpUtil.getBoolean("notifications_new_message_vibrate")) {
+                mBuilder.setDefaults(Notification.DEFAULT_VIBRATE);
+            } else {
+                mBuilder.setDefaults(Notification.DEFAULT_SOUND);
+            }
         }
 
         TaskStackBuilder builder = TaskStackBuilder.create(context)

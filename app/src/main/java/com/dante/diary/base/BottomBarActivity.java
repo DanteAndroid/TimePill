@@ -52,8 +52,10 @@ public class BottomBarActivity extends BaseActivity implements FragNavController
     public void fetchNotifications() {
         Subscription subscription = LoginManager.getApi().getTips().compose(applySchedulers())
                 .subscribe(tipResults -> {
-                    Log.d("test", "fetchNotifications: " + tipResults.size());
-                    bottomBar.getTabWithId(R.id.notification).setBadgeCount(tipResults.size());
+                    if (SpUtil.getBoolean("notifications_new_message", true)) {
+                        bottomBar.getTabWithId(R.id.notification).setBadgeCount(tipResults.size());
+                    }
+
                 }, throwable -> Log.e("test", "fetch: " + throwable.getMessage()));
         compositeSubscription.add(subscription);
     }
@@ -143,7 +145,6 @@ public class BottomBarActivity extends BaseActivity implements FragNavController
                 return TabsFragment.newInstance(new String[]{getString(R.string.my_notifications), getString(R.string.my_followers)});
             case ME:
                 int id = SpUtil.getInt(Constants.ID);
-                Log.d(TAG, "getRootFragment: " + id);
                 return ProfileFragment.newInstance(id);
         }
         throw new IllegalStateException("Need to send an index that we know");

@@ -51,15 +51,14 @@ public class NotificationListFragment extends RecyclerFragment implements IOnIte
                 log("onItemLongClick~~~~~~~~~~~~~~");
             }
 
-            @Override
-            public void onItemChildClick(BaseQuickAdapter baseQuickAdapter, View view, int position) {
-                int id = view.getId();
-                if (id == R.id.done) {
-                    readDone(adapter.getItem(position).id);
-                    adapter.remove(position);
-                }
-
-            }
+//            @Override
+//            public void onItemChildClick(BaseQuickAdapter baseQuickAdapter, View view, int position) {
+//                int id = view.getId();
+//                if (id == R.id.done) {
+//                    readDone(adapter.getItem(position).id);
+//                    adapter.remove(position);
+//                }
+//            }
         });
             fab.setImageResource(R.drawable.ic_done_all_white_36dp);
             fab.setOnClickListener(v -> readAllDone());
@@ -136,7 +135,7 @@ public class NotificationListFragment extends RecyclerFragment implements IOnIte
 
     private void onNotificationClicked(View view, int i) {
         TextView n = (TextView) view.findViewById(R.id.notification);
-        n.setTextColor(ContextCompat.getColor(getContext(), R.color.mediumGrey));
+        n.setTextColor(ContextCompat.getColor(getContext(), R.color.tertiaryText));
 
         TipResult notification = adapter.getItem(i);
         int type = adapter.getItem(i).getItemType();

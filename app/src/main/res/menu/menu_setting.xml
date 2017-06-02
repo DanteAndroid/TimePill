@@ -11,4 +11,8 @@
           android:title="@string/share_to"
           app:showAsAction="never"/>
 
+    <item android:id="@+id/night_mode"
+          android:orderInCategory="1"
+          android:title="@string/night_mode"
+          app:showAsAction="never"/>
 </menu>

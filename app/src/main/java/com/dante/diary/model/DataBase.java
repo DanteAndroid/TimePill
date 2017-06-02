@@ -6,7 +6,7 @@ import com.avos.avoscloud.AVObject;
 import com.avos.avoscloud.AVQuery;
 import com.avos.avoscloud.FindCallback;
 import com.dante.diary.base.Constants;
-import com.dante.diary.interfaces.UserExistCallback;
+import com.dante.diary.interfaces.QueryResultCallback;
 import com.dante.diary.utils.DateUtil;
 
 import java.util.Date;
@@ -39,7 +39,7 @@ public class DataBase {
         return realm;
     }
 
-    public static void findTimePillUser(int id, UserExistCallback callback) {
+    public static void findTimePillUser(int id, QueryResultCallback callback) {
         AVQuery<AVObject> query = new AVQuery<>(Constants.TP_USER);
         query.whereEqualTo(Constants.ID, id);
         query.findInBackground(new FindCallback<AVObject>() {

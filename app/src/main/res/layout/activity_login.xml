@@ -114,6 +114,7 @@
                     android:textColor="@color/white"/>
 
             </android.support.design.widget.TextInputLayout>
+
         </LinearLayout>
 
         <com.andrognito.patternlockview.PatternLockView
@@ -193,7 +194,7 @@
         android:layout_marginTop="@dimen/activity_horizontal_margin"
         android:gravity="center"
         android:text="@string/app_slogan"
-        android:textColor="@color/white"
+        android:textColor="@color/grey"
         android:textSize="22sp"
     />
 

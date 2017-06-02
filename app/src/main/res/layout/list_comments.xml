@@ -4,8 +4,6 @@
               android:layout_width="match_parent"
               android:layout_height="match_parent"
               android:layout_margin="@dimen/activity_horizontal_margin"
-              android:clickable="true"
-              android:focusableInTouchMode="true"
               android:orientation="vertical"
               tools:showIn="@layout/fragment_diary_detail">
 
@@ -25,7 +23,7 @@
         android:gravity="center"
         android:minHeight="68dp"
         android:text="@string/diary_has_no_comment"
-        android:textColor="@color/mediumGrey"
+        android:textColor="@color/tertiaryText"
         android:visibility="gone"
         tools:visibility="visible"/>
 
@@ -35,6 +33,7 @@
         android:layout_height="wrap_content"
         android:layout_marginBottom="8dp"
         android:padding="5dp"
+        android:textColor="@color/tertiaryText"
         android:visibility="gone"
         tools:text="共 13 条评论"
         tools:visibility="gone"/>

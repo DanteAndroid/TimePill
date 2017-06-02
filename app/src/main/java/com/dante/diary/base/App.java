@@ -31,6 +31,7 @@ public class App extends Application {
 //        return application.refWatcher;
 //    }
 
+
     @Override
     public void onCreate() {
         super.onCreate();

@@ -5,6 +5,7 @@
     <SwitchPreference
         android:defaultValue="true"
         android:key="notifications_new_message"
+        android:summary="@string/notification_hint"
         android:title="@string/pref_title_new_message_notifications"/>
 
     <!-- Allows the user to choose a ringtone in the 'notification' category. -->
@@ -18,9 +19,10 @@
         android:title="@string/pref_title_ringtone"/>
 
     <SwitchPreference
-        android:defaultValue="true"
+        android:defaultValue="false"
         android:dependency="notifications_new_message"
         android:key="notifications_new_message_vibrate"
+        android:summary="@string/notification_vibrate_hint"
         android:title="@string/pref_title_vibrate"/>
 
 </PreferenceScreen>

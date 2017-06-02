@@ -25,7 +25,6 @@ class NotificationBroadcastReceiver extends BroadcastReceiver {
 
     @Override
     public void onReceive(Context context, Intent intent) {
-        Log.d(TAG, "onReceive: ");
 
         if (ChatService.getClient() == null) {
             Log.d(TAG, "onReceive: ChatService.getClient() == null ");
@@ -33,7 +32,6 @@ class NotificationBroadcastReceiver extends BroadcastReceiver {
 
         } else {
             String conversationId = intent.getStringExtra(Constants.CONVERSATION_ID);
-            Log.d(TAG, "onReceive: conversationId " + conversationId);
             if (!TextUtils.isEmpty(conversationId)) {
                 goChatActivity(context, intent);
             }

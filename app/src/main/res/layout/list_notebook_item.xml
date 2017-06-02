@@ -6,13 +6,14 @@
                                     android:layout_width="match_parent"
                                     android:layout_height="wrap_content"
                                     android:layout_margin="6dp"
-                                    android:background="?android:attr/selectableItemBackground"
-                                    android:visibility="visible"
+                                    android:foreground="?android:attr/selectableItemBackground"
                                     app:cardCornerRadius="3dp">
 
-    <LinearLayout android:layout_width="match_parent"
-                  android:layout_height="wrap_content"
-                  android:orientation="vertical">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/item_background"
+        android:orientation="vertical">
         <ImageView
             android:id="@+id/cover"
             android:layout_width="match_parent"
@@ -21,14 +22,15 @@
             android:scaleType="centerCrop"
             tools:src="@drawable/default_cover"/>
 
-        <LinearLayout android:layout_width="match_parent"
-                      android:layout_height="wrap_content">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
             <TextView
-                android:layout_weight="1"
                 android:id="@+id/notebookSubject"
                 android:layout_width="0dp"
                 android:layout_height="36dp"
                 android:layout_gravity="center"
+                android:layout_weight="1"
                 android:drawablePadding="3dp"
                 android:gravity="center"
                 android:textColor="@color/primaryText"
@@ -39,11 +41,11 @@
                 android:id="@+id/more"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
-                android:src="@drawable/ic_menu_moreoverflow"
-                android:background="?attr/selectableItemBackgroundBorderless"
-                android:visibility="gone"
+                android:layout_gravity="end"
                 android:layout_marginRight="@dimen/activity_horizontal_margin"
-                android:layout_gravity="end"/>
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:src="@drawable/ic_menu_moreoverflow"
+                android:visibility="gone"/>
         </LinearLayout>
 
 
@@ -53,7 +55,7 @@
             android:layout_height="wrap_content"
             android:gravity="center"
             android:text="已过期"
-            android:textColor="@color/mediumGrey"
+            android:textColor="@color/tertiaryText"
             android:visibility="visible"/>
         <TextView
             android:id="@+id/createdToExpired"
@@ -62,8 +64,9 @@
             android:gravity="center"
             android:paddingBottom="5dp"
             android:paddingTop="2dp"
-            tools:text="2016-3-16 ~ 2017-3-9"
-            android:visibility="visible"/>
+            android:textColor="@color/tertiaryText"
+            android:visibility="visible"
+            tools:text="2016-3-16 ~ 2017-3-9"/>
 
     </LinearLayout>
 

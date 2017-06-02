@@ -33,7 +33,7 @@ import com.dante.diary.R;
 import com.dante.diary.base.BaseActivity;
 import com.dante.diary.base.Constants;
 import com.dante.diary.custom.LockPatternUtil;
-import com.dante.diary.interfaces.UserExistCallback;
+import com.dante.diary.interfaces.QueryResultCallback;
 import com.dante.diary.main.MainActivity;
 import com.dante.diary.model.DataBase;
 import com.dante.diary.model.User;
@@ -433,7 +433,7 @@ public class LoginActivity extends BaseActivity implements PatternLockViewListen
     }
 
     private void loginAVCloud() {
-        DataBase.findTimePillUser(id, new UserExistCallback() {
+        DataBase.findTimePillUser(id, new QueryResultCallback() {
             @Override
             public void onExist() {
 

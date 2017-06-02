@@ -1,7 +1,6 @@
 package com.dante.diary.draw.dialogs;
 
 import android.app.Dialog;
-import android.content.DialogInterface;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.os.Bundle;
@@ -272,12 +271,7 @@ public class DrawAttribsDialog extends DialogFragment {
                         onCustomViewDialogListener.onRefreshPaint(mPaint);
                     dismiss();
                 })
-                .setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialogInterface, int i) {
-                        dismiss();
-                    }
-                });
+                .setNegativeButton(android.R.string.no, (dialogInterface, i) -> dismiss());
         return builder.create();
     }
 
