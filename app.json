@@ -1,9 +1,9 @@
 {
 	"lastest_version": "v1.6.7",
-	"lastest_version_code": 17,
+	"lastest_version_code": 16,
 	"former_version": "v1.6.6",
 	"forceUpdate": false,
-	"message": "- 「时间胶囊」添加到主菜单;\n- 修复一些BUG",
+	"message": "-「时间胶囊」添加到主菜单;\n- 修复一些BUG",
 	"share_app_description": "from 时间胶囊：http://www.coolapk.com/apk/com.dante.diary",
 	"apk_url":"https://github.com/DanteAndroid/TimePill/releases/download/v1.6.7/app-release.apk",
   "egg_url":"https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1497010545099&di=b64cd3961cc1626181249abd4ed4079d&imgtype=0&src=http%3A%2F%2Fimg.mp.itc.cn%2Fupload%2F20161222%2F3c82d61542e246f8968fead7a297d587.gif"
