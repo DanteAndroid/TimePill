@@ -1,19 +1,20 @@
 package com.dante.diary.base;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.dante.diary.BuildConfig;
 import com.dante.diary.R;
-import com.dante.diary.timepill.TimePillActivity;
+import com.dante.diary.custom.Updater;
 import com.dante.diary.utils.AppUtil;
+import com.dante.diary.utils.SpUtil;
+import com.dante.diary.utils.TransitionHelper;
 
 import butterknife.BindView;
-import top.wefor.circularanim.CircularAnim;
 
 /**
  * about the author and so on.
@@ -21,12 +22,15 @@ import top.wefor.circularanim.CircularAnim;
 public class AboutActivity extends BaseActivity implements View.OnClickListener {
     private static final String TAG = "AboutActivity";
     private static final long DURATION = 300;
+    private static final String EGG_URL = "http://pic62.nipic.com/file/20150321/10529735_111347613000_2.jpg";
     @BindView(R.id.versionName)
     TextView versionName;
     @BindView(R.id.donate)
     TextView donate;
     @BindView(R.id.app)
     LinearLayout app;
+    @BindView(R.id.icon)
+    ImageView icon;
     private long startTime;
     private int secretIndex;
 
@@ -50,10 +54,8 @@ public class AboutActivity extends BaseActivity implements View.OnClickListener 
         if (System.currentTimeMillis() - startTime < DURATION * (secretIndex + 1)) {
             secretIndex++;
             if (secretIndex == 3) {
-                CircularAnim.fullActivity(AboutActivity.this, app)
-                        .colorOrImageRes(R.color.colorPrimary)
-                        .duration(600)
-                        .go(() -> startActivity(new Intent(getApplicationContext(), TimePillActivity.class)));
+                String url = SpUtil.getString(Updater.EGG_URL);
+                TransitionHelper.startViewer(this, icon, url.isEmpty() ? EGG_URL : url);
                 secretIndex = 0;
             }
         }
@@ -63,4 +65,5 @@ public class AboutActivity extends BaseActivity implements View.OnClickListener 
     public void onClick(View v) {
         go();
     }
+
 }

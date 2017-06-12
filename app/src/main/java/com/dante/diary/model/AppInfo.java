@@ -18,7 +18,9 @@ public class AppInfo {
      * forceUpdate : true
      * former_version : v1.0
      * share_app_description : 这个软件不错，图片适合做壁纸。https://github.com/DanteAndroid/Beauty/
+     * eggUrl : http://pic62.nipic.com/file/20150321/10529735_111347613000_2.jpg
      */
+
 
     @SerializedName("lastest_version")
     private String version;
@@ -32,6 +34,8 @@ public class AppInfo {
     private String formerVersion;
     @SerializedName("share_app_description")
     private String shareApp;
+    @SerializedName("egg_url")
+    private String eggUrl;
 
     public String getVersion() {
         return version;
@@ -100,5 +104,13 @@ public class AppInfo {
                 ", formerVersion='" + formerVersion + '\'' +
                 ", shareApp='" + shareApp + '\'' +
                 '}';
+    }
+
+    public String getEggUrl() {
+        return eggUrl;
+    }
+
+    public void setEggUrl(String eggUrl) {
+        this.eggUrl = eggUrl;
     }
 }

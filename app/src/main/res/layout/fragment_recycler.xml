@@ -31,7 +31,7 @@
         android:layout_marginTop="128dp"
         android:gravity="center"
         android:text="空空如也"
-        android:textColor="@color/secondText"
+        android:textColor="@color/tertiaryText"
         android:visibility="gone"/>
 
     <View

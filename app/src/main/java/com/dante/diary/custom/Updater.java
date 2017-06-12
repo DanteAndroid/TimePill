@@ -25,6 +25,7 @@ import rx.schedulers.Schedulers;
 public class Updater {
     public static final String SHARE_APP = "share_app";
     public static final String SHOULD_SHOW_UPDATE = "shouldShow";
+    public static final String EGG_URL = "egg_url";
     private static Subscription subscription;
     private final Activity context;
     private DownloadHelper helper;
@@ -55,6 +56,7 @@ public class Updater {
         NetService.createServiceWithBaseUrl(AppApi.class, API.GITHUB_RAW).getAppInfo()
                 .filter(appInfo -> {
                     SpUtil.save(Updater.SHARE_APP, appInfo.getShareApp());
+                    SpUtil.save(Updater.EGG_URL, appInfo.getEggUrl());
                     return appInfo.getVersionCode() > BuildConfig.VERSION_CODE;//版本有更新
                 })
                 .subscribeOn(Schedulers.io())

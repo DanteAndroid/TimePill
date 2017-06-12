@@ -48,6 +48,7 @@ import com.dante.diary.model.Topic;
 import com.dante.diary.net.HttpErrorAction;
 import com.dante.diary.setting.SettingActivity;
 import com.dante.diary.setting.SettingFragment;
+import com.dante.diary.timepill.TimePillActivity;
 import com.dante.diary.utils.ImageProgresser;
 import com.dante.diary.utils.Imager;
 import com.dante.diary.utils.Share;
@@ -512,6 +513,8 @@ public class MainDiaryFragment extends RecyclerFragment implements OrderedRealmC
                 modeManager.setNightMode(enableNight ? UiModeManager.MODE_NIGHT_YES : UiModeManager.MODE_NIGHT_NO);
                 SpUtil.save(Constants.IS_NIGHT, enableNight);
             }
+        } else if (id == R.id.time_pill) {
+            startActivity(new Intent(getActivity(), TimePillActivity.class));
         }
         return true;
     }
