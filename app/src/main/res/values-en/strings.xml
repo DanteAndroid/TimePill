@@ -280,5 +280,7 @@
     <string name="what_is_timepill">What is TimePill?</string>
     <string name="timepill_content_hint">Leave some words to yourself or him in the future</string>
     <string name="timepill_create_failed">Timepill create failed</string>
+    <string name="got_it">Got it</string>
+    <string name="announcement">Announcement</string>
 
 </resources>

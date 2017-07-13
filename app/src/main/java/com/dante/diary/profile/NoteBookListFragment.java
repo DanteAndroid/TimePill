@@ -99,11 +99,8 @@ public class NoteBookListFragment extends RecyclerFragment {
     }
 
     private void onNotebookClicked(View view, int index) {
-        int id = adapter.getItem(index).getId();
-        String subject = adapter.getItem(index).getSubject();
-//        Fragment f = DiaryListFragment.newInstance(userId, subject);
-//        add(f);
-        ViewActivity.viewDiaryList(getActivity(), id, subject);
+        Notebook n = adapter.getItem(index);
+        ViewActivity.viewDiaryList(getActivity(), n.getId(), n.getSubject());
     }
 
     @Override

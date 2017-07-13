@@ -17,7 +17,6 @@
             android:layout_width="match_parent"
             android:layout_height="?actionBarSize"
             android:background="?attr/colorPrimary"
-            android:minHeight="48dp"
             android:visibility="gone"
             app:popupTheme="@style/AppTheme.PopupOverlay"/>
     </android.support.design.widget.AppBarLayout>
@@ -25,7 +24,7 @@
     <include layout="@layout/fragment_recycler"/>
 
     <android.support.design.widget.FloatingActionButton
-        android:id="@+id/createTopicDiary"
+        android:id="@+id/diarylistFab"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|right"

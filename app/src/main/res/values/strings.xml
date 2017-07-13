@@ -89,7 +89,7 @@
     <string name="unable_to_fetch_notebooks">未获取到日记本，可能是网络断开或没有有效的日记本</string>
     <string name="pick_picture">选择图片</string>
     <string name="choose_notebook_hint">请选择一个日记本</string>
-    <string name="create_diary_failed">创建日记失败，请稍后重试</string>
+    <string name="create_diary_failed">发送日记失败，请稍后重试：</string>
     <string name="create_diary_success">日记已创建</string>
     <string name="delete_diary">删除日记</string>
     <string name="content_copied">内容已复制</string>
@@ -273,4 +273,6 @@
     <string name="timepill_content_hint">给将来的自己或TA留下一些话吧</string>
     <string name="timepill_create_failed">胶囊创建失败</string>
     <string name="type_hint">打字累了吗？可以试试语音输入法~</string>
+    <string name="got_it">知道了</string>
+    <string name="announcement">公告</string>
 </resources>

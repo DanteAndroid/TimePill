@@ -60,7 +60,7 @@ public class DiaryListFragment extends RecyclerFragment {
     DiaryListAdapter adapter;
     @BindView(R.id.stateText)
     TextView stateText;
-    @BindView(R.id.createTopicDiary)
+    @BindView(R.id.diarylistFab)
     FloatingActionButton fab;
     private int page;
     private int id;
@@ -70,7 +70,6 @@ public class DiaryListFragment extends RecyclerFragment {
     private String type;
     private Topic topic;
 
-    //id可以是用户id，也可以是notebook的id
     public static DiaryListFragment newInstance(int id, String type, String data) {
         Bundle args = new Bundle();
         args.putInt(Constants.ID, id);
@@ -213,6 +212,8 @@ public class DiaryListFragment extends RecyclerFragment {
                 }
             });
         }
+
+
         if (!type.equals(TODAY_DIARIES)) {
             adapter.setOnLoadMoreListener(() -> fetch(), recyclerView);
         }

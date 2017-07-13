@@ -10,6 +10,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewCompat;
 import android.view.View;
 
+import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.animation.GlideAnimation;
 import com.bumptech.glide.request.target.SimpleTarget;
 import com.dante.diary.R;
@@ -36,12 +37,22 @@ public class PictureFragment extends BaseFragment implements View.OnLongClickLis
     TouchImageView imageView;
     private Bitmap bitmap;
     private String url;
+    private boolean isGif;
 
 
     public static PictureFragment newInstance(String url) {
         PictureFragment fragment = new PictureFragment();
         Bundle args = new Bundle();
         args.putString(Constants.URL, url);
+        fragment.setArguments(args);
+        return fragment;
+    }
+
+    public static PictureFragment newInstance(String url, boolean isGif) {
+        PictureFragment fragment = new PictureFragment();
+        Bundle args = new Bundle();
+        args.putString(Constants.URL, url);
+        args.putBoolean("isGif", isGif);
         fragment.setArguments(args);
         return fragment;
     }
@@ -55,14 +66,22 @@ public class PictureFragment extends BaseFragment implements View.OnLongClickLis
     @Override
     protected void initViews() {
         url = getArguments().getString(Constants.URL);
-        ViewCompat.setTransitionName(imageView, url);
-        load(url);
+        isGif = getArguments().getBoolean("isGif", false);
+        if (isGif) {
+            Glide.with(this).load(url).asGif().into(imageView);
+            imageView.setDoubleTapEnabled(false);
+
+        } else {
+            ViewCompat.setTransitionName(imageView, url);
+            load(url);
+        }
+
     }
 
     @Override
     protected void initData() {
         imageView.setSingleTapListener(() -> getActivity().onBackPressed());
-        imageView.setOnLongClickListener(this);
+        if (!isGif) imageView.setOnLongClickListener(this);
     }
 
     private void load(String url) {

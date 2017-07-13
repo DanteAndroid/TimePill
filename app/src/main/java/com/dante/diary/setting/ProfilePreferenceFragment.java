@@ -20,7 +20,6 @@ import com.bumptech.glide.load.resource.drawable.GlideDrawable;
 import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.target.Target;
 import com.dante.diary.R;
-import com.dante.diary.base.BaseActivity;
 import com.dante.diary.custom.PickPictureActivity;
 import com.dante.diary.login.LoginManager;
 import com.dante.diary.model.DataBase;
@@ -117,7 +116,7 @@ public class ProfilePreferenceFragment extends PreferenceFragment {
         intro = findPreference(INTRO);
         gender = (ListPreference) findPreference(GENDER);
         avatar = findPreference(AVATAR);
-        base = ((BaseActivity) getActivity()).base;
+        base = DataBase.getInstance();
         user = base.findUser(LoginManager.getMyId());
 
         initUserInfo();

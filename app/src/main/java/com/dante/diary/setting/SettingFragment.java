@@ -28,6 +28,7 @@ import com.blankj.utilcode.utils.AppUtils;
 import com.blankj.utilcode.utils.CleanUtils;
 import com.blankj.utilcode.utils.FileUtils;
 import com.bugtags.library.Bugtags;
+import com.dante.diary.BuildConfig;
 import com.dante.diary.R;
 import com.dante.diary.base.AboutActivity;
 import com.dante.diary.base.App;
@@ -35,6 +36,7 @@ import com.dante.diary.base.BaseActivity;
 import com.dante.diary.base.EventMessage;
 import com.dante.diary.custom.BottomDialogFragment;
 import com.dante.diary.custom.LockPatternUtil;
+import com.dante.diary.login.LoginManager;
 import com.dante.diary.utils.AppUtil;
 import com.dante.diary.utils.SpUtil;
 import com.dante.diary.utils.UiUtils;
@@ -113,8 +115,6 @@ public class SettingFragment extends PreferenceFragment implements Preference.On
                 return true;
             }
             if (enable) {
-                shortSplash.setChecked(false);
-                shortSplash.setEnabled(false);
                 showPatternLockDialog(null);
             }
             return true;
@@ -195,6 +195,7 @@ public class SettingFragment extends PreferenceFragment implements Preference.On
                                     public void onSuccess() {
                                         hasPassword = false;
                                         patternDialog.dismiss();
+                                        shortSplash.setEnabled(true);
                                     }
 
                                     @Override
@@ -207,7 +208,8 @@ public class SettingFragment extends PreferenceFragment implements Preference.On
                                 hasPassword = true;
                                 SpUtil.save(SettingFragment.PATTERN_LOCK_PSW, PatternLockUtils.patternToString(patternLockView, patternLockView.getPattern()));
                                 patternDialog.dismiss();
-                                shortSplash.setEnabled(true);
+                                shortSplash.setChecked(false);
+                                shortSplash.setEnabled(false);
                             }
                         }
 
@@ -321,7 +323,7 @@ public class SettingFragment extends PreferenceFragment implements Preference.On
                 return;
             }
             String feedback = editText.getText().toString();
-            Bugtags.sendFeedback(feedback);
+            Bugtags.sendFeedback(feedback + " by " + LoginManager.getMyStringId() + " \nver: " + BuildConfig.VERSION_CODE);
             UiUtils.showSnack(commit, getString(R.string.thx_for_feedback));
             new Handler().postDelayed(dialog::dismiss, 500);
         });

@@ -22,10 +22,9 @@ public class ViewActivity extends BaseActivity {
     private Fragment fragment;
     private int id;
 
-    //id可以是用户id，也可以是notebook的id
-    public static void viewDiaryList(Context context, int id, @Nullable String notebookSubject) {
+    public static void viewDiaryList(Context context, int notebookId, @Nullable String notebookSubject) {
         Intent intent = new Intent(context, ViewActivity.class);
-        intent.putExtra(Constants.ID, id);
+        intent.putExtra(Constants.ID, notebookId);
         intent.putExtra(Constants.TYPE, TYPE_DIARY_LIST);
         intent.putExtra(Constants.DATA, notebookSubject);
         context.startActivity(intent);

@@ -94,6 +94,7 @@ public class EditDiaryActivity extends BaseActivity {
         if (getIntent().getExtras() != null) {
             diaryId = getIntent().getIntExtra(Constants.ID, 0);
             isTopic = getIntent().getBooleanExtra("isTopic", false);
+
             if (isTopic) {
                 toolbar.setTitle(R.string.edit_topic_diary);
             }
@@ -287,7 +288,6 @@ public class EditDiaryActivity extends BaseActivity {
         if (isEditMode) {
             return LoginManager.getApi().updateDiary(diaryId, diaryContent, notebookId);
         }
-
         return LoginManager.getApi()
                 .createDiary(notebookId, NetService.getRequestBody(diaryContent), isTopic ? NetService.getRequestBody("1") : null,
                         photoFile == null ? null : NetService.createMultiPart("photo", photoFile));

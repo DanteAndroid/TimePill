@@ -217,7 +217,6 @@ public class ProfileFragment extends BaseFragment {
         toolbarLayout.setTitle(user.getName());
 
         intro.setText(TextUtils.isEmpty(user.getIntro()) ? "该用户简介为空" : user.getIntro());
-
         intro.setOnClickListener(v -> {
             UiUtils.showDetailDialog(getActivity(), user.getIntro());
 

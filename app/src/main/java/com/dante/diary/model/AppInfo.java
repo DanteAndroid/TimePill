@@ -17,6 +17,7 @@ public class AppInfo {
      * apkUrl : app-armeabi-v7a-release.apk
      * forceUpdate : true
      * former_version : v1.0
+     * announcement :
      * share_app_description : 这个软件不错，图片适合做壁纸。https://github.com/DanteAndroid/Beauty/
      * eggUrl : http://pic62.nipic.com/file/20150321/10529735_111347613000_2.jpg
      */
@@ -36,6 +37,7 @@ public class AppInfo {
     private String shareApp;
     @SerializedName("egg_url")
     private String eggUrl;
+    private String announcement;
 
     public String getVersion() {
         return version;
@@ -112,5 +114,13 @@ public class AppInfo {
 
     public void setEggUrl(String eggUrl) {
         this.eggUrl = eggUrl;
+    }
+
+    public String getAnnouncement() {
+        return announcement;
+    }
+
+    public void setAnnouncement(String announcement) {
+        this.announcement = announcement;
     }
 }

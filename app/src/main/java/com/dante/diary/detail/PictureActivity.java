@@ -17,6 +17,7 @@ public class PictureActivity extends BaseActivity {
     CoordinatorLayout frameLayout;
 
     private String url;
+    private boolean isGif;
 
     @Override
     protected int initLayoutId() {
@@ -29,7 +30,8 @@ public class PictureActivity extends BaseActivity {
         supportPostponeEnterTransition();
         frameLayout.setFitsSystemWindows(false);
         url = getIntent().getStringExtra(Constants.URL);
-        Fragment fragment = PictureFragment.newInstance(url);
+        isGif = getIntent().getBooleanExtra("isGif", false);
+        Fragment fragment = PictureFragment.newInstance(url, isGif);
         getSupportFragmentManager().beginTransaction()
                 .replace(R.id.frame_layout, fragment)
                 .commit();

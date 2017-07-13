@@ -83,8 +83,9 @@
                     android:layout_gravity="start"
                     android:layout_weight="1"
                     android:gravity="start|center_vertical"
-                    android:paddingStart="5dp"
-                    android:text="@string/expire_time"/>
+                    android:paddingLeft="6dp"
+                    android:text="@string/expire_time"
+                    android:textSize="16sp"/>
 
                 <Switch
                     android:id="@+id/privacy"

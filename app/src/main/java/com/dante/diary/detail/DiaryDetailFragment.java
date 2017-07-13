@@ -60,6 +60,7 @@ import com.dante.diary.utils.UiUtils;
 import com.dante.diary.utils.WrapContentLinearLayoutManager;
 import com.jaychang.st.SimpleText;
 
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 
@@ -566,12 +567,17 @@ public class DiaryDetailFragment extends BaseFragment implements SwipeRefreshLay
         LoginManager.getApi().deleteDiary(diaryId)
                 .compose(applySchedulers())
                 .subscribe(responseBodyResponse -> {
-                    UiUtils.showSnack(content, getString(R.string.diary_delete_success));
-                    base.deleteDiary(diaryId);
-                    new Handler().postDelayed(() -> getActivity().onBackPressed(), 400);
+                    try {
+                        log("delete result" + responseBodyResponse.body().string());
+                        UiUtils.showSnack(content, getString(R.string.diary_delete_success));
+                        base.deleteDiary(diaryId);
+                        new Handler().postDelayed(() -> getActivity().onBackPressed(), 400);
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
 
                 }, throwable -> {
-                    UiUtils.showSnackLong(content, getString(R.string.diary_delete_failed) + throwable.getMessage());
+                    UiUtils.showSnackLong(content, getString(R.string.diary_delete_failed));
                 });
     }
 

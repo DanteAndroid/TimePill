@@ -3,6 +3,7 @@ package com.dante.diary.custom;
 import android.Manifest;
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.text.TextUtils;
 
 import com.dante.diary.BuildConfig;
 import com.dante.diary.R;
@@ -25,6 +26,7 @@ import rx.schedulers.Schedulers;
 public class Updater {
     public static final String SHARE_APP = "share_app";
     public static final String SHOULD_SHOW_UPDATE = "shouldShow";
+    public static final String SHOULD_SHOW_ANNOUNCEMENT = "shouldShowAnnouncement";
     public static final String EGG_URL = "egg_url";
     private static Subscription subscription;
     private final Activity context;
@@ -55,6 +57,7 @@ public class Updater {
     public void check() {
         NetService.createServiceWithBaseUrl(AppApi.class, API.GITHUB_RAW).getAppInfo()
                 .filter(appInfo -> {
+                    showAnnouncement(appInfo);
                     SpUtil.save(Updater.SHARE_APP, appInfo.getShareApp());
                     SpUtil.save(Updater.EGG_URL, appInfo.getEggUrl());
                     return appInfo.getVersionCode() > BuildConfig.VERSION_CODE;//版本有更新
@@ -67,7 +70,21 @@ public class Updater {
                     if (shouldShowUpdate) {
                         showDialog(appInfo);
                     }
-                }, throwable -> throwable.printStackTrace());
+                }, Throwable::printStackTrace);
+    }
+
+    private void showAnnouncement(AppInfo appInfo) {
+        if (TextUtils.isEmpty(appInfo.getAnnouncement())
+                || !SpUtil.getBoolean(appInfo.getAnnouncement() + SHOULD_SHOW_ANNOUNCEMENT, true)) {
+            return;
+        }
+
+        context.runOnUiThread(() -> new AlertDialog.Builder(context)
+                .setMessage(appInfo.getAnnouncement())
+                .setPositiveButton(R.string.got_it,
+                        (dialog, which) -> SpUtil.save(appInfo.getAnnouncement() + SHOULD_SHOW_ANNOUNCEMENT, false))
+                .show());
+
     }
 
     private void showDialog(final AppInfo appInfo) {

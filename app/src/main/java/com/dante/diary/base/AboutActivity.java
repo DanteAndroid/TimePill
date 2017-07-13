@@ -1,5 +1,6 @@
 package com.dante.diary.base;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.view.View;
@@ -10,11 +11,13 @@ import android.widget.TextView;
 import com.dante.diary.BuildConfig;
 import com.dante.diary.R;
 import com.dante.diary.custom.Updater;
+import com.dante.diary.detail.PictureActivity;
 import com.dante.diary.utils.AppUtil;
 import com.dante.diary.utils.SpUtil;
-import com.dante.diary.utils.TransitionHelper;
 
 import butterknife.BindView;
+
+import static com.dante.diary.base.App.context;
 
 /**
  * about the author and so on.
@@ -54,11 +57,19 @@ public class AboutActivity extends BaseActivity implements View.OnClickListener 
         if (System.currentTimeMillis() - startTime < DURATION * (secretIndex + 1)) {
             secretIndex++;
             if (secretIndex == 3) {
-                String url = SpUtil.getString(Updater.EGG_URL);
-                TransitionHelper.startViewer(this, icon, url.isEmpty() ? EGG_URL : url);
+                viewGif();
+
                 secretIndex = 0;
             }
         }
+    }
+
+    private void viewGif() {
+        String url = SpUtil.getString(Updater.EGG_URL);
+        Intent intent = new Intent(context.getApplicationContext(), PictureActivity.class);
+        intent.putExtra(Constants.URL, url.isEmpty() ? EGG_URL : url);
+        intent.putExtra("isGif", true);
+        startActivity(intent);
     }
 
     @Override
