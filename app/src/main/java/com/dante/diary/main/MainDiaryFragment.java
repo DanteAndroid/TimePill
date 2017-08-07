@@ -415,24 +415,26 @@ public class MainDiaryFragment extends RecyclerFragment implements OrderedRealmC
         subscription = LoginManager.getApi().getTopic()
                 .compose(applySchedulers())
                 .subscribe(response -> {
+
                     String result;
                     try {
                         result = response.body().string();
                         if (result.isEmpty()) {
+                            SpUtil.remove(Constants.TOPIC_PICTURE);
                             recyclerView.setNestedScrollingEnabled(false);
                             new Handler().postDelayed(() -> appBar.setExpanded(false), 400);
-                            return;
                         } else {
+                            Topic topic = new Gson().fromJson(result, Topic.class);
+                            MainDiaryFragment.this.topic = topic;
+                            SpUtil.save(Constants.TOPIC_PICTURE, topic.getImageUrl());
                             appBar.setExpanded(true);
                             recyclerView.setNestedScrollingEnabled(true);
                             appBar.addOnOffsetChangedListener((appBarLayout, verticalOffset) -> {
                                 collapsed = verticalOffset == 0;
                             });
+                            toolbarLayout.setTitle("今日话题：" + topic.getTitle());
+                            Imager.load(MainDiaryFragment.this, topic.getImageUrl(), topicImage);
                         }
-                        Topic topic = new Gson().fromJson(result, Topic.class);
-                        MainDiaryFragment.this.topic = topic;
-                        toolbarLayout.setTitle("今日话题：" + topic.getTitle());
-                        Imager.load(MainDiaryFragment.this, topic.getImageUrl(), topicImage);
 
                     } catch (IOException e) {
                         e.printStackTrace();

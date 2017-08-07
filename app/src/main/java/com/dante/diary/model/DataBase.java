@@ -64,9 +64,7 @@ public class DataBase {
     }
 
     public void save(RealmObject realmObject) {
-        realm.beginTransaction();
-        realm.copyToRealmOrUpdate(realmObject);
-        realm.commitTransaction();
+        realm.executeTransaction(realm1 -> realm1.copyToRealmOrUpdate(realmObject));
     }
 
     public boolean hasDiary(String url) {
@@ -84,16 +82,11 @@ public class DataBase {
     }
 
     public void clearAllDiaries() {
-        if (realm.isClosed()) return;
-        realm.beginTransaction();
-        realm.delete(Diary.class);
-        realm.commitTransaction();
+        realm.executeTransaction(realm1 -> realm1.delete(Diary.class));
     }
 
     public void clearAll() {
-        realm.beginTransaction();
-        realm.deleteAll();
-        realm.commitTransaction();
+        realm.executeTransaction(realm1 -> realm1.deleteAll());
     }
 
     public User findUser(int id) {
@@ -135,9 +128,7 @@ public class DataBase {
     }
 
     public <T extends RealmObject> void save(List<T> realmObjects) {
-        realm.beginTransaction();
-        realm.copyToRealmOrUpdate(realmObjects);
-        realm.commitTransaction();
+        realm.executeTransaction(r -> r.copyToRealmOrUpdate(realmObjects));
     }
 
     public void close() {
@@ -146,8 +137,7 @@ public class DataBase {
     }
 
     public void deleteDiary(int diaryId) {
-        realm.beginTransaction();
-        realm.where(Diary.class).equalTo(Constants.ID, diaryId).findAll().deleteAllFromRealm();
-        realm.commitTransaction();
+        realm.executeTransaction(r ->
+                r.where(Diary.class).equalTo(Constants.ID, diaryId).findAll().deleteAllFromRealm());
     }
 }

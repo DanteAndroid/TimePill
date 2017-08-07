@@ -12,6 +12,7 @@ import android.support.annotation.Nullable;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -22,10 +23,12 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.Spinner;
+import android.widget.Switch;
 
 import com.blankj.utilcode.utils.KeyboardUtils;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.bumptech.glide.request.target.Target;
 import com.dante.diary.R;
 import com.dante.diary.base.BaseActivity;
 import com.dante.diary.base.Constants;
@@ -45,6 +48,7 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
+import java.util.concurrent.ExecutionException;
 
 import butterknife.BindView;
 import rx.Observable;
@@ -71,6 +75,8 @@ public class EditDiaryActivity extends BaseActivity {
     LinearLayout root;
     @BindView(R.id.attachPhoto)
     ImageView attachPhoto;
+    @BindView(R.id.useTopicPic)
+    Switch useTopicPic;
 
     private String diaryContent;
     private int notebookId;
@@ -81,6 +87,7 @@ public class EditDiaryActivity extends BaseActivity {
     private Diary diary;
     private ArrayList<Notebook> validSubjects = new ArrayList<>();
     private boolean isTopic;
+    private File topicPictureFile;
 
 
     @Override
@@ -109,16 +116,40 @@ public class EditDiaryActivity extends BaseActivity {
                 toolbar.setTitle(R.string.edit_diary);
             }
         }
-
+        fetchTopicPicture();
         fetchSubjects();
         initEditText();
         initTools();
+    }
+
+    private void fetchTopicPicture() {
+        if (isTopic) {
+            useTopicPic.setVisibility(View.VISIBLE);
+            useTopicPic.setOnCheckedChangeListener((buttonView, isChecked) -> {
+                if (isChecked) {
+                    photoFile = topicPictureFile;
+                } else {
+                    photoFile = null;
+                }
+            });
+            new Thread(() -> {
+                try {
+                    topicPictureFile = Glide.with(EditDiaryActivity.this).load(SpUtil.getString(Constants.TOPIC_PICTURE))
+                            .downloadOnly(Target.SIZE_ORIGINAL, Target.SIZE_ORIGINAL).get();
+                    photoFile = topicPictureFile;
+                } catch (InterruptedException | ExecutionException e) {
+                    e.printStackTrace();
+                }
+                Log.d(TAG, "source: " + isTopic + photoFile.length());
+            }).start();
+        }
     }
 
     private void initTools() {
         if (isEditMode) {
             photo.setVisibility(View.GONE);
             palette.setVisibility(View.GONE);
+            useTopicPic.setVisibility(View.GONE);
         }
         photo.setOnClickListener(v -> startActivityForResult(new Intent(getApplicationContext(), PickPictureActivity.class), REQUEST_PICK_PICTURE));
 

@@ -90,6 +90,16 @@
             android:paddingTop="8dp"
             android:src="@drawable/ic_brush_black_24px"/>
 
+        <Switch
+            android:id="@+id/useTopicPic"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="right"
+            android:layout_weight="1"
+            android:checked="true"
+            android:gravity="end|center_vertical"
+            android:text="@string/use_topic_pic"
+            android:visibility="gone"/>
     </LinearLayout>
 
 

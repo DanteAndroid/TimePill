@@ -275,4 +275,5 @@
     <string name="type_hint">打字累了吗？可以试试语音输入法~</string>
     <string name="got_it">知道了</string>
     <string name="announcement">公告</string>
+    <string name="use_topic_pic">使用话题图片</string>
 </resources>

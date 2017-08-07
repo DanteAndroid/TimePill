@@ -43,4 +43,5 @@ public class Constants {
     public static final String TIME_PILL = "TimePill";
     public static final String OPEN_TIME = "openTime";
     public static final String TIME_REVERSE = "time_order";
+    public static final String TOPIC_PICTURE = "topic_pic";
 }

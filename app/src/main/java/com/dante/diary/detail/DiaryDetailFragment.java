@@ -33,6 +33,7 @@ import android.widget.TextView;
 
 import com.blankj.utilcode.utils.ClipboardUtils;
 import com.blankj.utilcode.utils.IntentUtils;
+import com.bugtags.library.Bugtags;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.resource.drawable.GlideDrawable;
 import com.bumptech.glide.request.RequestListener;
@@ -375,7 +376,10 @@ public class DiaryDetailFragment extends BaseFragment implements SwipeRefreshLay
 
                 }, throwable -> {
                     swipeRefresh.setRefreshing(false);
-                    UiUtils.showSnackLong(rootView, R.string.get_diary_failed);
+                    Bugtags.sendException(throwable);
+                    if (!throwable.getMessage().contains("android.app.ActivityOptions.isReturning")) {
+                        UiUtils.showSnackLong(rootView, getString(R.string.get_diary_failed));
+                    }
                 });
         compositeSubscription.add(subscription);
 
