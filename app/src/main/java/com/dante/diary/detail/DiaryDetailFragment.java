@@ -517,11 +517,27 @@ public class DiaryDetailFragment extends BaseFragment implements SwipeRefreshLay
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
-//        if (id == R.id.action_delete) {
-//            ToastUtils.showShortToast("delete");
-//        }
+        if (id == R.id.action_report) {
+            reportDiary(diary);
+        }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    private void reportDiary(Diary diary) {
+        if (diary == null) return;
+        LoginManager.getApi().reportDiary(diary.getUserId(), diary.getId())
+                .compose(applySchedulers())
+                .subscribe(responseBodyResponse -> {
+                    UiUtils.showSnack(rootView, R.string.report_success);
+                    try {
+                        String result = responseBodyResponse.body().string();
+                        log("report result " + result);
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                });
+
     }
 
     @Override

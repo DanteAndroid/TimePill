@@ -322,7 +322,7 @@ public class LoginActivity extends BaseActivity implements PatternLockViewListen
 //        timePill.animate().scaleX(0)
 //                .scaleY(0)
 //                .setDuration(400)
-//                .start();
+//                .startRecord();
         slogan.animate().alpha(0)
                 .setStartDelay(450)
                 .setDuration(400)

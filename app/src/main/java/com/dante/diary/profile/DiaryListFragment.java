@@ -320,6 +320,7 @@ public class DiaryListFragment extends RecyclerFragment {
             isTimeReversed = true;
         }
         adapter.setNewData(diaries);
+        recyclerView.smoothScrollToPosition(0);
     }
 
     @Override

@@ -3,13 +3,12 @@
       xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
         android:id="@+id/action_item_share"
-        app:showAsAction="always"
         android:title="@string/share_to"
-        app:actionProviderClass="android.support.v7.widget.ShareActionProvider" />
-    <!--<item-->
-        <!--android:id="@+id/action_delete"-->
-        <!--app:showAsAction="ifRoom"-->
-        <!--android:icon="@drawable/ic_send_white_36px"-->
-        <!--android:title="@string/delete_diary"/>-->
+        app:actionProviderClass="android.support.v7.widget.ShareActionProvider"
+        app:showAsAction="ifRoom"/>
+    <item
+        android:id="@+id/action_report"
+        android:title="@string/report_diary"
+        app:showAsAction="never"/>
 
 </menu>

@@ -34,6 +34,7 @@ public class Constants {
     public static final String EXPIRED = "expired";
     public static final String CREATED = "created";
     public static final String HINT = "hint";
+    public static final String RECORD = "record_url";
 
     //timepill
     public static final String NOTEBOOK_ID = "notebookId";

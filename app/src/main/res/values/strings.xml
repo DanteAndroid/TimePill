@@ -276,4 +276,14 @@
     <string name="got_it">知道了</string>
     <string name="announcement">公告</string>
     <string name="use_topic_pic">使用话题图片</string>
+    <string name="report_diary">举报</string>
+    <string name="report_success">举报成功</string>
+    <string name="record_success">录音成功</string>
+    <string name="record_failed">录音失败</string>
+    <string name="record_start">录音开始…再次点击结束录音</string>
+    <string name="record_overwrite_hint">将覆盖已有录音，要继续吗</string>
+    <string name="record_new">新建录音</string>
+    <string name="record_too_short">录音太短，将不会上传</string>
+    <string name="record_length">录音时长 %1$d 分 %2$d 秒</string>
+    <string name="remove_record">移除录音？</string>
 </resources>

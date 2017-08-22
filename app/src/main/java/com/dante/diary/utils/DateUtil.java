@@ -24,7 +24,7 @@ public class DateUtil {
     private static final String TAG = "DateUtil";
 
     public static Date parseStandardDate(String date) {
-        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss", Locale.getDefault());
+        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault());
         try {
             return formatter.parse(date);
         } catch (ParseException e) {
@@ -34,12 +34,12 @@ public class DateUtil {
     }
 
     public static String getDisplayTime(Date date) {
-        SimpleDateFormat formatter = new SimpleDateFormat("hh:mm:ss", Locale.getDefault());
+        SimpleDateFormat formatter = new SimpleDateFormat("HH:mm:ss", Locale.getDefault());
         return formatter.format(date);
     }
 
     public static String getDisplayDayAndTime(Date date) {
-        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss", Locale.getDefault());
+        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault());
         return formatter.format(date);
     }
 

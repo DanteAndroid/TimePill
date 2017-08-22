@@ -282,5 +282,14 @@
     <string name="timepill_create_failed">Timepill create failed</string>
     <string name="got_it">Got it</string>
     <string name="announcement">Announcement</string>
+    <string name="record_failed">Record failed</string>
+    <string name="record_length">Record length %1$d min %2$d s</string>
+    <string name="record_new">New record</string>
+    <string name="record_overwrite_hint">Will override original record, continue?</string>
+    <string name="record_start">Record start, tap again to finish</string>
+    <string name="record_success">Record success</string>
+    <string name="record_too_short">Record too short, will not upload</string>
+    <string name="remove_record">Remove record?</string>
+    <string name="use_topic_pic">Use topic picture</string>
 
 </resources>

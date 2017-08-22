@@ -72,8 +72,19 @@ public class NoteBookListFragment extends RecyclerFragment {
                 }
 
             }
+
+            @Override
+            public void onItemLongClick(BaseQuickAdapter adapter, View view, int position) {
+                onNotebookLongClicked(view, position);
+
+            }
         });
 
+    }
+
+    private void onNotebookLongClicked(View view, int index) {
+        Notebook n = adapter.getItem(index);
+        //显示日记本总字数
     }
 
     @Override

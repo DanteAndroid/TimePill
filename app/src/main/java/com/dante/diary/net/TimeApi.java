@@ -58,6 +58,9 @@ public interface TimeApi {
     @POST("relation/{user_id}")
     Observable<Response<ResponseBody>> follow(@Path("user_id") int userId);
 
+    @FormUrlEncoded
+    @POST("reports")
+    Observable<Response<ResponseBody>> reportDiary(@Field("user_id") int userId, @Field("diary_id") int diaryId);
 
     @GET("relation/{user_id}")
     Observable<Response<ResponseBody>> hasfollow(@Path("user_id") int userId);
