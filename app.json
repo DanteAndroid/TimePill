@@ -1,11 +1,11 @@
 {
-	"lastest_version": "v1.6.8",
-	"lastest_version_code": 18,
-	"former_version": "v1.6.7",
-	"forceUpdate": false,
-	"message": "- 添加彩蛋和公告\n - 修复一些BUG",
+	"lastest_version": "v1.7.0",
+	"lastest_version_code": 19,
+	"former_version": "v1.6.8",
+	"forceUpdate": true,
+	"message": "- 时间胶囊添加语音功能\n - 搜索日记功能",
 	"share_app_description": "from 时间胶囊：http://www.coolapk.com/apk/com.dante.diary",
-	"apk_url":"https://github.com/DanteAndroid/TimePill/releases/download/v1.6.8/app-release.apk",
-	"announcement":"欢迎来到时间胶囊~",
-  "egg_url":"https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1497010545099&di=b64cd3961cc1626181249abd4ed4079d&imgtype=0&src=http%3A%2F%2Fimg.mp.itc.cn%2Fupload%2F20161222%2F3c82d61542e246f8968fead7a297d587.gif"
+	"apk_url":"https://github.com/DanteAndroid/TimePill/releases/download/v1.7/app-release.apk",
+	"announcement":"试试根据关键词搜一下自己曾经的日记吧~",
+  	"egg_url":"https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1497010545099&di=b64cd3961cc1626181249abd4ed4079d&imgtype=0&src=http%3A%2F%2Fimg.mp.itc.cn%2Fupload%2F20161222%2F3c82d61542e246f8968fead7a297d587.gif"
 }
