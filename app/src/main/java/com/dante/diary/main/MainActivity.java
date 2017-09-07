@@ -45,7 +45,6 @@ public class MainActivity extends BottomBarActivity {
         return false;
     }
 
-
     private void initUpdater() {
         updater = Updater.getInstance(this);
         updater.check();
@@ -80,6 +79,11 @@ public class MainActivity extends BottomBarActivity {
         } else {
             doublePressBackToQuit();
         }
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onTest(EventMessage m) {
+
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)

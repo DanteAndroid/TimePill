@@ -30,6 +30,8 @@ import com.dante.diary.main.DiaryListAdapter;
 import com.dante.diary.main.MainDiaryFragment;
 import com.dante.diary.model.Diary;
 import com.dante.diary.model.Topic;
+import com.dante.diary.net.HttpErrorAction;
+import com.dante.diary.search.SearchActivity;
 import com.dante.diary.utils.ImageProgresser;
 import com.dante.diary.utils.SpUtil;
 import com.dante.diary.utils.TransitionHelper;
@@ -54,8 +56,7 @@ public class DiaryListFragment extends RecyclerFragment {
     public static final String TOPIC = "topic";
     public static final String NOTEBOOK = "notebook";
     public static final String TODAY_DIARIES = "other";
-
-
+    public static final String SEARCH = "search";
     private static final String TAG = "DiaryListFragment";
     DiaryListAdapter adapter;
     @BindView(R.id.stateText)
@@ -69,6 +70,9 @@ public class DiaryListFragment extends RecyclerFragment {
     private boolean isTimeReversed;
     private String type;
     private Topic topic;
+    private Integer notebookId = null;
+    private String keyword;
+    private boolean isFromMyNotebook;
 
     public static DiaryListFragment newInstance(int id, String type, String data) {
         Bundle args = new Bundle();
@@ -104,6 +108,12 @@ public class DiaryListFragment extends RecyclerFragment {
             isFromNotebook = true;
             setHasOptionsMenu(true);
             adapter = new DiaryListAdapter(R.layout.list_diary_item_expired, null);
+        }
+        if (type.equals(SEARCH)) {
+            keyword = data;
+            if (id != 0) {
+                notebookId = id;
+            }
         }
 
         layoutManager = new LinearLayoutManager(barActivity);
@@ -251,17 +261,27 @@ public class DiaryListFragment extends RecyclerFragment {
                 .distinct()
                 .compose(applySchedulers())
                 .subscribe(diaries -> {
-                    if (isFromNotebook) {
-                        base.save(diaries);
+                    log("fetch" + diaries.isEmpty());
+                    if (!diaries.isEmpty()) {
+                        if (isFromNotebook) {
+                            base.save(diaries);
+                        }
+                        if (LoginManager.isMe(diaries.get(0).getUserId())) {
+                            isFromMyNotebook = true;
+                            getActivity().invalidateOptionsMenu();
+                        }
                     }
+
                     if (page <= 1 && diaries.isEmpty()) {
                         adapter.setNewData(null);
                         stateText.setText(R.string.no_today_diary);
                         stateText.setVisibility(View.VISIBLE);
                     } else {
                         if (diaries.isEmpty()) {
+                            log(" loadmore end");
                             adapter.loadMoreEnd();
                         } else {
+                            stateText.setVisibility(View.GONE);
                             if (page <= 1) {
                                 adapter.setNewData(diaries);
                             } else {
@@ -272,18 +292,31 @@ public class DiaryListFragment extends RecyclerFragment {
                         }
                     }
                     changeRefresh(false);
-                }, throwable -> changeRefresh(false));
+                }, new HttpErrorAction<Throwable>() {
+                    @Override
+                    public void call(Throwable throwable) {
+                        super.call(throwable);
+                        changeRefresh(false);
+                        UiUtils.showSnack(toolbar, getString(R.string.fetch_diary_error) + errorMessage);
+                    }
+                });
     }
 
     private Observable<List<Diary>> diariesSource() {
-        if (type.equals(FOLLOWING)) {
-            return LoginManager.getApi().getFollowingDiaries(page, MainDiaryFragment.FETCH_DIARY_SIZE).map(result -> result.diaries);
-        } else if (type.equals(TOPIC)) {
-            return LoginManager.getApi().getTopicDiaries(page, MainDiaryFragment.FETCH_DIARY_SIZE).map(result -> result.diaries);
-        } else if (type.equals(NOTEBOOK)) {
-            //notebook的日记返回格式跟全站的不太一样，需要留意
-            return LoginManager.getApi().getDiariesOfNotebook(id, page, MainDiaryFragment.FETCH_DIARY_SIZE)
-                    .map(listItemResult -> listItemResult.items);
+        switch (type) {
+            case FOLLOWING:
+                return LoginManager.getApi().getFollowingDiaries(page, MainDiaryFragment.FETCH_DIARY_SIZE).map(result -> result.diaries);
+            case TOPIC:
+                return LoginManager.getApi().getTopicDiaries(page, MainDiaryFragment.FETCH_DIARY_SIZE).map(result -> result.diaries);
+            case NOTEBOOK:
+                //notebook的日记返回格式跟全站的不太一样，需要留意
+                return LoginManager.getApi().getDiariesOfNotebook(id, page, MainDiaryFragment.FETCH_DIARY_SIZE)
+                        .map(listItemResult -> listItemResult.items);
+            case SEARCH:
+                log("search " + keyword + " " + page + notebookId);
+                return LoginManager.getApi().search(keyword, page, MainDiaryFragment.FETCH_DIARY_SIZE, notebookId)
+                        .map(listDiariesResult -> listDiariesResult.items);
+
         }
         return LoginManager.getApi()
                 .getTodayDiaries(id);
@@ -306,6 +339,11 @@ public class DiaryListFragment extends RecyclerFragment {
                 item.setTitle(R.string.time_order_normal);
                 reverseDiary();
             }
+        } else if (id == R.id.action_search) {
+            Intent search = new Intent(getContext(), SearchActivity.class);
+            search.putExtra(Constants.SUBJECT, data);
+            search.putExtra(Constants.ID, this.id);
+            startActivity(search);
         }
         return true;
     }
@@ -326,7 +364,10 @@ public class DiaryListFragment extends RecyclerFragment {
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
-        inflater.inflate(R.menu.menu_order, menu);
+        inflater.inflate(R.menu.menu_notebook_list, menu);
+        if (isFromMyNotebook) {
+            menu.add(0, R.id.action_search, 0, R.string.search);
+        }
     }
 
 

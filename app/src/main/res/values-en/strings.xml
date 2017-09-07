@@ -142,7 +142,7 @@
     <string name="version">Version</string>
     <string name="view">View</string>
     <string name="x_diaries_updated">%d diaries updated</string>
-    <string name="xxx_copied">\"%s\" has been copied</string>
+    <string name="xxx_copied">"%s" has been copied</string>
     <string name="detect_new_version">New version detected</string>
     <string name="donate">Donte</string>
     <string name="donate_description">This app is my work of private time, your support will make it
@@ -229,14 +229,14 @@
     <string name="time_order_reverse">Time order reverse</string>
 
     <string name="pref_id">User ID</string>
-    <string name="chat">私信</string>
+    <string name="chat">Chat</string>
     <string name="conversation_is_empty">Conversation is empty</string>
     <string name="diary_has_no_comment">This diary has no comment.</string>
     <string name="message_sent">Message sent</string>
     <string name="pm">PM</string>
     <string name="unspport_message_type">Not supported message type</string>
     <string name="hint_enter_message">Enter message</string>
-    <string name="cancel_followed_failed">取消被关注失败</string>
+    <string name="cancel_followed_failed">Cancel fowllowed failed</string>
     <string name="no_topic_today">Today has no topic</string>
     <string name="cancel_followed">Cancel followed</string>
     <string name="cancel_followed_message">Delete his following to you? He would not see your
@@ -291,5 +291,12 @@
     <string name="record_too_short">Record too short, will not upload</string>
     <string name="remove_record">Remove record?</string>
     <string name="use_topic_pic">Use topic picture</string>
+    <string name="report_diary">Report diary</string>
+    <string name="report_success">Report success</string>
+    <string name="search">Search</string>
+    <string name="search_diary">Search diary</string>
+    <string name="fetch_diary_error">Oops, fetch diary error:</string>
+    <string name="search_diary_hint">Input your keyword</string>
+    <string name="search_notebook_diary_hint">Search in "%s"</string>
 
 </resources>

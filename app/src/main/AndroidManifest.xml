@@ -1,10 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest package="com.dante.diary"
-          xmlns:android="http://schemas.android.com/apk/res/android"
->
+          xmlns:android="http://schemas.android.com/apk/res/android">
 
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
-
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
     <uses-permission android:name="android.permission.READ_PHONE_STATE"/>
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE"/>
@@ -74,12 +72,12 @@
             android:name=".chat.ConversationActivity"
             android:label="@string/chat"
             android:parentActivityName=".main.MainActivity"/>
-        <activity
-            android:name=".base.ViewActivity"/>
+        <activity android:name=".base.ViewActivity"/>
         <activity
             android:name=".draw.DrawActivity"
             android:label="@string/draw"
             android:windowSoftInputMode="stateHidden"/>
+
         <provider
             android:name="android.support.v4.content.FileProvider"
             android:authorities="${applicationId}.fileProvider"
@@ -90,21 +88,22 @@
                 android:resource="@xml/file_paths"/>
         </provider>
 
-        <!--<receiver-->
-        <!--android:name=".NotificationReceiver"-->
-        <!--android:enabled="true">-->
-        <!--<intent-filter>-->
-        <!--<action android:name="cn.jpush.android.intent.MESSAGE_RECEIVED" />-->
-        <!--<action android:name="cn.jpush.android.intent.NOTIFICATION_RECEIVED" />-->
-        <!--<action android:name="cn.jpush.android.intent.NOTIFICATION_OPENED" />-->
-        <!--<action android:name="cn.jpush.android.intent.NOTIFICATION_CLICK_ACTION" />-->
-        <!--<action android:name="cn.jpush.android.intent.CONNECTION" />-->
-        <!--<category android:name="${applicationId}" />-->
-        <!--</intent-filter>-->
-        <!--</receiver>-->
+        <!-- <receiver -->
+        <!-- android:name=".NotificationReceiver" -->
+        <!-- android:enabled="true"> -->
+        <!-- <intent-filter> -->
+        <!-- <action android:name="cn.jpush.android.intent.MESSAGE_RECEIVED" /> -->
+        <!-- <action android:name="cn.jpush.android.intent.NOTIFICATION_RECEIVED" /> -->
+        <!-- <action android:name="cn.jpush.android.intent.NOTIFICATION_OPENED" /> -->
+        <!-- <action android:name="cn.jpush.android.intent.NOTIFICATION_CLICK_ACTION" /> -->
+        <!-- <action android:name="cn.jpush.android.intent.CONNECTION" /> -->
+        <!-- <category android:name="${applicationId}" /> -->
+        <!-- </intent-filter> -->
+        <!-- </receiver> -->
         <!-- 实时通信模块、推送（均需要加入以下声明） START -->
         <!-- 实时通信模块、推送都要使用 PushService -->
         <service android:name="com.avos.avoscloud.PushService"/>
+
         <receiver android:name="com.avos.avoscloud.AVBroadcastReceiver">
             <intent-filter>
                 <action android:name="android.intent.action.BOOT_COMPLETED"/>
@@ -114,7 +113,9 @@
         </receiver>
         <!-- 实时通信模块、推送 END -->
 
-
+        <activity android:name=".search.SearchActivity"
+                  android:label="@string/search_diary">
+        </activity>
     </application>
 
 </manifest>

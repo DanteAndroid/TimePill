@@ -25,6 +25,7 @@ public class DateUtil {
 
     public static Date parseStandardDate(String date) {
         SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault());
+        formatter.setLenient(false);
         try {
             return formatter.parse(date);
         } catch (ParseException e) {

@@ -15,6 +15,8 @@ import android.text.TextUtils;
 import android.transition.Explode;
 import android.transition.Transition;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
@@ -37,6 +39,7 @@ import com.dante.diary.interfaces.QueryResultCallback;
 import com.dante.diary.login.LoginManager;
 import com.dante.diary.model.DataBase;
 import com.dante.diary.model.User;
+import com.dante.diary.search.SearchActivity;
 import com.dante.diary.setting.SettingFragment;
 import com.dante.diary.utils.DateUtil;
 import com.dante.diary.utils.SpUtil;
@@ -148,6 +151,7 @@ public class ProfileFragment extends BaseFragment {
             fab.setOnClickListener(v -> follow());
             initTabs();
         }
+
     }
 
     private void follow() {
@@ -207,15 +211,12 @@ public class ProfileFragment extends BaseFragment {
                 }
             });
         }
-
 //        boolean isIntroShort = user.getIntro() == null || user.getIntro().length() < SHORT_INTRO_LENGTH;
 //        if (isIntroShort) {
 //            ViewGroup.LayoutParams params = toolbarLayout.getLayoutParams();
 //            params.height = (int) getResources().getDimension(R.dimen.app_bar_height);
 //            toolbarLayout.setLayoutParams(params);
 //        }
-        toolbarLayout.setTitle(user.getName());
-
         intro.setText(TextUtils.isEmpty(user.getIntro()) ? "该用户简介为空" : user.getIntro());
         intro.setOnClickListener(v -> {
             UiUtils.showDetailDialog(getActivity(), user.getIntro());
@@ -224,8 +225,10 @@ public class ProfileFragment extends BaseFragment {
         created.setText(String.format("%s 加入胶囊",
                 DateUtil.getDisplayDay(user.getCreated()))
         );
-
-        if (!hasFollow && !LoginManager.isMe(id)) {
+        toolbarLayout.setTitle(user.getName());
+        if (LoginManager.isMe(id)) {
+            toolbar.inflateMenu(R.menu.menu_search_item);
+        } else if (!hasFollow) {
             fab.show();
         }
         startPostponedEnterTransition();
@@ -379,6 +382,8 @@ public class ProfileFragment extends BaseFragment {
         int id = item.getItemId();
         if (id == R.id.action_pm) {
             pm();
+        } else if (id == R.id.action_search) {
+            startActivity(new Intent(getContext(), SearchActivity.class));
         }
         return true;
     }
@@ -390,10 +395,12 @@ public class ProfileFragment extends BaseFragment {
         }
         ConversationActivity.chat(getActivity(), id);
     }
-//
-//    @Override
-//    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-//        super.onCreateOptionsMenu(menu, inflater);
-//        inflater.inflate(R.menu.menu_pm, menu);
-//    }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        super.onCreateOptionsMenu(menu, inflater);
+//        if (LoginManager.isMe(id)) {
+//            inflater.inflate(R.menu.menu_search_item, menu);
+//        }
+    }
 }

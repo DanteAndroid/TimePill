@@ -43,11 +43,15 @@ public interface TimeApi {
     @GET("diaries/today")
     Observable<DiariesResult<List<Diary>>> allTodayDiaries(@Query("page") int page, @Query("page_size") int pageSize);
 
+    @GET("diaries/search")
+    Observable<NotebooksResult<List<Diary>>> search(@Query("keywords") String keywords, @Query("page") int pageNum,
+                                                    @Query("page_size") int pageSize, @Query("notebook_id") Integer notebookId);
+
     @GET("users/{user_id}/diaries")
     Observable<List<Diary>> getTodayDiaries(@Path("user_id") int userId);
 
     @GET("diaries/follow")
-    Observable<DiariesResult<List<Diary>>> getFollowingDiaries(@Query("page") int page, @Query("page_size") int pageSize);
+    Observable<DiariesResult<List<Diary>>> getFollowingDiaries(@Query("page") int page, @Query("page_size") Integer pageSize);
 
     @GET("relation")
     Observable<UsersResult<List<User>>> getFollowings(@Query("page") int page, @Query("page_size") int pageSize);

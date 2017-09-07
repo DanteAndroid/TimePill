@@ -74,7 +74,6 @@ public class AppUtil {
         intent.addFlags(FLAG_ACTIVITY_NEW_TASK);
         intent.addFlags(FLAG_ACTIVITY_CLEAR_TOP);
         activity.startActivity(intent);
-
         EventBus.getDefault().post(new EventMessage("restart"));
         activity.finish();
     }

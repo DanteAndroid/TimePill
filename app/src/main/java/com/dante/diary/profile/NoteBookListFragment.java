@@ -135,10 +135,13 @@ public class NoteBookListFragment extends RecyclerFragment {
                 .getMyNotebooks(userId)
                 .compose(applySchedulers())
                 .subscribe(notebooks -> {
-                    if (page <= 1 && notebooks.isEmpty()) {
-                        stateText.setText(R.string.no_notebook);
-                        stateText.setVisibility(View.VISIBLE);
+                    if (notebooks.isEmpty()) {
+                        if (page <= 1) {
+                            stateText.setText(R.string.no_notebook);
+                            stateText.setVisibility(View.VISIBLE);
+                        }
                     } else {
+                        stateText.setVisibility(View.GONE);
                         adapter.setNewData(notebooks);
                     }
                     base.save(notebooks);

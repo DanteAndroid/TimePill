@@ -263,7 +263,7 @@
     <string name="xxx_says_at_xxx">在 %s 对你说：</string>
     <string name="cant_find_timepill">嗯…… 地球上找不到这个时间胶囊</string>
     <string name="timepill_created">时间胶囊创建成功，KEY已复制到粘贴板</string>
-    <string name="I_created_a_timepill">我创建了一个时间胶囊，KEY：%s, 快去查看吧。</string>
+    <string name="I_created_a_timepill">我创建了一个时间胶囊，KEY：%s, 快去看看</string>
     <string name="input_key">输入包含时间胶囊KEY的内容，APP会自动读取KEY</string>
     <string name="extract">提取</string>
     <string name="what_is_timepill">什么是时间胶囊？</string>
@@ -276,7 +276,7 @@
     <string name="got_it">知道了</string>
     <string name="announcement">公告</string>
     <string name="use_topic_pic">使用话题图片</string>
-    <string name="report_diary">举报</string>
+    <string name="report_diary">举报日记</string>
     <string name="report_success">举报成功</string>
     <string name="record_success">录音成功</string>
     <string name="record_failed">录音失败</string>
@@ -286,4 +286,9 @@
     <string name="record_too_short">录音太短，将不会上传</string>
     <string name="record_length">录音时长 %1$d 分 %2$d 秒</string>
     <string name="remove_record">移除录音？</string>
+    <string name="search_diary">搜索日记</string>
+    <string name="search_diary_hint">输入关键词</string>
+    <string name="search_notebook_diary_hint">在\"%s\"中搜索</string>
+    <string name="search">搜索</string>
+    <string name="fetch_diary_error">啊哦，无法获取日记</string>
 </resources>
