@@ -44,8 +44,8 @@
                 android:layout_gravity="end"
                 android:layout_marginRight="@dimen/activity_horizontal_margin"
                 android:background="?attr/selectableItemBackgroundBorderless"
-                android:src="@drawable/ic_menu_moreoverflow"
-                android:visibility="gone"/>
+                android:visibility="gone"
+                app:srcCompat="@drawable/ic_menu_moreoverflow"/>
         </LinearLayout>
 
 

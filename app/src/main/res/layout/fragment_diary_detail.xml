@@ -29,8 +29,8 @@
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|right"
         android:layout_margin="@dimen/fab_margin"
-        android:src="@drawable/comment"
         android:visibility="invisible"
         app:backgroundTint="@color/colorAccent"
+        app:srcCompat="@drawable/comment"
     />
 </android.support.design.widget.CoordinatorLayout>

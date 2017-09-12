@@ -229,12 +229,17 @@ public abstract class BaseFragment extends Fragment {
 
     public void finishFragment() {
         if (barActivity != null) {
-            barActivity.controller.popFragment();
+            barActivity.control
+            ler.popFragment();
         }
     }
 
     public void startTransition() {
-        getActivity().supportStartPostponedEnterTransition();
+        try {
+            getActivity().supportStartPostponedEnterTransition();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     public void pushFragment(Fragment f) {

@@ -66,8 +66,8 @@
             android:clickable="true"
             android:paddingBottom="8dp"
             android:paddingTop="8dp"
-            android:src="@drawable/ic_mood_black_24px"
             android:visibility="gone"
+            app:srcCompat="@drawable/ic_mood_black_24px"
             tools:visibility="visible"/>
 
         <ImageView
@@ -78,7 +78,7 @@
             android:clickable="true"
             android:paddingBottom="8dp"
             android:paddingTop="8dp"
-            android:src="@drawable/ic_insert_photo_black_24px"/>
+            app:srcCompat="@drawable/ic_insert_photo_black_24px"/>
 
         <ImageView
             android:id="@+id/palette"
@@ -88,7 +88,7 @@
             android:clickable="true"
             android:paddingBottom="8dp"
             android:paddingTop="8dp"
-            android:src="@drawable/ic_brush_black_24px"/>
+            app:srcCompat="@drawable/ic_brush_black_24px"/>
 
         <Switch
             android:id="@+id/useTopicPic"

@@ -49,9 +49,9 @@
         android:layout_marginBottom="72dp"
         android:layout_marginLeft="@dimen/fab_margin"
         android:layout_marginRight="@dimen/fab_margin"
-        android:src="@drawable/comment"
         android:visibility="invisible"
         app:backgroundTint="@color/colorAccent"
+        app:srcCompat="@drawable/comment"
     />
 
 </android.support.design.widget.CoordinatorLayout>
