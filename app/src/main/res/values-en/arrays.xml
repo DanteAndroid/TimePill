@@ -3,7 +3,6 @@
     <string-array name="picture_menu">
         <item>Share</item>
         <item>Save</item>
-
     </string-array>
     <string-array name="diary_menu_my">
         <item>Edit</item>
@@ -30,8 +29,12 @@
     <string-array name="create_diary_hints">
         <item>What\'s your feeling now</item>
         <item>What\'s up</item>
+        <item>What\'s wrong</item>
         <item>Anything new?</item>
         <item>Any idea today?</item>
         <item>How is your day?</item>
+        <item>Have read any books?</item>
+        <item>Have seen any movies?</item>
+        <item>Have seen any animations?</item>
     </string-array>
 </resources>

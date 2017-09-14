@@ -393,7 +393,6 @@ public class LoginActivity extends BaseActivity implements PatternLockViewListen
             UiUtils.showSnack(login, getString(R.string.name_or_psw_is_empty));
             return;
         }
-        Log.d(TAG, "login: " + emailAccount + "  " + password);
         KeyboardUtils.hideSoftInput(this);
         CircularAnim.hide(login).go(() -> {
             animationFinished = true;

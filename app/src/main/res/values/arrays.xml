@@ -3,7 +3,6 @@
     <string-array name="picture_menu">
         <item>分享</item>
         <item>保存</item>
-
     </string-array>
     <string-array name="diary_menu_my">
         <item>编辑</item>
@@ -28,10 +27,14 @@
         <item>橡皮擦</item>
     </string-array>
     <string-array name="create_diary_hints">
-        <item>现在感觉如何</item>
+        <item>现在感觉如何?</item>
+        <item>吓一跳吧?</item>
         <item>今天有什么想法？</item>
         <item>最近有啥好玩的事情？</item>
         <item>最近发现了什么</item>
         <item>最近有什么期待</item>
+        <item>最近有看什么书吗</item>
+        <item>最近有看什么电影吗</item>
+        <item>最近有看什么动漫吗</item>
     </string-array>
 </resources>
