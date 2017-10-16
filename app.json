@@ -6,6 +6,6 @@
 	"message": "- 日记本长按也可以进入编辑\n - 真正修复多个搜索按钮的问题\n - 新注册用户有引导界面",
 	"share_app_description": "from 时间胶囊：http://www.coolapk.com/apk/com.dante.diary",
 	"apk_url":"https://github.com/DanteAndroid/TimePill/releases/download/v1.7.3/app-release.apk",
-	"announcement":"关于创建长时间的日记本：目前只支持过期时间在一年内，创建日记本时选择相应的时间即可（要点到具体日期）",
+	"announcement":"关于创建长时间的日记本，目前只支持过期时间在一年内，创建日记本时选择相应的时间即可（要点到具体日期）；\n如果需要更长时间，可以试试时间胶囊功能哦",
   	"egg_url":"https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1506329484513&di=e076ba7c3d50b7bb2a5a5aa0a6813b30&imgtype=0&src=http%3A%2F%2Fimg2.3lian.com%2F2014%2Ff4%2F191%2Fd%2F104.jpg"
 }
