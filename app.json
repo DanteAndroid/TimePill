@@ -1,11 +1,11 @@
 {
-	"lastest_version": "v1.7.4",
-	"lastest_version_code": 24,
-	"former_version": "v1.7.3",
+	"lastest_version": "v1.7.5",
+	"lastest_version_code": 25,
+	"former_version": "v1.7.4",
 	"forceUpdate": false,
-	"message": "- 调整部分UI\n - 真正修复多个搜索按钮的问题\n - 新注册用户有引导界面",
+  	"message": "- 加入导出日记本功能\n - 新注册用户有引导界面",
 	"share_app_description": "from 时间胶囊：http://www.coolapk.com/apk/com.dante.diary",
-	"apk_url":"https://github.com/DanteAndroid/TimePill/releases/download/v1.7.4/app-release.apk",
-	"announcement":"有小伙伴反映需要导出功能，我不清楚你想导出成什么？\n其他想法可以通过反馈或者捐赠留言跟我沟通哦",
+	"apk_url":"https://github.com/DanteAndroid/TimePill/releases/download/v1.7.5/app-armeabi-v7a-release.apk",
+	"announcement":"",
   	"egg_url":"https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1506329484513&di=e076ba7c3d50b7bb2a5a5aa0a6813b30&imgtype=0&src=http%3A%2F%2Fimg2.3lian.com%2F2014%2Ff4%2F191%2Fd%2F104.jpg"
 }
