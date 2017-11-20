@@ -1,11 +1,11 @@
 {
-	"lastest_version": "v1.7.6",
-	"lastest_version_code": 26,
-	"former_version": "v1.7.5",
+	"lastest_version": "v1.7.7",
+	"lastest_version_code": 27,
+	"former_version": "v1.7.6",
 	"forceUpdate": false,
-	"message": "- 更新配色\n - 新注册用户有引导界面",
+	"message": "- 更新配色\n - 提高稳定性",
 	"share_app_description": "from 时间胶囊：http://www.coolapk.com/apk/com.dante.diary",
-	"apk_url":"https://github.com/DanteAndroid/TimePill/releases/download/v1.7.6/app-armeabi-v7a-release.apk",
+	"apk_url":"https://github.com/DanteAndroid/TimePill/releases/download/v1.7.7/app-armeabi-v7a-release.apk",
 	"announcement":"",
   	"egg_url":"https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1506329484513&di=e076ba7c3d50b7bb2a5a5aa0a6813b30&imgtype=0&src=http%3A%2F%2Fimg2.3lian.com%2F2014%2Ff4%2F191%2Fd%2F104.jpg"
 }
