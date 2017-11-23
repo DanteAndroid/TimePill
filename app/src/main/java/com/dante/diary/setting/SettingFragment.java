@@ -301,7 +301,7 @@ public class SettingFragment extends PreferenceFragment implements Preference.On
     }
 
     private boolean clearCache() {
-        ((BaseActivity) getActivity()).base.clearAll();
+        ((BaseActivity) getActivity()).getBase().clearAll();
         SpUtil.clear();
         return CleanUtils.cleanExternalCache() && CleanUtils.cleanInternalCache();
     }

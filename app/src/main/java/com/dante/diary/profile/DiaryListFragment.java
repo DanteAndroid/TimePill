@@ -1,18 +1,24 @@
 package com.dante.diary.profile;
 
+import android.Manifest;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Environment;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.blankj.utilcode.utils.FileUtils;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.resource.drawable.GlideDrawable;
 import com.bumptech.glide.request.RequestListener;
@@ -20,6 +26,7 @@ import com.bumptech.glide.request.target.Target;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.listener.OnItemClickListener;
 import com.dante.diary.R;
+import com.dante.diary.base.App;
 import com.dante.diary.base.Constants;
 import com.dante.diary.base.RecyclerFragment;
 import com.dante.diary.base.ViewActivity;
@@ -28,21 +35,28 @@ import com.dante.diary.edit.EditDiaryActivity;
 import com.dante.diary.login.LoginManager;
 import com.dante.diary.main.DiaryListAdapter;
 import com.dante.diary.main.MainDiaryFragment;
+import com.dante.diary.model.DataBase;
 import com.dante.diary.model.Diary;
 import com.dante.diary.model.Topic;
 import com.dante.diary.net.HttpErrorAction;
 import com.dante.diary.search.SearchActivity;
+import com.dante.diary.utils.AppUtil;
 import com.dante.diary.utils.ImageProgresser;
 import com.dante.diary.utils.SpUtil;
 import com.dante.diary.utils.TransitionHelper;
 import com.dante.diary.utils.UiUtils;
 import com.google.gson.Gson;
+import com.tbruyelle.rxpermissions.RxPermissions;
 
+import java.io.File;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import butterknife.BindView;
 import io.realm.Sort;
 import rx.Observable;
+import rx.Subscription;
 import top.wefor.circularanim.CircularAnim;
 
 /**
@@ -84,11 +98,31 @@ public class DiaryListFragment extends RecyclerFragment {
         return fragment;
     }
 
+    public static void exportNotebook(int notebookId, View rootView) {
+        DataBase base = DataBase.getInstance();
+        List<Diary> diaries = base.findDiariesOfNotebook(notebookId);
+        File exportFile = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOCUMENTS),
+                base.findNotebook(notebookId).getSubject() + ".txt");
+        boolean success = false;
+        for (int i = 0; i < diaries.size(); i++) {
+            Diary diary = diaries.get(i);
+            if (i == 0) {
+                FileUtils.writeFileFromString(exportFile, "《" + diary.getNotebookSubject() + "》\n\n\n", false);
+            }
+            success = FileUtils.writeFileFromString(exportFile, diary.getCreated() + "\n\n" + diary.getContent() + "\n\n\n", true);
+        }
+        if (success && exportFile.length() > 0) {
+            UiUtils.showSnackLong(rootView, App.context.getString(R.string.export_success)
+                    , R.string.check, v -> AppUtil.openExplorer(exportFile));
+        } else {
+            UiUtils.showSnack(rootView, R.string.export_failed);
+        }
+    }
+
     @Override
     protected int initLayoutId() {
         return R.layout.fragment_diary_list;
     }
-
 
     @Override
     protected void initViews() {
@@ -104,6 +138,9 @@ public class DiaryListFragment extends RecyclerFragment {
             id = SpUtil.getInt(Constants.ID);
         }
         adapter = new DiaryListAdapter(null);
+        if (!type.equals(TODAY_DIARIES)) {
+            adapter.setEmptyView(R.layout.empty_diary, (ViewGroup) rootView);
+        }
         if (type.equals(NOTEBOOK)) {
             isFromNotebook = true;
             setHasOptionsMenu(true);
@@ -169,6 +206,7 @@ public class DiaryListFragment extends RecyclerFragment {
     }
 
     private void onDiaryClicked(View view, int i) {
+        Log.d(TAG, "onDiaryClicked: " + type);
         if (isFromNotebook) {
             Intent intent = new Intent(getContext().getApplicationContext(), DiariesViewerActivity.class);
             intent.putExtra(Constants.POSITION, i);
@@ -262,6 +300,12 @@ public class DiaryListFragment extends RecyclerFragment {
                 .compose(applySchedulers())
                 .subscribe(diaries -> {
                     log("fetch" + diaries.isEmpty());
+                    if (isFromNotebook) {
+                        ArrayList<Diary> orderedDiaries = new ArrayList<>(diaries);
+                        Collections.reverse(orderedDiaries);
+                        diaries = orderedDiaries;
+                        adapter.setEmptyView(R.layout.empty_diary);
+                    }
                     if (!diaries.isEmpty()) {
                         if (isFromNotebook) {
                             base.save(diaries);
@@ -274,11 +318,12 @@ public class DiaryListFragment extends RecyclerFragment {
 
                     if (page <= 1 && diaries.isEmpty()) {
                         adapter.setNewData(null);
-                        stateText.setText(R.string.no_today_diary);
-                        stateText.setVisibility(View.VISIBLE);
+                        if (type.equals(TODAY_DIARIES)) {
+                            stateText.setText("没有最新日记");
+                            stateText.setVisibility(View.VISIBLE);
+                        }
                     } else {
                         if (diaries.isEmpty()) {
-                            log(" loadmore end");
                             adapter.loadMoreEnd();
                         } else {
                             stateText.setVisibility(View.GONE);
@@ -313,10 +358,8 @@ public class DiaryListFragment extends RecyclerFragment {
                 return LoginManager.getApi().getDiariesOfNotebook(id, page, MainDiaryFragment.FETCH_DIARY_SIZE)
                         .map(listItemResult -> listItemResult.items);
             case SEARCH:
-                log("search " + keyword + " " + page + notebookId);
                 return LoginManager.getApi().search(keyword, page, MainDiaryFragment.FETCH_DIARY_SIZE, notebookId)
                         .map(listDiariesResult -> listDiariesResult.items);
-
         }
         return LoginManager.getApi()
                 .getTodayDiaries(id);
@@ -344,6 +387,23 @@ public class DiaryListFragment extends RecyclerFragment {
             search.putExtra(Constants.SUBJECT, data);
             search.putExtra(Constants.ID, this.id);
             startActivity(search);
+        } else if (id == R.id.export) {
+            final RxPermissions permissions = new RxPermissions(getActivity());
+            Subscription subscription = permissions.request(Manifest.permission.WRITE_EXTERNAL_STORAGE)
+                    .map(granted -> {
+                        if (granted) {
+                            return this.id;
+                        } else {
+                            return 0;
+                        }
+                    })
+                    .compose(applySchedulers())
+                    .subscribe(nid -> {
+                        if (nid > 0) {
+                            exportNotebook(nid, rootView);
+                        }
+                    }, throwable -> Toast.makeText(getContext(), throwable.getMessage(), Toast.LENGTH_SHORT).show());
+            compositeSubscription.add(subscription);
         }
         return true;
     }
@@ -366,7 +426,8 @@ public class DiaryListFragment extends RecyclerFragment {
         super.onCreateOptionsMenu(menu, inflater);
         inflater.inflate(R.menu.menu_notebook_list, menu);
         if (isFromMyNotebook) {
-            menu.add(0, R.id.action_search, 0, R.string.search);
+            menu.findItem(R.id.action_search).setVisible(true);
+            menu.findItem(R.id.export).setVisible(true);
         }
     }
 

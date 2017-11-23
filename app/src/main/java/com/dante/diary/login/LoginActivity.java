@@ -138,7 +138,7 @@ public class LoginActivity extends BaseActivity implements PatternLockViewListen
             }, 400);
             return;
         }
-
+        slogan = (TextView) findViewById(R.id.slogan);
         slogan.animate()
                 .translationY(isLogin ? LOGO_TRANSLATION_Y * 2 / 3 : LOGO_TRANSLATION_Y)
                 .setStartDelay(STARTUP_DELAY)
@@ -149,6 +149,7 @@ public class LoginActivity extends BaseActivity implements PatternLockViewListen
             patternView.animate().alpha(1).setStartDelay(STARTUP_DELAY + 300).start();
             patternView.addPatternLockListener(LoginActivity.this);
         }
+        timePill = (ImageView) findViewById(R.id.timePill);
         timePill.animate()
                 .translationY(isLogin ? LOGO_TRANSLATION_Y * 2 / 3 : LOGO_TRANSLATION_Y)
                 .setStartDelay(STARTUP_DELAY)
@@ -341,6 +342,7 @@ public class LoginActivity extends BaseActivity implements PatternLockViewListen
                 .compose(applySchedulers())
                 .subscribe(user -> {
                     showRegister();
+                    SpUtil.save(Constants.IS_NEW_USER, true);
                     UiUtils.showSnack(register, getString(R.string.register_success));
                     login();
                     saveAccount(user);
@@ -451,14 +453,14 @@ public class LoginActivity extends BaseActivity implements PatternLockViewListen
         String today = DateUtil.getDisplayDay(new Date());
         String lastDate = SpUtil.getString(Constants.DATE);
         if (!today.equals(lastDate)) {
-            base.clearAllDiaries();
+            getBase().clearAllDiaries();
         }
         SpUtil.save(Constants.DATE, today);
     }
 
     private void saveAccount(User user) {
         Log.d(TAG, "saveAccount: " + user.getId());
-        base.save(user);
+        getBase().save(user);
         id = user.getId();
         SpUtil.save(Constants.ACCOUNT, emailAccount);
         SpUtil.save(Constants.PASSWORD, password);

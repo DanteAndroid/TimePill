@@ -1,16 +1,18 @@
 // Top-level build file where you can add configuration options common to all sub-projects/modules.
 
 buildscript {
+    ext.kotlin_version = '1.1.51'
     repositories {
         jcenter()
 
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:2.3.3'
+        classpath 'com.android.tools.build:gradle:3.0.0'
         classpath 'com.jakewharton.hugo:hugo-plugin:1.2.1' //打印log的工具
         classpath "io.realm:realm-gradle-plugin:3.1.3"
-        classpath 'me.tatarka:gradle-retrolambda:3.2.5'
+        classpath 'me.tatarka:gradle-retrolambda:3.6.0'
         classpath 'com.bugtags.library:bugtags-gradle:2.1.1'
+        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
 
         // NOTE: Do not place your application dependencies here; they belong
         // in the individual module build.gradle files
@@ -25,6 +27,9 @@ allprojects {
         }
         maven {
             url "http://mvn.leancloud.cn/nexus/content/repositories/public"
+        }
+        maven {
+            url "https://maven.google.com"
         }
     }
 }

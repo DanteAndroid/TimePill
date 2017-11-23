@@ -109,9 +109,7 @@ public class DownloadHelper {
                 } catch (Exception e) {
                     Bugtags.sendException(e.getCause());
                     e.printStackTrace();
-
                 }
-                Log.i("test", "Downloaded id " + intent.getLongExtra(DownloadManager.EXTRA_DOWNLOAD_ID, 0));
             }
         };
         context.registerReceiver(receiver, new IntentFilter(DownloadManager.ACTION_DOWNLOAD_COMPLETE));

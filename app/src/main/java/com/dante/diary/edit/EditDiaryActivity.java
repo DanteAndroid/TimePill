@@ -9,6 +9,8 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.Nullable;
+import android.support.v4.content.ContextCompat;
+import android.support.v7.app.AppCompatDelegate;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
@@ -103,17 +105,17 @@ public class EditDiaryActivity extends BaseActivity {
             isTopic = getIntent().getBooleanExtra("isTopic", false);
 
             if (isTopic) {
-                toolbar.setTitle(R.string.edit_topic_diary);
+                getToolbar().setTitle(R.string.edit_topic_diary);
             }
             isEditMode = diaryId > 0;
             if (isEditMode) {
-                diary = base.findDiary(diaryId);
+                diary = getBase().findDiary(diaryId);
                 if (diary == null) {
                     fetchDiary();
                 } else {
                     inflateDiary();
                 }
-                toolbar.setTitle(R.string.edit_diary);
+                getToolbar().setTitle(R.string.edit_diary);
             }
         }
         fetchTopicPicture();
@@ -262,7 +264,7 @@ public class EditDiaryActivity extends BaseActivity {
                 .compose(applySchedulers())
                 .subscribe(notebooks -> {
                     this.notebooks = notebooks;
-                    base.save(notebooks);
+                    getBase().save(notebooks);
                     checkValidNotebooks(notebooks);
                     initSubjectSpinner(validSubjects);
 
@@ -361,7 +363,8 @@ public class EditDiaryActivity extends BaseActivity {
             enabled = true;
         }
         MenuItem item = menu.findItem(R.id.action_send);
-        Drawable resIcon = getResources().getDrawable(R.drawable.ic_send_white_36px, getTheme());
+        AppCompatDelegate.setCompatVectorFromResourcesEnabled(true);
+        Drawable resIcon = ContextCompat.getDrawable(this, R.drawable.ic_send_white_36px);
         if (!enabled) {
             resIcon.mutate().setColorFilter(Color.LTGRAY, PorterDuff.Mode.SRC_IN);
         }

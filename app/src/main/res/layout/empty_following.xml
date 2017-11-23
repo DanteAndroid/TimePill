@@ -11,7 +11,7 @@
         android:layout_gravity="center"
         android:gravity="center"
         android:text="您没有关注任何人"
-        android:textColor="@color/secondText"
+        android:textColor="@color/tertiaryText"
         android:textSize="20sp"/>
 
 </LinearLayout>

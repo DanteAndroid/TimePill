@@ -75,7 +75,8 @@ public class NoteBookListFragment extends RecyclerFragment {
 
             @Override
             public void onItemLongClick(BaseQuickAdapter adapter, View view, int position) {
-                onNotebookLongClicked(view, position);
+//                onNotebookLongClicked(view, position);
+                showNotebookEditDialog(view, position);
 
             }
         });

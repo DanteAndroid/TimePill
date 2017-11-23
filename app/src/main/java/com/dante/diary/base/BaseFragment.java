@@ -114,7 +114,7 @@ public abstract class BaseFragment extends Fragment {
 
     protected void onCreateView() {
         ButterKnife.bind(this, rootView);
-        base = ((BaseActivity) getActivity()).base;
+        base = ((BaseActivity) getActivity()).getBase();
     }
 
     public void initAppBar() {
@@ -229,8 +229,7 @@ public abstract class BaseFragment extends Fragment {
 
     public void finishFragment() {
         if (barActivity != null) {
-            barActivity.control
-            ler.popFragment();
+            barActivity.controller.popFragment();
         }
     }
 

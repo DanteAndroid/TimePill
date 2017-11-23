@@ -30,8 +30,6 @@
             android:name=".edit.EditNotebookActivity"
             android:label="@string/create_notebook"
             android:windowSoftInputMode="adjustPan"/>
-        <activity android:name=".TransitionActivity">
-        </activity>
         <activity
             android:name=".custom.PickPictureActivity"
             android:label="@string/pick_picture">

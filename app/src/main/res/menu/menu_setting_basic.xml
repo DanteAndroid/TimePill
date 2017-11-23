@@ -5,10 +5,13 @@
           android:orderInCategory="0"
           android:title="@string/action_settings"
           app:showAsAction="never"/>
-
-    <item android:id="@+id/action_share"
-          android:orderInCategory="1"
-          android:title="@string/share_to"
+    <item android:id="@+id/donate"
+          android:orderInCategory="2"
+          android:title="@string/donate"
+          app:showAsAction="never"/>
+    <item android:id="@+id/time_pill"
+          android:orderInCategory="3"
+          android:title="@string/app_name"
           app:showAsAction="never"/>
 
 </menu>

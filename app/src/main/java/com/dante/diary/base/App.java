@@ -3,7 +3,7 @@ package com.dante.diary.base;
 import android.annotation.SuppressLint;
 import android.app.Application;
 import android.content.Context;
-import android.util.Log;
+import android.os.StrictMode;
 
 import com.avos.avoscloud.AVOSCloud;
 import com.avos.avoscloud.im.v2.AVIMMessageManager;
@@ -13,8 +13,6 @@ import com.bugtags.library.Bugtags;
 import com.dante.diary.chat.PMMessageHandler;
 
 import io.realm.Realm;
-
-import static com.bumptech.glide.gifdecoder.GifHeaderParser.TAG;
 
 /**
  * Created by yons on 17/3/3.
@@ -44,8 +42,9 @@ public class App extends Application {
         AVOSCloud.initialize(this, LEAN_APP_ID, LEAN_APP_KEY);
 //        AVOSCloud.setDebugLogEnabled(BuildConfig.DEBUG);
         AVIMMessageManager.registerMessageHandler(AVIMTextMessage.class, new PMMessageHandler());
-        Thread.setDefaultUncaughtExceptionHandler((t, e) -> Log.e(TAG, "uncaughtException: " + e.getMessage()));
         Realm.init(this);
         Utils.init(this);
+        StrictMode.VmPolicy.Builder builder = new StrictMode.VmPolicy.Builder();
+        StrictMode.setVmPolicy(builder.build());
     }
 }

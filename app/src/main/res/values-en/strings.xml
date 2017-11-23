@@ -298,5 +298,18 @@
     <string name="fetch_diary_error">Oops, fetch diary error:</string>
     <string name="search_diary_hint">Input your keyword</string>
     <string name="search_notebook_diary_hint">Search in "%s"</string>
+    <string name="new_user_create_notebook_hint">Detect you are new user, please create notebook
+        before writing a diary
+    </string>
+    <string name="create_second_hint">Set an expire time, everday you will lose memory at 0:00,
+        before expire time, you cannot read diaries before
+    </string>
+    <string name="create_hint">Create your own diary</string>
+    <string name="export">Export</string>
+    <string name="export_failed">Export notebook failed, please check permissions.</string>
+    <string name="export_success">Export notebook success!</string>
+    <string name="check">Check</string>
+    <string name="no_explorer_installed">No file explorer installed!</string>
+    <string name="wechat_not_installed">Wechat not installed</string>
 
 </resources>

@@ -62,11 +62,11 @@ public class DiariesViewerActivity extends BaseActivity {
         List<Fragment> fragments = new ArrayList<>();
         if (notebookId > 0) {
             isTimeReversed = getIntent().getBooleanExtra(Constants.TIME_REVERSE, false);
-            diaries = base.findDiariesOfNotebook(notebookId)
+            diaries = getBase().findDiariesOfNotebook(notebookId)
                     .sort(Constants.CREATED, isTimeReversed ? Sort.DESCENDING : Sort.ASCENDING);
 
         } else {
-            diaries = base.findTodayDiaries();
+            diaries = getBase().findTodayDiaries();
         }
         for (int i = 0; i < diaries.size(); i++) {
             fragments.add(DiaryDetailFragment.newInstance(diaries.get(i).getId()));

@@ -12,8 +12,9 @@ import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.support.design.widget.TextInputEditText;
 import android.support.design.widget.TextInputLayout;
-import android.support.v4.content.res.ResourcesCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewCompat;
+import android.support.v7.app.AppCompatDelegate;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
@@ -102,13 +103,13 @@ public class EditNotebookActivity extends BaseActivity {
 
         if (getIntent().getExtras() != null) {
             notebookId = getIntent().getIntExtra(Constants.ID, 0);
-            notebook = base.findNotebook(notebookId);
+            notebook = getBase().findNotebook(notebookId);
             if (notebook == null) {
                 UiUtils.showSnack(expireCalendar, R.string.unable_to_find_notebook);
                 return;
             }
             isEditMode = notebookId > 0;
-            toolbar.setTitle(R.string.edit_notebook);
+            getToolbar().setTitle(R.string.edit_notebook);
         }
 
         initCover();
@@ -291,12 +292,13 @@ public class EditNotebookActivity extends BaseActivity {
                         UiUtils.showSnack(expireCalendar, s);
                     }
                     setResult(RESULT_OK);
-                    if (coverChanged) {
-                        finish();
-                    } else {
-                        supportFinishAfterTransition();
-                    }
-
+                    new Handler().postDelayed(() -> {
+                        if (coverChanged) {
+                            finish();
+                        } else {
+                            supportFinishAfterTransition();
+                        }
+                    }, 1000);
                 }, new HttpErrorAction<Throwable>() {
                     @Override
                     public void call(Throwable throwable) {
@@ -326,7 +328,8 @@ public class EditNotebookActivity extends BaseActivity {
     public boolean onPrepareOptionsMenu(Menu menu) {
         boolean enabled = !TextUtils.isEmpty(notebookSubject) || notebookChanged;
         MenuItem item = menu.findItem(R.id.action_send);
-        Drawable resIcon = ResourcesCompat.getDrawable(getResources(), R.drawable.ic_send_white_36px, getTheme());
+        AppCompatDelegate.setCompatVectorFromResourcesEnabled(true);
+        Drawable resIcon = ContextCompat.getDrawable(this, R.drawable.ic_send_white_36px);
         if (!enabled) {
             resIcon.mutate().setColorFilter(Color.LTGRAY, PorterDuff.Mode.SRC_IN);
         }

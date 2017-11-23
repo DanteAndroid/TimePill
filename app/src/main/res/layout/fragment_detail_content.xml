@@ -71,7 +71,6 @@
                 android:textIsSelectable="true"
                 android:textSize="16sp"
                 tools:text="@string/test_diary"/>
-
             <ImageView
                 android:id="@+id/attachPicture"
                 android:layout_width="wrap_content"

@@ -117,7 +117,7 @@ public class ConversationActivity extends BaseActivity implements MessagesListAd
                                 Toast.makeText(ConversationActivity.this, R.string.conversation_is_empty, Toast.LENGTH_SHORT).show();
                             }
                         } else {
-                            UiUtils.showSnackLong(toolbar, "获取对话失败");
+                            UiUtils.showSnackLong(getToolbar(), "获取对话失败");
                             Log.e(TAG, "fetchConversation: " + e.getMessage());
                         }
                     }
@@ -135,7 +135,7 @@ public class ConversationActivity extends BaseActivity implements MessagesListAd
                         Log.d(TAG, "fetchMessage: " + list.size());
                         fetchMessage(list);
                     } else {
-                        UiUtils.showSnackLong(toolbar, "获取消息失败");
+                        UiUtils.showSnackLong(getToolbar(), "获取消息失败");
                         Log.e(TAG, "fetchConversation: " + e.getMessage());
                     }
                 }
@@ -164,7 +164,7 @@ public class ConversationActivity extends BaseActivity implements MessagesListAd
 //            adapter.addToStart(msg, false);
         }
         adapter.addToEnd(messages, true);
-        toolbar.setTitle(String.format("与 %s 的私信", otherUser.getName()));
+        getToolbar().setTitle(String.format("与 %s 的私信", otherUser.getName()));
     }
 
 
@@ -186,7 +186,7 @@ public class ConversationActivity extends BaseActivity implements MessagesListAd
                     @Override
                     public void onNext(User user) {
                         ConversationActivity.this.otherUser = user;
-                        base.save(user);
+                        getBase().save(user);
                     }
                 });
     }

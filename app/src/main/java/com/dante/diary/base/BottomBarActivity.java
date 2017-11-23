@@ -57,7 +57,7 @@ public class BottomBarActivity extends BaseActivity implements FragNavController
                     }
 
                 }, throwable -> Log.e("test", "fetch: " + throwable.getMessage()));
-        compositeSubscription.add(subscription);
+        getCompositeSubscription().add(subscription);
     }
 
     public void hideBottomBar() {

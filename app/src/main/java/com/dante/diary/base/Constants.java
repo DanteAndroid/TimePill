@@ -21,6 +21,7 @@ public class Constants {
     public static final String CONTENT = "content";
     public static final String KEY = "key";
     public static final String NAME = "name";
+    public static final String IS_FIRST = "is_first";
 
     //custom
     public static final String VIEW_POSITION = "view_position";
@@ -45,5 +46,6 @@ public class Constants {
     public static final String OPEN_TIME = "openTime";
     public static final String TIME_REVERSE = "time_order";
     public static final String TOPIC_PICTURE = "topic_pic";
-    public static final java.lang.String KEYWORD = "keyword";
+    public static final String KEYWORD = "keyword";
+    public static final String IS_NEW_USER = "is_new_user";
 }

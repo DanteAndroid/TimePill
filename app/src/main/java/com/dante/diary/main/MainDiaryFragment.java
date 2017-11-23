@@ -16,6 +16,7 @@ import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -38,7 +39,6 @@ import com.dante.diary.base.Constants;
 import com.dante.diary.base.RecyclerFragment;
 import com.dante.diary.base.ViewActivity;
 import com.dante.diary.chat.ChatService;
-import com.dante.diary.custom.Updater;
 import com.dante.diary.detail.DiariesViewerActivity;
 import com.dante.diary.edit.EditDiaryActivity;
 import com.dante.diary.edit.EditNotebookActivity;
@@ -52,7 +52,6 @@ import com.dante.diary.timepill.TimePillActivity;
 import com.dante.diary.utils.AppUtil;
 import com.dante.diary.utils.ImageProgresser;
 import com.dante.diary.utils.Imager;
-import com.dante.diary.utils.Share;
 import com.dante.diary.utils.SpUtil;
 import com.dante.diary.utils.TransitionHelper;
 import com.dante.diary.utils.UiUtils;
@@ -60,7 +59,6 @@ import com.dante.diary.utils.WrapContentLinearLayoutManager;
 import com.google.gson.Gson;
 
 import java.io.IOException;
-import java.util.List;
 
 import butterknife.BindView;
 import butterknife.Unbinder;
@@ -71,8 +69,8 @@ import io.realm.OrderedRealmCollectionChangeListener;
 import io.realm.RealmResults;
 import rx.Observable;
 import rx.Subscriber;
-import rx.functions.Func1;
 import top.wefor.circularanim.CircularAnim;
+import uk.co.samuelwall.materialtaptargetprompt.MaterialTapTargetPrompt;
 
 
 public class MainDiaryFragment extends RecyclerFragment implements OrderedRealmCollectionChangeListener<RealmResults<Diary>> {
@@ -174,8 +172,25 @@ public class MainDiaryFragment extends RecyclerFragment implements OrderedRealmC
                 }
             }
         });
-
         initFab();
+        initGuide();
+    }
+
+    private void initGuide() {
+        if (SpUtil.getBoolean(Constants.IS_FIRST, true) && SpUtil.getBoolean(Constants.IS_NEW_USER)
+                && fabMenu.getVisibility() == View.VISIBLE) {
+            new MaterialTapTargetPrompt.Builder(getActivity())
+                    .setTarget(fabMenu)
+                    .setPrimaryText(R.string.new_user_create_notebook_hint)
+                    .setSecondaryText(R.string.create_second_hint)
+                    .setPromptStateChangeListener((prompt, state) -> {
+                        if (state == MaterialTapTargetPrompt.STATE_FOCAL_PRESSED) {
+
+                        }
+                    })
+                    .show();
+        }
+        SpUtil.save(Constants.IS_FIRST, false);
     }
 
     @Override
@@ -366,12 +381,7 @@ public class MainDiaryFragment extends RecyclerFragment implements OrderedRealmC
                 .allTodayDiaries(page, FETCH_DIARY_SIZE)
                 .compose(applySchedulers())
                 .map(listResult -> listResult.diaries)
-                .flatMap(new Func1<List<Diary>, Observable<Diary>>() {
-                    @Override
-                    public Observable<Diary> call(List<Diary> diaries) {
-                        return Observable.from(diaries);
-                    }
-                })
+                .flatMap(diaries -> Observable.from(diaries))
                 .distinct()
                 .subscribe(new Subscriber<Diary>() {
 
@@ -443,7 +453,7 @@ public class MainDiaryFragment extends RecyclerFragment implements OrderedRealmC
                     @Override
                     public void call(Throwable throwable) {
                         super.call(throwable);
-                        if (!errorMessage.isEmpty()) {
+                        if (!TextUtils.isEmpty(errorMessage)) {
                             UiUtils.showSnack(rootView, errorMessage);
                         }
                     }
@@ -502,11 +512,6 @@ public class MainDiaryFragment extends RecyclerFragment implements OrderedRealmC
         int id = item.getItemId();
         if (id == R.id.action_settings) {
             startActivity(new Intent(getContext(), SettingActivity.class));
-        } else if (id == R.id.action_share) {
-
-            String text = SpUtil.get(Updater.SHARE_APP, getString(R.string.share_app_description));
-            Share.shareText(getContext(), text);
-
         } else if (id == R.id.night_mode) {
             if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
                 UiUtils.showSnack(rootView, R.string.android_version_is_old);

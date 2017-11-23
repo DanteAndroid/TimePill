@@ -18,6 +18,7 @@ import com.dante.diary.login.LoginActivity;
 
 import org.greenrobot.eventbus.EventBus;
 
+import java.io.File;
 import java.util.List;
 
 import moe.feng.alipay.zerosdk.AlipayZeroSdk;
@@ -95,7 +96,20 @@ public class AppUtil {
         try {
             App.context.startActivity(intent);
         } catch (Exception e) {
-            Toast.makeText(App.context, "微信未安装", Toast.LENGTH_SHORT).show();
+            Toast.makeText(App.context, R.string.wechat_not_installed, Toast.LENGTH_SHORT).show();
         }
+    }
+
+    public static void openExplorer(File file) {
+        Uri uri = Uri.fromFile(file.getParentFile());
+        Intent intent = new Intent(Intent.ACTION_VIEW);
+        intent.setFlags(FLAG_ACTIVITY_NEW_TASK);
+        intent.setDataAndType(uri, "text/*");
+        if (intent.resolveActivityInfo(App.context.getPackageManager(), 0) != null) {
+            App.context.startActivity(intent);
+        } else {
+            Toast.makeText(context, R.string.no_explorer_installed, Toast.LENGTH_SHORT).show();
+        }
+
     }
 }

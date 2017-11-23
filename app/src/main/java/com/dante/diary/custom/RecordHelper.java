@@ -188,12 +188,10 @@ public class RecordHelper {
     }
 
     public static int getDuration() {
-        FileInputStream fis = null;
         int seconds = 0;
         try {
-            fis = new FileInputStream(getRecordFile());
             mediaPlayer.reset();
-            mediaPlayer.setDataSource(fis.getFD());
+            mediaPlayer.setDataSource(getRecordFile().getPath());
             mediaPlayer.prepare();
             int duration = mediaPlayer.getDuration();
             if (duration <= 0) {
@@ -201,17 +199,9 @@ public class RecordHelper {
             }
             seconds = duration / 1000;
             Log.i(TAG, "getDuration: duration " + duration / 1000 + " duration:" + duration);
-        } catch (IOException e) {
+        } catch (Exception e) {
             Log.i(TAG, "playAudio: failed");
             e.printStackTrace();
-        } finally {
-            if (fis != null) {
-                try {
-                    fis.close();
-                } catch (IOException ignore) {
-
-                }
-            }
         }
         return seconds;
     }

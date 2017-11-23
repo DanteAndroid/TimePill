@@ -71,7 +71,7 @@
     <string name="fail_to_create_notebook">创建日记本失败</string>
     <string name="edit_notebook">编辑日记本</string>
     <string name="update_success">更新成功</string>
-    <string name="create_notebook_success">日记本 %s 创建成功</string>
+    <string name="create_notebook_success">日记本《%s》创建成功</string>
     <string name="update_failed">更新失败</string>
 
     <string name="content_saved_as_draft">内容已存为草稿</string>
@@ -291,4 +291,13 @@
     <string name="search_notebook_diary_hint">在\"%s\"中搜索</string>
     <string name="search">搜索</string>
     <string name="fetch_diary_error">啊哦，无法获取日记</string>
+    <string name="new_user_create_notebook_hint">检测到您是新用户\n请先创建一个日记本吧</string>
+    <string name="create_second_hint">设定一个过期时间，每天零点你将「失忆」，在过期时间之前，你无法回顾日记</string>
+    <string name="create_hint">创建你的私人日记</string>
+    <string name="export">导出</string>
+    <string name="export_failed">导出日记本失败，请检查权限</string>
+    <string name="export_success">日记本导出成功~</string>
+    <string name="check">查看</string>
+    <string name="no_explorer_installed">未安装文件管理器！</string>
+    <string name="wechat_not_installed">微信未安装</string>
 </resources>

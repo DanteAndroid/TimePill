@@ -101,7 +101,7 @@ public class TimePillOpenActivity extends BaseActivity {
                 }
             });
         } else {
-            UiUtils.showSnackLong(toolbar, R.string.invalid_timepill_key);
+            UiUtils.showSnackLong(getToolbar(), R.string.invalid_timepill_key);
         }
     }
 

@@ -31,6 +31,18 @@ public abstract class BaseActivity extends AppCompatActivity {
     private boolean isShowToolbar = true;
     private ProgressDialog dialog;
 
+    public CompositeSubscription getCompositeSubscription() {
+        return compositeSubscription;
+    }
+
+    public DataBase getBase() {
+        return base;
+    }
+
+    public Toolbar getToolbar() {
+        return toolbar;
+    }
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

@@ -33,7 +33,6 @@ import android.widget.TextView;
 
 import com.blankj.utilcode.utils.ClipboardUtils;
 import com.blankj.utilcode.utils.IntentUtils;
-import com.bugtags.library.Bugtags;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.resource.drawable.GlideDrawable;
 import com.bumptech.glide.request.RequestListener;
@@ -363,12 +362,15 @@ public class DiaryDetailFragment extends BaseFragment implements SwipeRefreshLay
 
         TimeApi api = LoginManager.getApi();
         subscription = api.getDiaryDetail(diaryId)
-                .zipWith(api.getDiaryComments(diaryId), (diary1, comments) -> {
-                    DiaryDetailFragment.this.diary = diary1;
+                .zipWith(api.getDiaryComments(diaryId), (d, comments) -> {
+                    DiaryDetailFragment.this.diary = d;
                     return comments;
                 })
                 .compose(applySchedulers())
                 .subscribe(comments -> {
+                    if (diary == null) {
+                        throw new RuntimeException("Diary is null");
+                    }
                     swipeRefresh.setRefreshing(false);
                     inflate(comments);
                     setShareIntent(diary.getContent());
@@ -376,9 +378,8 @@ public class DiaryDetailFragment extends BaseFragment implements SwipeRefreshLay
 
                 }, throwable -> {
                     swipeRefresh.setRefreshing(false);
-                    Bugtags.sendException(throwable);
                     if (!throwable.getMessage().contains("android.app.ActivityOptions.isReturning")) {
-                        UiUtils.showSnackLong(rootView, getString(R.string.get_diary_failed));
+                        UiUtils.showSnackLong(rootView, getString(R.string.get_diary_failed) + throwable.getMessage());
                     }
                 });
         compositeSubscription.add(subscription);
@@ -392,14 +393,14 @@ public class DiaryDetailFragment extends BaseFragment implements SwipeRefreshLay
 
     private void inflateDiary() {
         toolbar.setTitle(diary.getNotebookSubject());
-
         myAvatar.setOnClickListener(v -> goProfile(diary.getUserId()));
 
-        Glide.with(this).load(diary.getUser().getAvatarUrl())
-                .bitmapTransform(new RoundedCornersTransformation(getContext(), 5, 0))
-                .into(myAvatar);
+        if (diary.getUser() != null) {
+            Glide.with(this).load(diary.getUser().getAvatarUrl())
+                    .bitmapTransform(new RoundedCornersTransformation(getContext(), 5, 0))
+                    .into(myAvatar);
+        }
         getActivity().supportPostponeEnterTransition();
-
         diaryDate.setText(DateUtil.getDisplayDay(diary.getCreated()));
         content.setText(diary.getContent());
         diaryLayout.setOnLongClickListener(this);

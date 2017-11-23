@@ -48,13 +48,13 @@ public class UiUtils {
 
     public static void showSnack(View rootView, int textId, int actionTextId, View.OnClickListener onClickListener) {
         if (null != rootView) {
-            Snackbar.make(rootView, textId, Snackbar.LENGTH_LONG).setAction(actionTextId, onClickListener).show();
+            Snackbar.make(rootView, textId, Snackbar.LENGTH_SHORT).setAction(actionTextId, onClickListener).show();
         }
     }
 
     public static void showSnack(View rootView, String text, int actionTextId, View.OnClickListener onClickListener) {
         if (null != rootView) {
-            Snackbar.make(rootView, text, Snackbar.LENGTH_LONG).setAction(actionTextId, onClickListener).show();
+            Snackbar.make(rootView, text, Snackbar.LENGTH_SHORT).setAction(actionTextId, onClickListener).show();
         }
     }
 

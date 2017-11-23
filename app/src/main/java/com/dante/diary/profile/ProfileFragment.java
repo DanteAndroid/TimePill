@@ -110,9 +110,7 @@ public class ProfileFragment extends BaseFragment {
     @Override
     public void onPause() {
         super.onPause();
-        if (fabMenu != null) {
-            fabMenu.closeMenu();
-        }
+        fabMenu.closeMenu();
     }
 
 //    @Override
@@ -202,7 +200,13 @@ public class ProfileFragment extends BaseFragment {
             DataBase.findTimePillUser(id, new QueryResultCallback() {
                 @Override
                 public void onExist() {
-                    toolbar.inflateMenu(R.menu.menu_pm);
+                    if (toolbar.getMenu() == null) {
+                        toolbar.inflateMenu(R.menu.menu_pm);
+                    } else {
+                        if (toolbar.getMenu().findItem(R.menu.menu_pm) == null) {
+                            toolbar.inflateMenu(R.menu.menu_pm);
+                        }
+                    }
                 }
 
                 @Override
@@ -227,7 +231,14 @@ public class ProfileFragment extends BaseFragment {
         );
         toolbarLayout.setTitle(user.getName());
         if (LoginManager.isMe(id)) {
-            toolbar.inflateMenu(R.menu.menu_search_item);
+            if (toolbar.getMenu() == null) {
+                toolbar.inflateMenu(R.menu.menu_search_item);
+            } else {
+                if (toolbar.getMenu().findItem(R.id.action_search) == null) {
+                    toolbar.inflateMenu(R.menu.menu_search_item);
+                }
+            }
+
         } else if (!hasFollow) {
             fab.show();
         }

@@ -237,7 +237,7 @@ public class TimePillCreateActivity extends BaseActivity {
                                 UiUtils.showSnack(record, R.string.record_failed);
                             }
                         }, throwable -> Log.e(TAG, "error: " + throwable.getMessage()));
-                compositeSubscription.add(subscription);
+                getCompositeSubscription().add(subscription);
 
             }
 
