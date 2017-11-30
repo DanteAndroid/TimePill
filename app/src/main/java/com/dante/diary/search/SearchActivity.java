@@ -23,13 +23,13 @@ import rx.Observable;
 public class SearchActivity extends BaseActivity {
     public static final int SEARCH_DEBOUNCE_TIME = 5000;
     private static final String TAG = "SearchActivity";
+    private long nowTime;
+    private long lastTime;
     private SearchView searchView;
     private Fragment fragment;
     private int notebookId;
     private String notebookSubject;
     private String keywords;
-    private long lastTime;
-    private long nowTime;
     private MenuItem searchItem;
     private boolean hasInit;
 
