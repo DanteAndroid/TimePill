@@ -7,6 +7,7 @@ public class Constants {
 
     //  http://blog.feng.moe/2016/08/29/alipay-zerosdk/
     public static final String ALI_PAY = "aex00371u7j5qknwdj0yu11";
+    public static final String ALI_PAY_HONGBAO = "https://qr.alipay.com/c1x05355zgmefxj4haetub8";
 
     //common
     public static final String TYPE = "type";

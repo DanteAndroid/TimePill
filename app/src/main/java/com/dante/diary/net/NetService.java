@@ -1,7 +1,6 @@
 package com.dante.diary.net;
 
 import android.text.TextUtils;
-import android.util.Log;
 
 import com.dante.diary.BuildConfig;
 import com.dante.diary.utils.AuthenticationInterceptor;
@@ -98,13 +97,11 @@ public class NetService {
     }
 
     public static TimeApi getTimeApi(String name, String password) {
-        Log.d("test", "getTimeApi: " + name);
         api = createService(TimeApi.class, name, password);
         return api;
     }
 
     public static MultipartBody.Part createMultiPart(String name, File file) {
-        Log.d("test", "createMultiPart: " + file);
         RequestBody requestFile = RequestBody.create(MediaType.parse("image/*"),
                 file);
 

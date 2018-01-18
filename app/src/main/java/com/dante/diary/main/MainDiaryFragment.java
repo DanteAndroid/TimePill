@@ -59,9 +59,9 @@ import com.dante.diary.utils.WrapContentLinearLayoutManager;
 import com.google.gson.Gson;
 
 import java.io.IOException;
+import java.util.List;
 
 import butterknife.BindView;
-import butterknife.Unbinder;
 import io.github.yavski.fabspeeddial.FabSpeedDial;
 import io.github.yavski.fabspeeddial.SimpleMenuListenerAdapter;
 import io.realm.OrderedCollectionChangeSet;
@@ -75,11 +75,8 @@ import uk.co.samuelwall.materialtaptargetprompt.MaterialTapTargetPrompt;
 
 public class MainDiaryFragment extends RecyclerFragment implements OrderedRealmCollectionChangeListener<RealmResults<Diary>> {
     public static final int FETCH_DIARY_SIZE = 20;
-    private static final String TAG = "MainDiaryFragment";
     private static final String INDEX = "INDEX";
-    String url;
     boolean isFetching;
-    String title;
     int page = 1;
     BaseActivity context;
     DiaryListAdapter adapter;
@@ -92,7 +89,6 @@ public class MainDiaryFragment extends RecyclerFragment implements OrderedRealmC
     ImageView topicImage;
     @BindView(R.id.topicTitle)
     TextView topicTitle;
-    Unbinder unbinder;
     @BindView(R.id.toolbar_layout)
     CollapsingToolbarLayout toolbarLayout;
     @BindView(R.id.appBar)
@@ -100,11 +96,10 @@ public class MainDiaryFragment extends RecyclerFragment implements OrderedRealmC
 
 
     private Intent intent;
-    private boolean collapsed;
     private Topic topic;
     private boolean isHiding;
     private boolean isShowing;
-    private boolean enableNight;
+    private boolean collapsed;
 
     public MainDiaryFragment() {
         // Required empty public constructor
@@ -165,7 +160,9 @@ public class MainDiaryFragment extends RecyclerFragment implements OrderedRealmC
             public void onItemChildClick(BaseQuickAdapter baseQuickAdapter, View view, int i) {
                 int id = view.getId();
                 if (id == R.id.avatar) {
-                    goProfile(adapter.getItem(i).getUserId());
+                    Diary d = adapter.getItem(i);
+                    if (d == null) return;
+                    goProfile(d.getUserId());
 
                 } else if (id == R.id.attachPicture) {
                     onPictureClicked(view, i);
@@ -185,7 +182,7 @@ public class MainDiaryFragment extends RecyclerFragment implements OrderedRealmC
                     .setSecondaryText(R.string.create_second_hint)
                     .setPromptStateChangeListener((prompt, state) -> {
                         if (state == MaterialTapTargetPrompt.STATE_FOCAL_PRESSED) {
-
+//do nothing
                         }
                     })
                     .show();
@@ -310,7 +307,6 @@ public class MainDiaryFragment extends RecyclerFragment implements OrderedRealmC
     }
 
     private void onPictureClicked(View view, int i) {
-
         final ProgressBar progressBar = ImageProgresser.attachProgress(view);
         String url = adapter.getItem(i).getPhotoUrl();
         Glide.with(this).load(url).listener(new RequestListener<String, GlideDrawable>() {
@@ -381,9 +377,10 @@ public class MainDiaryFragment extends RecyclerFragment implements OrderedRealmC
                 .allTodayDiaries(page, FETCH_DIARY_SIZE)
                 .compose(applySchedulers())
                 .map(listResult -> listResult.diaries)
-                .flatMap(diaries -> Observable.from(diaries))
+                .flatMap(Observable::from)
+                .buffer(3)
                 .distinct()
-                .subscribe(new Subscriber<Diary>() {
+                .subscribe(new Subscriber<List<Diary>>() {
 
                     @Override
                     public void onStart() {
@@ -406,7 +403,7 @@ public class MainDiaryFragment extends RecyclerFragment implements OrderedRealmC
                     }
 
                     @Override
-                    public void onNext(Diary diary) {
+                    public void onNext(List<Diary> diary) {
                         base.realm.executeTransactionAsync(realm -> {
                             realm.copyToRealmOrUpdate(diary);
                         });
@@ -425,7 +422,6 @@ public class MainDiaryFragment extends RecyclerFragment implements OrderedRealmC
         subscription = LoginManager.getApi().getTopic()
                 .compose(applySchedulers())
                 .subscribe(response -> {
-
                     String result;
                     try {
                         result = response.body().string();
@@ -481,7 +477,6 @@ public class MainDiaryFragment extends RecyclerFragment implements OrderedRealmC
     public void onChange(RealmResults<Diary> collection, OrderedCollectionChangeSet changeSet) {
         // `null`  means the async query returns the first time.
         if (changeSet == null) {
-            log("no change");
             adapter.notifyDataSetChanged();
             return;
         }
@@ -489,7 +484,6 @@ public class MainDiaryFragment extends RecyclerFragment implements OrderedRealmC
         OrderedCollectionChangeSet.Range[] deletions = changeSet.getDeletionRanges();
         for (int i = deletions.length - 1; i >= 0; i--) {
             OrderedCollectionChangeSet.Range range = deletions[i];
-            log("no notifyItemRangeRemoved " + range.startIndex + " to " + range.length);
             adapter.notifyItemRangeRemoved(range.startIndex, range.length);
         }
 
@@ -517,7 +511,7 @@ public class MainDiaryFragment extends RecyclerFragment implements OrderedRealmC
                 UiUtils.showSnack(rootView, R.string.android_version_is_old);
             } else {
                 UiModeManager modeManager = (UiModeManager) context.getSystemService(Context.UI_MODE_SERVICE);
-                enableNight = !(modeManager.getNightMode() == UiModeManager.MODE_NIGHT_YES);
+                boolean enableNight = !(modeManager.getNightMode() == UiModeManager.MODE_NIGHT_YES);
                 modeManager.setNightMode(enableNight ? UiModeManager.MODE_NIGHT_YES : UiModeManager.MODE_NIGHT_NO);
                 SpUtil.save(Constants.IS_NIGHT, enableNight);
             }
@@ -525,6 +519,8 @@ public class MainDiaryFragment extends RecyclerFragment implements OrderedRealmC
             startActivity(new Intent(getActivity(), TimePillActivity.class));
         } else if (id == R.id.donate) {
             AppUtil.donate(getActivity());
+        } else if (id == R.id.hongbao) {
+            AppUtil.openBrowser(getActivity(), Constants.ALI_PAY_HONGBAO);
         }
         return true;
     }

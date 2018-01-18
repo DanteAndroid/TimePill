@@ -11,6 +11,7 @@
     <color name="whiteBackground">@color/cardview_dark_background</color>
     <color name="item_background">@color/cardview_dark_background</color>
     <color name="white">#202020</color>
+    <color name="whiteFont">#acabab</color>
     <color name="divider">#808080</color>
     <color name="grey">#acabab</color>
     <color name="grey_background">#313131</color>

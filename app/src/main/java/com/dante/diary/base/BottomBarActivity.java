@@ -7,6 +7,7 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
+import android.view.View;
 
 import com.dante.diary.R;
 import com.dante.diary.follow.TabsFragment;
@@ -32,6 +33,7 @@ public class BottomBarActivity extends BaseActivity implements FragNavController
     @BindView(R.id.bottomBar)
     public BottomBar bottomBar;
     public boolean isBarShown;
+    View rootView;
     private int MAIN = FragNavController.TAB1;
     private boolean isHiding;
     private boolean isShowing;
@@ -135,7 +137,6 @@ public class BottomBarActivity extends BaseActivity implements FragNavController
 
     @Override
     public Fragment getRootFragment(int index) {
-
         switch (index) {
             case DIARIES:
                 return MainDiaryFragment.newInstance(index);

@@ -10,6 +10,7 @@ import android.provider.MediaStore;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 
+import com.blankj.utilcode.utils.FileUtils;
 import com.dante.diary.R;
 import com.dante.diary.utils.UiUtils;
 import com.tbruyelle.rxpermissions.RxPermissions;
@@ -18,6 +19,7 @@ import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.OutputStream;
 
 import rx.android.schedulers.AndroidSchedulers;
@@ -75,7 +77,12 @@ public class PickPictureActivity extends AppCompatActivity {
     }
 
     private void saveToFile(Intent data) {
-        photo = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES), "temp.jpg");
+        String suffix = ".jpg";
+        if (data.getType() != null) {
+            String[] type = data.getType().split("/");
+            suffix = "." + type[1];
+        }
+        photo = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES), "temp" + suffix);
         if (photo.exists()) {
             photo.delete();
         }
@@ -89,15 +96,22 @@ public class PickPictureActivity extends AppCompatActivity {
         } catch (IOException e) {
             e.printStackTrace();
         }
+        if (data.getData() == null) return;
         Log.i(TAG, "saveToFile Uri: " + data.getData().getPath());
         try {
-            Bitmap bitmap = MediaStore.Images.Media.getBitmap(this.getContentResolver(), data.getData());
-            if (bitmap != null) {
-                OutputStream os = new BufferedOutputStream(new FileOutputStream(photo));
-                Log.i(TAG, "saveToFile: scale bitmap " + bitmap.getWidth() + ", " + bitmap.getHeight());
-                bitmap.compress(Bitmap.CompressFormat.JPEG, 100, os);
-                os.close();
+            if (suffix.endsWith("gif")) {
+                InputStream inputStream = getContentResolver().openInputStream(data.getData());
+                FileUtils.writeFileFromIS(photo, inputStream, true);
+            } else {
+                Bitmap bitmap = MediaStore.Images.Media.getBitmap(this.getContentResolver(), data.getData());
+                if (bitmap != null) {
+                    OutputStream os = new BufferedOutputStream(new FileOutputStream(photo));
+                    bitmap.compress(Bitmap.CompressFormat.JPEG, 100, os);
+                    Log.i(TAG, "saveToFile: scale bitmap " + bitmap.getWidth() + ", " + bitmap.getHeight());
+                    os.close();
+                }
             }
+
         } catch (IOException e) {
             Log.e(TAG, "saveToFile: write temp file failed");
             handleResult(RESULT_FAILED);

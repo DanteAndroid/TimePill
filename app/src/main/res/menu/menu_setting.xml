@@ -18,4 +18,8 @@
           android:orderInCategory="3"
           android:title="@string/app_name"
           app:showAsAction="never"/>
+    <item android:id="@+id/hongbao"
+          android:orderInCategory="3"
+          android:title="@string/hongbao"
+          app:showAsAction="never"/>
 </menu>

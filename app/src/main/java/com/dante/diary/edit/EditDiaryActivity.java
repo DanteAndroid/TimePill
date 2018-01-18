@@ -1,13 +1,17 @@
 package com.dante.diary.edit;
 
+import android.Manifest;
 import android.app.AlertDialog;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
 import android.os.Handler;
+import android.provider.MediaStore;
 import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatDelegate;
@@ -37,6 +41,7 @@ import com.dante.diary.base.Constants;
 import com.dante.diary.custom.PickPictureActivity;
 import com.dante.diary.draw.DrawActivity;
 import com.dante.diary.login.LoginManager;
+import com.dante.diary.main.MainActivity;
 import com.dante.diary.model.Diary;
 import com.dante.diary.model.Notebook;
 import com.dante.diary.net.HttpErrorAction;
@@ -45,8 +50,13 @@ import com.dante.diary.utils.ImageProgresser;
 import com.dante.diary.utils.Imager;
 import com.dante.diary.utils.SpUtil;
 import com.dante.diary.utils.UiUtils;
+import com.tbruyelle.rxpermissions.RxPermissions;
 
+import java.io.BufferedOutputStream;
 import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -54,12 +64,14 @@ import java.util.concurrent.ExecutionException;
 
 import butterknife.BindView;
 import rx.Observable;
+import rx.android.schedulers.AndroidSchedulers;
+import rx.schedulers.Schedulers;
 
 import static com.dante.diary.custom.PickPictureActivity.REQUEST_PICK_PICTURE;
 
 public class EditDiaryActivity extends BaseActivity {
-    public static final int DIARY_CONTENT_TEXT_LIMIT = 10;
-    private static final String TAG = "CreateDiaryActivity";
+    public static final int DIARY_CONTENT_TEXT_LIMIT = 5;
+    private static final String TAG = "EditDiaryActivity";
     private static final int REQUEST_DRAW = 2;
     @BindView(R.id.subjectSpinner)
     Spinner subjectSpinner;
@@ -83,13 +95,14 @@ public class EditDiaryActivity extends BaseActivity {
     private String diaryContent;
     private int notebookId;
     private int diaryId;
-    private List<Notebook> notebooks;
     private File photoFile;
     private boolean isEditMode;
     private Diary diary;
     private ArrayList<Notebook> validSubjects = new ArrayList<>();
     private boolean isTopic;
     private File topicPictureFile;
+    private String sharedText;
+    private Uri sharedImageUri;
 
 
     @Override
@@ -117,11 +130,27 @@ public class EditDiaryActivity extends BaseActivity {
                 }
                 getToolbar().setTitle(R.string.edit_diary);
             }
+            handleSendAction();
         }
         fetchTopicPicture();
         fetchSubjects();
         initEditText();
         initTools();
+    }
+
+    private void handleSendAction() {
+        Intent intent = getIntent();
+        String action = intent.getAction();
+        String type = intent.getType();
+        if (Intent.ACTION_SEND.equals(action) && type != null) {
+            if ("text/plain".equals(type)) {
+                sharedText = intent.getStringExtra(Intent.EXTRA_TEXT);
+            } else if (type.startsWith("image/")) {
+                sharedImageUri = intent.getParcelableExtra(Intent.EXTRA_STREAM);
+            }
+        } else {
+            // Handle other intents, such as being started from the home screen
+        }
     }
 
     private void fetchTopicPicture() {
@@ -142,7 +171,6 @@ public class EditDiaryActivity extends BaseActivity {
                 } catch (InterruptedException | ExecutionException e) {
                     e.printStackTrace();
                 }
-                Log.d(TAG, "source: " + isTopic + photoFile.length());
             }).start();
         }
     }
@@ -154,7 +182,6 @@ public class EditDiaryActivity extends BaseActivity {
             useTopicPic.setVisibility(View.GONE);
         }
         photo.setOnClickListener(v -> startActivityForResult(new Intent(getApplicationContext(), PickPictureActivity.class), REQUEST_PICK_PICTURE));
-
         palette.setOnClickListener(v -> {
             KeyboardUtils.hideSoftInput(EditDiaryActivity.this);
             startActivityForResult(new Intent(getApplicationContext(), DrawActivity.class), REQUEST_DRAW);
@@ -166,9 +193,8 @@ public class EditDiaryActivity extends BaseActivity {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == REQUEST_PICK_PICTURE) {
             if (resultCode == RESULT_OK) {
-                Uri uri = data.getData();
                 String path = data.getStringExtra("path");
-                retrievePicture(uri, path);
+                retrievePicture(null, path);
             } else if (resultCode == PickPictureActivity.RESULT_FAILED) {
                 UiUtils.showSnack(photo, getString(R.string.fail_read_pictures));
             }
@@ -189,9 +215,52 @@ public class EditDiaryActivity extends BaseActivity {
                     attachPhoto.setVisibility(View.GONE);
                     photoFile = null;
                 }).show());
-
-        photoFile = new File(path);
+        if (uri == null) {
+            photoFile = new File(path);
+        } else {
+            RxPermissions permissions = new RxPermissions(this);
+            permissions.request(Manifest.permission.WRITE_EXTERNAL_STORAGE)
+                    .subscribeOn(Schedulers.io())
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe(grant -> {
+                        if (grant) {
+                            photoFile = saveFile(uri);
+                        } else {
+                            UiUtils.showSnack(getWindow().getDecorView(), getString(R.string.unable_upload_picture));
+                        }
+                    });
+        }
         Glide.with(this).load(photoFile).diskCacheStrategy(DiskCacheStrategy.NONE).into(attachPhoto);
+    }
+
+    private File saveFile(Uri uri) {
+        File photo = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES), "temp" + ".jpg");
+        if (photo.exists()) {
+            photo.delete();
+        }
+        try {
+            boolean exist = photo.createNewFile();
+            if (!exist) {
+                Log.e(TAG, "saveToFile: can't create file");
+                return null;
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        try {
+            Bitmap bitmap = MediaStore.Images.Media.getBitmap(this.getContentResolver(), uri);
+            if (bitmap != null) {
+                OutputStream os = new BufferedOutputStream(new FileOutputStream(photo));
+                bitmap.compress(Bitmap.CompressFormat.JPEG, 100, os);
+                Log.i(TAG, "saveToFile: scale bitmap " + bitmap.getWidth() + ", " + bitmap.getHeight());
+                os.close();
+            }
+
+        } catch (IOException e) {
+            Log.e(TAG, "saveToFile: write temp file failed");
+            e.printStackTrace();
+        }
+        return photo;
     }
 
     private void fetchDiary() {
@@ -218,12 +287,18 @@ public class EditDiaryActivity extends BaseActivity {
     }
 
     private void initEditText() {
-        String draft = SpUtil.getString("draft");
-        if (!draft.isEmpty()) {
-            content.setText(draft);
+        if (TextUtils.isEmpty(sharedText)) {
+            diaryContent = SpUtil.getString("draft");
+            if (!diaryContent.isEmpty()) {
+                content.setText(diaryContent);
+                content.setSelection(content.getText().length());
+                SpUtil.remove("draft");
+                UiUtils.showSnack(content, getString(R.string.draft_restored));
+            }
+        } else {
+            diaryContent = sharedText;
+            content.setText(diaryContent);
             content.setSelection(content.getText().length());
-            SpUtil.remove("draft");
-            UiUtils.showSnack(content, getString(R.string.draft_restored));
         }
         String[] hints = getResources().getStringArray(R.array.create_diary_hints);
         content.setHint(hints[new Random().nextInt(hints.length)]);
@@ -253,7 +328,7 @@ public class EditDiaryActivity extends BaseActivity {
                 invalidateOptionsMenu();
             }
         });
-
+        invalidateOptionsMenu();
         new Handler().postDelayed(() -> KeyboardUtils.showSoftInput(content), 300);
     }
 
@@ -263,7 +338,6 @@ public class EditDiaryActivity extends BaseActivity {
                 .getMyNotebooks(LoginManager.getMyId())
                 .compose(applySchedulers())
                 .subscribe(notebooks -> {
-                    this.notebooks = notebooks;
                     getBase().save(notebooks);
                     checkValidNotebooks(notebooks);
                     initSubjectSpinner(validSubjects);
@@ -303,6 +377,9 @@ public class EditDiaryActivity extends BaseActivity {
                     SpUtil.remove("draft");
                     setResult(RESULT_OK);
                     supportFinishAfterTransition();
+                    if (sharedImageUri != null || sharedText != null) {
+                        startActivity(new Intent(getApplicationContext(), MainActivity.class));
+                    }
 
                 }, new HttpErrorAction<Throwable>() {
                     @Override
@@ -354,9 +431,11 @@ public class EditDiaryActivity extends BaseActivity {
     @Override
     public boolean onPrepareOptionsMenu(Menu menu) {
         boolean enabled;
+        Log.d(TAG, "onPrepareOptionsMenu: ");
         if (isEditMode && diaryContent != null && diary != null) {
             enabled = (!diaryContent.equals(diary.getContent())) || notebookId != diary.getNotebookId();
         } else {
+
             enabled = !TextUtils.isEmpty(diaryContent);
         }
         if (photoFile != null && photoFile.exists()) {
@@ -367,6 +446,7 @@ public class EditDiaryActivity extends BaseActivity {
         Drawable resIcon = ContextCompat.getDrawable(this, R.drawable.ic_send_white_36px);
         if (!enabled) {
             resIcon.mutate().setColorFilter(Color.LTGRAY, PorterDuff.Mode.SRC_IN);
+
         }
         item.setEnabled(enabled);
         item.setIcon(resIcon);
@@ -388,4 +468,11 @@ public class EditDiaryActivity extends BaseActivity {
         return true;
     }
 
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+//        if (sharedImageUri != null || sharedText != null) {
+//            startActivity(new Intent(getApplicationContext(), MainActivity.class));
+//        }
+    }
 }

@@ -49,7 +49,6 @@ import com.google.gson.Gson;
 import com.tbruyelle.rxpermissions.RxPermissions;
 
 import java.io.File;
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
@@ -301,9 +300,7 @@ public class DiaryListFragment extends RecyclerFragment {
                 .subscribe(diaries -> {
                     log("fetch" + diaries.isEmpty());
                     if (isFromNotebook) {
-                        ArrayList<Diary> orderedDiaries = new ArrayList<>(diaries);
-                        Collections.reverse(orderedDiaries);
-                        diaries = orderedDiaries;
+                        reorderDiaries(diaries);//时间顺序
                         adapter.setEmptyView(R.layout.empty_diary);
                     }
                     if (!diaries.isEmpty()) {
@@ -346,6 +343,15 @@ public class DiaryListFragment extends RecyclerFragment {
                     }
                 });
     }
+
+    private void reorderDiaries(List<Diary> diaries) {
+        Collections.sort(diaries, (o1, o2) -> {
+            if (o1.getCreated() == null || o2.getCreated() == null)
+                return 0;
+            return o1.getCreated().compareTo(o2.getCreated());
+        });
+    }
+
 
     private Observable<List<Diary>> diariesSource() {
         switch (type) {

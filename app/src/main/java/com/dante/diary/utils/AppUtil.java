@@ -24,6 +24,7 @@ import java.util.List;
 import moe.feng.alipay.zerosdk.AlipayZeroSdk;
 
 import static android.content.Context.UI_MODE_SERVICE;
+import static android.content.Intent.ACTION_VIEW;
 import static android.content.Intent.FLAG_ACTIVITY_CLEAR_TOP;
 import static android.content.Intent.FLAG_ACTIVITY_NEW_TASK;
 import static com.dante.diary.base.App.context;
@@ -110,6 +111,11 @@ public class AppUtil {
         } else {
             Toast.makeText(context, R.string.no_explorer_installed, Toast.LENGTH_SHORT).show();
         }
+    }
 
+    public static void openBrowser(Activity activity, String url) {
+        Intent intent = new Intent(ACTION_VIEW);
+        intent.setData(Uri.parse(url));
+        activity.startActivity(intent);
     }
 }

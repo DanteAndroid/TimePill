@@ -311,5 +311,6 @@
     <string name="check">Check</string>
     <string name="no_explorer_installed">No file explorer installed!</string>
     <string name="wechat_not_installed">Wechat not installed</string>
+    <string name="hongbao">AliPayRedPocket</string>
 
 </resources>

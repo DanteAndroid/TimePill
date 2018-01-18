@@ -20,6 +20,7 @@ import android.support.v7.widget.Toolbar;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -60,7 +61,6 @@ import com.dante.diary.utils.UiUtils;
 import com.dante.diary.utils.WrapContentLinearLayoutManager;
 import com.jaychang.st.SimpleText;
 
-import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 
@@ -275,8 +275,8 @@ public class DiaryDetailFragment extends BaseFragment implements SwipeRefreshLay
         commentFragment = BottomDialogFragment.create(R.layout.comment_layout)
                 .with(this)
                 .bindView(v -> {
-                    TextInputLayout textInputLayout = (TextInputLayout) v.findViewById(R.id.commentTextInputLayout);
-                    ImageView commit = (ImageView) v.findViewById(R.id.commit);
+                    TextInputLayout textInputLayout = v.findViewById(R.id.commentTextInputLayout);
+                    ImageView commit = v.findViewById(R.id.commit);
                     EditText commentEt = textInputLayout.getEditText();
                     assert commentEt != null;
                     cacheComment(commentEt);
@@ -303,7 +303,7 @@ public class DiaryDetailFragment extends BaseFragment implements SwipeRefreshLay
         commentFragment = BottomDialogFragment.create(R.layout.comment_layout)
                 .with(this)
                 .bindView(v -> {
-                    TextInputLayout textInputLayout = (TextInputLayout) v.findViewById(R.id.commentTextInputLayout);
+                    TextInputLayout textInputLayout = v.findViewById(R.id.commentTextInputLayout);
                     EditText editText = textInputLayout.getEditText();
                     textInputLayout.setHint(String.format(getString(R.string.reply_to_xxx), userName));
                     cacheComment(editText);
@@ -374,7 +374,7 @@ public class DiaryDetailFragment extends BaseFragment implements SwipeRefreshLay
                     swipeRefresh.setRefreshing(false);
                     inflate(comments);
                     setShareIntent(diary.getContent());
-                    base.save(diary);
+//                    base.save(diary);
 
                 }, throwable -> {
                     swipeRefresh.setRefreshing(false);
@@ -425,7 +425,8 @@ public class DiaryDetailFragment extends BaseFragment implements SwipeRefreshLay
             attachPicture.setVisibility(View.VISIBLE);
             attachPicture.setOnClickListener(v -> {
                 final ProgressBar progressBar = ImageProgresser.attachProgress(attachPicture);
-                Glide.with(this).load(diary.getPhotoUrl()).listener(new RequestListener<String, GlideDrawable>() {
+                Glide.with(this).load(diary.getPhotoUrl()).placeholder(R.drawable.image_place_holder)
+                        .listener(new RequestListener<String, GlideDrawable>() {
                     @Override
                     public boolean onException(Exception e, String model, Target<GlideDrawable> target, boolean isFirstResource) {
                         progressBar.setVisibility(View.GONE);
@@ -440,7 +441,14 @@ public class DiaryDetailFragment extends BaseFragment implements SwipeRefreshLay
                     }
                 }).preload();
             });
-
+            attachPicture.setOnLongClickListener(v -> {
+                Intent intent = new Intent(getActivity().getApplicationContext(), PictureActivity.class);
+                intent.putExtra("isGif", true);
+                intent.putExtra(Constants.URL, diary.getPhotoUrl());
+                startActivity(intent);
+                return true;
+            });
+            Log.d(TAG, "initPicture: " + diary.getPhotoThumbUrl());
             Imager.load(this, diary.getPhotoThumbUrl(), attachPicture);
         }
     }
@@ -531,12 +539,6 @@ public class DiaryDetailFragment extends BaseFragment implements SwipeRefreshLay
                 .compose(applySchedulers())
                 .subscribe(responseBodyResponse -> {
                     UiUtils.showSnack(rootView, R.string.report_success);
-                    try {
-                        String result = responseBodyResponse.body().string();
-                        log("report result " + result);
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
                 });
 
     }
@@ -588,14 +590,9 @@ public class DiaryDetailFragment extends BaseFragment implements SwipeRefreshLay
         LoginManager.getApi().deleteDiary(diaryId)
                 .compose(applySchedulers())
                 .subscribe(responseBodyResponse -> {
-                    try {
-                        log("delete result" + responseBodyResponse.body().string());
-                        UiUtils.showSnack(content, getString(R.string.diary_delete_success));
-                        base.deleteDiary(diaryId);
-                        new Handler().postDelayed(() -> getActivity().onBackPressed(), 400);
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
+                    UiUtils.showSnack(content, getString(R.string.diary_delete_success));
+                    base.deleteDiary(diaryId);
+                    new Handler().postDelayed(() -> getActivity().onBackPressed(), 400);
 
                 }, throwable -> {
                     UiUtils.showSnackLong(content, getString(R.string.diary_delete_failed));

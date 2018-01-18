@@ -11,8 +11,11 @@ import android.support.v4.view.ViewCompat;
 import android.view.View;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.resource.gif.GifDrawable;
+import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.animation.GlideAnimation;
 import com.bumptech.glide.request.target.SimpleTarget;
+import com.bumptech.glide.request.target.Target;
 import com.dante.diary.R;
 import com.dante.diary.base.BaseFragment;
 import com.dante.diary.base.Constants;
@@ -67,10 +70,21 @@ public class PictureFragment extends BaseFragment implements View.OnLongClickLis
     protected void initViews() {
         url = getArguments().getString(Constants.URL);
         isGif = getArguments().getBoolean("isGif", false);
+        log("initviews" + url);
         if (isGif) {
-            Glide.with(this).load(url).asGif().into(imageView);
-            imageView.setDoubleTapEnabled(false);
+            Glide.with(this).load(url).asGif().listener(new RequestListener<String, GifDrawable>() {
+                @Override
+                public boolean onException(Exception e, String model, Target<GifDrawable> target, boolean isFirstResource) {
+                    getActivity().onBackPressed();
+                    return false;
+                }
 
+                @Override
+                public boolean onResourceReady(GifDrawable resource, String model, Target<GifDrawable> target, boolean isFromMemoryCache, boolean isFirstResource) {
+                    return false;
+                }
+            }).into(imageView);
+            imageView.setDoubleTapEnabled(false);
         } else {
             ViewCompat.setTransitionName(imageView, url);
             load(url);
@@ -97,6 +111,7 @@ public class PictureFragment extends BaseFragment implements View.OnLongClickLis
             @Override
             public void onResourceReady(Bitmap b, GlideAnimation<? super Bitmap> arg1) {
                 imageView.setImageBitmap(b);
+
                 startTransition();
                 bitmap = b;
             }

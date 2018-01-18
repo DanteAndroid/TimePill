@@ -18,7 +18,6 @@ import com.dante.diary.model.User;
 import com.dante.diary.net.TimeApi;
 import com.dante.diary.utils.UiUtils;
 
-import java.io.IOException;
 import java.util.List;
 
 import rx.Observable;
@@ -94,11 +93,6 @@ public class FollowListFragment extends RecyclerFragment {
                 .compose(applySchedulers())
                 .subscribe(responseBodyResponse -> {
                     adapter.notifyItemRemoved(position);
-                    try {
-                        log("cancel followed" + responseBodyResponse.body().string());
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
                 }, throwable -> UiUtils.showSnack(rootView, getString(R.string.cancel_followed_failed) + " " + throwable.getMessage()));
     }
 

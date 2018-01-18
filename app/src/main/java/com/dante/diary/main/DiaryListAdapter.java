@@ -24,7 +24,6 @@ public class DiaryListAdapter extends BaseQuickAdapter<Diary, BaseViewHolder> {
 
     public DiaryListAdapter(List<Diary> data) {
         super(R.layout.list_diary_item, data);
-//        setHasStableIds(true);
     }
 
     public DiaryListAdapter(int itemLayoutId, List<Diary> data) {

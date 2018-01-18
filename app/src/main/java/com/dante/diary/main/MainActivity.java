@@ -77,13 +77,9 @@ public class MainActivity extends BottomBarActivity {
         if (getSupportFragmentManager().getBackStackEntryCount() > 0) {
             super.onBackPressed();
         } else {
-            doublePressBackToQuit();
+            super.onBackPressed();
+//            doublePressBackToQuit();
         }
-    }
-
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onTest(EventMessage m) {
-
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
