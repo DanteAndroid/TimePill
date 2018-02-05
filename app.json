@@ -1,9 +1,9 @@
 {
-	"lastest_version": "v1.8.3",
-	"lastest_version_code": 33,
-	"former_version": "v1.8.2",
+	"lastest_version": "v1.8.5",
+	"lastest_version_code": 35,
+	"former_version": "v1.8.3",
  	"forceUpdate": false,
- 	"message": "- 微不足道的贡献\n - 优化代码",
+	"message": "- Gif图支持\n - 优化代码",
 	"share_app_description": "from 时间胶囊：http://www.coolapk.com/apk/com.dante.diary",
 	"apk_url":"https://github.com/DanteAndroid/TimePill/releases/download/v1.8.3/app-armeabi-v7a-release.apk",
 	"announcement":"",
