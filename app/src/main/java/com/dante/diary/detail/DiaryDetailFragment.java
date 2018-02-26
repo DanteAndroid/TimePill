@@ -5,6 +5,7 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.design.widget.FloatingActionButton;
@@ -20,7 +21,6 @@ import android.support.v7.widget.Toolbar;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -49,10 +49,10 @@ import com.dante.diary.interfaces.IOnItemClickListener;
 import com.dante.diary.login.LoginManager;
 import com.dante.diary.model.Comment;
 import com.dante.diary.model.Diary;
+import com.dante.diary.net.HttpErrorAction;
 import com.dante.diary.net.TimeApi;
 import com.dante.diary.utils.DateUtil;
 import com.dante.diary.utils.ImageProgresser;
-import com.dante.diary.utils.Imager;
 import com.dante.diary.utils.Share;
 import com.dante.diary.utils.SpUtil;
 import com.dante.diary.utils.TextChecker;
@@ -61,6 +61,10 @@ import com.dante.diary.utils.UiUtils;
 import com.dante.diary.utils.WrapContentLinearLayoutManager;
 import com.jaychang.st.SimpleText;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 
@@ -109,6 +113,8 @@ public class DiaryDetailFragment extends BaseFragment implements SwipeRefreshLay
     RelativeLayout diaryLayout;
     @BindView(R.id.scrollView)
     NestedScrollView scrollView;
+    @BindView(R.id.isGif)
+    TextView isGif;
     private ShareActionProvider mShareActionProvider;
     private int diaryId;
     private String commentTemp;
@@ -422,11 +428,36 @@ public class DiaryDetailFragment extends BaseFragment implements SwipeRefreshLay
 
     private void initPicture() {
         if (!TextUtils.isEmpty(diary.getPhotoThumbUrl())) {
-            attachPicture.setVisibility(View.VISIBLE);
+            boolean gif = diary.getPhotoUrl().endsWith(".gif");
+            isGif.setVisibility(View.GONE);
+            Glide.with(this).load(diary.getPhotoThumbUrl()).asBitmap().error(R.drawable.error_holder)
+                    .listener(new RequestListener<String, Bitmap>() {
+                        @Override
+                        public boolean onException(Exception e, String model, Target<Bitmap> target, boolean isFirstResource) {
+                            return false;
+                        }
+
+                        @Override
+                        public boolean onResourceReady(Bitmap resource, String model, Target<Bitmap> target, boolean isFromMemoryCache, boolean isFirstResource) {
+                            attachPicture.setVisibility(View.VISIBLE);
+                            if (gif) {
+                                isGif.setVisibility(View.VISIBLE);
+                            }
+                            return false;
+                        }
+                    })
+                    .into(attachPicture);
             attachPicture.setOnClickListener(v -> {
+                if (gif) {
+                    Intent intent = new Intent(getActivity().getApplicationContext(), PictureActivity.class);
+                    intent.putExtra("isGif", true);
+                    intent.putExtra(Constants.URL, diary.getPhotoUrl());
+                    startActivity(intent);
+                    return;
+                }
+
                 final ProgressBar progressBar = ImageProgresser.attachProgress(attachPicture);
-                Glide.with(this).load(diary.getPhotoUrl()).placeholder(R.drawable.image_place_holder)
-                        .listener(new RequestListener<String, GlideDrawable>() {
+                Glide.with(this).load(diary.getPhotoUrl()).listener(new RequestListener<String, GlideDrawable>() {
                     @Override
                     public boolean onException(Exception e, String model, Target<GlideDrawable> target, boolean isFirstResource) {
                         progressBar.setVisibility(View.GONE);
@@ -441,15 +472,6 @@ public class DiaryDetailFragment extends BaseFragment implements SwipeRefreshLay
                     }
                 }).preload();
             });
-            attachPicture.setOnLongClickListener(v -> {
-                Intent intent = new Intent(getActivity().getApplicationContext(), PictureActivity.class);
-                intent.putExtra("isGif", true);
-                intent.putExtra(Constants.URL, diary.getPhotoUrl());
-                startActivity(intent);
-                return true;
-            });
-            Log.d(TAG, "initPicture: " + diary.getPhotoThumbUrl());
-            Imager.load(this, diary.getPhotoThumbUrl(), attachPicture);
         }
     }
 
@@ -590,12 +612,30 @@ public class DiaryDetailFragment extends BaseFragment implements SwipeRefreshLay
         LoginManager.getApi().deleteDiary(diaryId)
                 .compose(applySchedulers())
                 .subscribe(responseBodyResponse -> {
-                    UiUtils.showSnack(content, getString(R.string.diary_delete_success));
-                    base.deleteDiary(diaryId);
-                    new Handler().postDelayed(() -> getActivity().onBackPressed(), 400);
+                    if (responseBodyResponse.errorBody() == null) {
+                        UiUtils.showSnack(content, getString(R.string.diary_delete_success));
+                        base.deleteDiary(diaryId);
+                        new Handler().postDelayed(() -> getActivity().onBackPressed(), 400);
+                        return;
+                    }
+                    try {
+                        String message = responseBodyResponse.errorBody().string();
+                        if (!TextUtils.isEmpty(message)) {
+                            JSONObject jsonObject = new JSONObject(message);
+                            UiUtils.showSnackLong(content, getString(R.string.diary_delete_failed)
+                                    + " " + jsonObject.optString("message"));
 
-                }, throwable -> {
-                    UiUtils.showSnackLong(content, getString(R.string.diary_delete_failed));
+                        }
+
+                    } catch (JSONException | IOException e) {
+                        e.printStackTrace();
+                    }
+                }, new HttpErrorAction<Throwable>() {
+                    @Override
+                    public void call(Throwable throwable) {
+                        super.call(throwable);
+                        UiUtils.showSnackLong(content, getString(R.string.diary_delete_failed) + " " + errorMessage);
+                    }
                 });
     }
 

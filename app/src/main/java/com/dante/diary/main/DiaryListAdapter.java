@@ -47,18 +47,22 @@ public class DiaryListAdapter extends BaseQuickAdapter<Diary, BaseViewHolder> {
         TextView date = helper.getView(R.id.diaryDate);
         TextView name = helper.getView(R.id.userName);
         TextView time = helper.getView(R.id.time);
+        TextView isGif = helper.getView(R.id.isGif);
 
         String picture = item.getPhotoThumbUrl();
-        if (!TextUtils.isEmpty(picture)) {
-            attach.setVisibility(View.VISIBLE);
-            Imager.load(helper.itemView.getContext(), picture, attach);
-        } else {
+        if (TextUtils.isEmpty(picture)) {
             attach.setVisibility(View.GONE);//一定要加，否则会出现图片重复
+            isGif.setVisibility(View.GONE);
+        } else {
+            attach.setVisibility(View.VISIBLE);
+            isGif.setVisibility(picture.endsWith(".gif") ? View.VISIBLE : View.GONE);
+            Imager.load(helper.itemView.getContext(), picture, attach);
         }
         RelativeLayout.LayoutParams timeParams = (RelativeLayout.LayoutParams) time.getLayoutParams();
         if (item.getUser() == null) {
             //没有user对象，则是获取用户的日记列表
             name.setVisibility(View.GONE);
+
             String displayDay = DateUtil.getDisplayDay(item.getCreated());
             date.setText(displayDay);
             date.setVisibility(displayDay.equals(lastDate) || displayDay.equals(DateUtil.getDisplayDay(new Date())) ? View.GONE : View.VISIBLE);

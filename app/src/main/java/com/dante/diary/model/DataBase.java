@@ -7,6 +7,7 @@ import com.avos.avoscloud.AVQuery;
 import com.avos.avoscloud.FindCallback;
 import com.dante.diary.base.Constants;
 import com.dante.diary.interfaces.QueryResultCallback;
+import com.dante.diary.login.LoginManager;
 import com.dante.diary.utils.DateUtil;
 
 import java.util.Date;
@@ -39,7 +40,7 @@ public class DataBase {
         return realm;
     }
 
-    public static void findTimePillUser(int id, QueryResultCallback callback) {
+    public static void findTimePillUser(int id, QueryResultCallback<AVObject> callback) {
         AVQuery<AVObject> query = new AVQuery<>(Constants.TP_USER);
         query.whereEqualTo(Constants.ID, id);
         query.findInBackground(new FindCallback<AVObject>() {
@@ -48,7 +49,22 @@ public class DataBase {
                 if (list == null || list.isEmpty()) {
                     callback.notExist();
                 } else {
-                    callback.onExist();
+                    callback.onExist(list);
+                }
+            }
+        });
+    }
+
+    public static void findTimePills(QueryResultCallback<AVObject> callback) {
+        AVQuery<AVObject> query = new AVQuery<>(Constants.TIME_PILL);
+        query.whereEqualTo(Constants.TP_USER, LoginManager.getMyId());
+        query.findInBackground(new FindCallback<AVObject>() {
+            @Override
+            public void done(List<AVObject> list, AVException e) {
+                if (list == null || list.isEmpty()) {
+                    callback.notExist();
+                } else {
+                    callback.onExist(list);
                 }
             }
         });

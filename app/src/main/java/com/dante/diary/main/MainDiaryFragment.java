@@ -40,6 +40,7 @@ import com.dante.diary.base.RecyclerFragment;
 import com.dante.diary.base.ViewActivity;
 import com.dante.diary.chat.ChatService;
 import com.dante.diary.detail.DiariesViewerActivity;
+import com.dante.diary.detail.PictureActivity;
 import com.dante.diary.edit.EditDiaryActivity;
 import com.dante.diary.edit.EditNotebookActivity;
 import com.dante.diary.login.LoginManager;
@@ -307,8 +308,17 @@ public class MainDiaryFragment extends RecyclerFragment implements OrderedRealmC
     }
 
     private void onPictureClicked(View view, int i) {
-        final ProgressBar progressBar = ImageProgresser.attachProgress(view);
         String url = adapter.getItem(i).getPhotoUrl();
+
+        if (url.endsWith(".gif")) {
+            Intent intent = new Intent(getActivity().getApplicationContext(), PictureActivity.class);
+            intent.putExtra("isGif", true);
+            intent.putExtra(Constants.URL, url);
+            startActivity(intent);
+            return;
+        }
+
+        final ProgressBar progressBar = ImageProgresser.attachProgress(view);
         Glide.with(this).load(url).listener(new RequestListener<String, GlideDrawable>() {
             @Override
             public boolean onException(Exception e, String model, Target<GlideDrawable> target, boolean isFirstResource) {

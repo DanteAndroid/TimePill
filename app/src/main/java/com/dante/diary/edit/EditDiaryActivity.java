@@ -341,7 +341,6 @@ public class EditDiaryActivity extends BaseActivity {
                     getBase().save(notebooks);
                     checkValidNotebooks(notebooks);
                     initSubjectSpinner(validSubjects);
-
                 }, throwable -> UiUtils.showSnackLong(subjectSpinner, getString(R.string.unable_to_fetch_notebooks), R.string.create_notebook, v -> {
                     startActivity(new Intent(getApplicationContext(), EditNotebookActivity.class));
                     finish();

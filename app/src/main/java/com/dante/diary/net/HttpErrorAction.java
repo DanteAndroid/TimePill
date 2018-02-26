@@ -21,6 +21,7 @@ public class HttpErrorAction<T> implements Action1<Throwable> {
     @CallSuper
     @Override
     public void call(Throwable throwable) {
+        throwable.printStackTrace();
         if (throwable instanceof HttpException) {
             HttpException e = (HttpException) throwable;
             try {

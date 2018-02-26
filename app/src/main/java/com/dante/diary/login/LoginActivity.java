@@ -138,7 +138,7 @@ public class LoginActivity extends BaseActivity implements PatternLockViewListen
             }, 400);
             return;
         }
-        slogan = (TextView) findViewById(R.id.slogan);
+        slogan = findViewById(R.id.slogan);
         slogan.animate()
                 .translationY(isLogin ? LOGO_TRANSLATION_Y * 2 / 3 : LOGO_TRANSLATION_Y)
                 .setStartDelay(STARTUP_DELAY)
@@ -149,7 +149,7 @@ public class LoginActivity extends BaseActivity implements PatternLockViewListen
             patternView.animate().alpha(1).setStartDelay(STARTUP_DELAY + 300).start();
             patternView.addPatternLockListener(LoginActivity.this);
         }
-        timePill = (ImageView) findViewById(R.id.timePill);
+        timePill = findViewById(R.id.timePill);
         timePill.animate()
                 .translationY(isLogin ? LOGO_TRANSLATION_Y * 2 / 3 : LOGO_TRANSLATION_Y)
                 .setStartDelay(STARTUP_DELAY)
@@ -434,9 +434,9 @@ public class LoginActivity extends BaseActivity implements PatternLockViewListen
     }
 
     private void loginAVCloud() {
-        DataBase.findTimePillUser(id, new QueryResultCallback() {
+        DataBase.findTimePillUser(id, new QueryResultCallback<AVObject>() {
             @Override
-            public void onExist() {
+            public void onExist(List<AVObject> avObjects) {
 
             }
 

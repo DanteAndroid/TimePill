@@ -58,7 +58,6 @@ public class AboutActivity extends BaseActivity implements View.OnClickListener 
             secretIndex++;
             if (secretIndex == 3) {
                 viewGif();
-
                 secretIndex = 0;
             }
         }

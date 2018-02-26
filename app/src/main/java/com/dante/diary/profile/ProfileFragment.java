@@ -25,6 +25,7 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.avos.avoscloud.AVObject;
 import com.bumptech.glide.Glide;
 import com.dante.diary.R;
 import com.dante.diary.base.App;
@@ -197,9 +198,9 @@ public class ProfileFragment extends BaseFragment {
                 .into(avatar);
 
         if (!LoginManager.isMe(id)) {
-            DataBase.findTimePillUser(id, new QueryResultCallback() {
+            DataBase.findTimePillUser(id, new QueryResultCallback<AVObject>() {
                 @Override
-                public void onExist() {
+                public void onExist(List<AVObject> avObjects) {
                     if (toolbar.getMenu() == null) {
                         toolbar.inflateMenu(R.menu.menu_pm);
                     } else {

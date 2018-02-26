@@ -78,9 +78,19 @@ public class PickPictureActivity extends AppCompatActivity {
 
     private void saveToFile(Intent data) {
         String suffix = ".jpg";
-        if (data.getType() != null) {
-            String[] type = data.getType().split("/");
-            suffix = "." + type[1];
+        if (data.getData() == null) return;
+        String type;
+        if (data.getType() == null) {
+            type = getContentResolver().getType(data.getData());
+        } else {
+            type = data.getType();
+        }
+        if (type != null && type.contains("/")) {
+            suffix = "." + type.split("/")[1];
+        }
+        Log.d(TAG, "saveToFile: " + suffix);
+        if (data.getData().getPath().endsWith(".gif")) {
+            suffix = ".gif";
         }
         photo = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES), "temp" + suffix);
         if (photo.exists()) {
@@ -96,8 +106,6 @@ public class PickPictureActivity extends AppCompatActivity {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        if (data.getData() == null) return;
-        Log.i(TAG, "saveToFile Uri: " + data.getData().getPath());
         try {
             if (suffix.endsWith("gif")) {
                 InputStream inputStream = getContentResolver().openInputStream(data.getData());

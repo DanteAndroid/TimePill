@@ -47,11 +47,11 @@
             android:background="@color/colorPrimary"
             android:lineSpacingMultiplier="1.4"
             android:padding="@dimen/activity_horizontal_margin"
-            android:textColor="@color/white"
+            android:textColor="@color/whiteFont"
             android:textIsSelectable="true"
             android:textSize="16sp"
             tools:alpha="1"
-            tools:text="string/test_diary"/>
+            tools:text="@string/test_diary"/>
 
         <LinearLayout
             android:id="@+id/soundLayout"

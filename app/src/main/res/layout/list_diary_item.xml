@@ -97,19 +97,33 @@
                 android:textColor="@color/secondText"
                 tools:text="@string/test_diary"/>
 
-            <ImageView
-                android:id="@+id/attachPicture"
+            <FrameLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignStart="@+id/content"
-                android:layout_below="@+id/content"
-                android:layout_marginTop="8dp"
-                android:adjustViewBounds="true"
-                android:maxHeight="180dp"
-                android:maxWidth="140dp"
-                android:visibility="gone"
-                tools:src="@mipmap/ic_launcher"
-                tools:visibility="visible"/>
+                android:layout_below="@+id/content">
+
+                <ImageView
+                    android:id="@+id/attachPicture"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:adjustViewBounds="true"
+                    android:maxHeight="180dp"
+                    android:maxWidth="140dp"
+                    android:visibility="gone"
+                    tools:src="@mipmap/ic_launcher"
+                    tools:visibility="visible"/>
+                <TextView
+                    android:id="@+id/isGif"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="right|bottom"
+                    android:background="@color/btg_global_text_blue"
+                    android:padding="3dp"
+                    android:text="GIF"
+                    android:textColor="@color/white" android:visibility="gone"/>
+            </FrameLayout>
 
         </RelativeLayout>
     </LinearLayout>

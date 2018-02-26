@@ -159,7 +159,9 @@ public class NoteBookListFragment extends RecyclerFragment {
     private void showNotebookEditDialog(View view, int position) {
         ViewGroup parent = (ViewGroup) view.getParent().getParent();
         View cover = parent.findViewById(R.id.cover);
-        int id = adapter.getItem(position).getId();
+        Notebook notebook = adapter.getItem(position);
+        if (!LoginManager.isMe(notebook.getUserId())) return;
+        int id = notebook.getId();
 
         ViewCompat.setTransitionName(cover, String.valueOf(id));
         Intent intent = new Intent(getContext().getApplicationContext(), EditNotebookActivity.class);

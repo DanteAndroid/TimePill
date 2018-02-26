@@ -112,10 +112,16 @@
         </LinearLayout>
 
         <TextView
+            android:id="@+id/myTimepill"
+            android:layout_width="match_parent"
+            android:layout_height="32dp"
+            android:gravity="center"
+            android:text="@string/my_timepills"
+            android:textColor="@color/tertiaryText"/>
+        <TextView
             android:id="@+id/timepillIntro"
             android:layout_width="match_parent"
-            android:layout_height="48dp"
-            android:clickable="true"
+            android:layout_height="32dp"
             android:gravity="center"
             android:text="@string/what_is_timepill"
             android:textColor="@color/tertiaryText"/>
