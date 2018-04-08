@@ -1,11 +1,11 @@
 {
-	"lastest_version": "v1.8.9",
-	"lastest_version_code": 39,
-	"former_version": "v1.8.8",
+	"lastest_version": "v1.9.0",
+	"lastest_version_code": 40,
+	"former_version": "v1.8.9",
  	"forceUpdate": true,
-	"message": "- 笔记本添加私密标签\n - 修复夜间模式下的颜色问题",
+ 	"message": "- 夜间模式更黑\n - 空的日记本可删除了",
 	"share_app_description": "from 时间胶囊：http://www.coolapk.com/apk/com.dante.diary",
-	"apk_url":"https://github.com/DanteAndroid/TimePill/releases/download/v1.8.8/app-armeabi-v7a-release.apk",
+	"apk_url":"https://github.com/DanteAndroid/TimePill/releases/download/v1.9.0/app-armeabi-v7a-release.apk",
 	"announcement":"",
   	"egg_url":"http://img.zcool.cn/community/017d26554bd4fe000001bf725e4d59.jpg@1280w_1l_2o_100sh.webp"
 }
