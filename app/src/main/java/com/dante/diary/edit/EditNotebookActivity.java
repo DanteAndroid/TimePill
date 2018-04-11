@@ -19,7 +19,6 @@ import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.transition.Slide;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -127,7 +126,6 @@ public class EditNotebookActivity extends BaseActivity {
 
         if (isEditMode) {
             ViewCompat.setTransitionName(notebookCover, String.valueOf(notebookId));
-            Log.d(TAG, "initCover: " + notebookId);
             Glide.with(this)
                     .load(notebook.getCoverUrl())
                     .asBitmap()
@@ -279,7 +277,6 @@ public class EditNotebookActivity extends BaseActivity {
         }
         data.put(Constants.PRIVACY, isPrivate ? PRIVACY_PRIVATE : PRIVACY_PUBLIC);
         data.put(Constants.EXPIRED, expireDate);
-        Log.d(TAG, "send: " + data.toString());
         source(data).subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(n -> {

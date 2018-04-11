@@ -9,13 +9,13 @@
     <color name="tertiaryText">#808080</color>
 
     <color name="whiteBackground">@color/cardview_dark_background</color>
-    <color name="item_background">@color/cardview_dark_background</color>
+    <color name="item_background">@color/black</color>
     <color name="white">#202020</color>
     <color name="whiteFont">#acabab</color>
     <color name="divider">#808080</color>
     <color name="grey">#acabab</color>
     <color name="grey_background">#313131</color>
-    <color name="bar_background">#1e1e1e</color>
+    <color name="bar_background">#000000</color>
     <color name="greyer">#9e9e9e</color>
 
     <color name="halfTransparent">#66000000</color>

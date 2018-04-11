@@ -39,7 +39,6 @@ public class SearchActivity extends BaseActivity {
         super.initViews(savedInstanceState);
         if (getIntent() != null) {
             notebookId = getIntent().getIntExtra(Constants.ID, 0);
-            Log.d(TAG, "search: " + notebookId);
             notebookSubject = getIntent().getStringExtra(Constants.SUBJECT);
         }
     }

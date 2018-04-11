@@ -624,7 +624,6 @@ public class DiaryDetailFragment extends BaseFragment implements SwipeRefreshLay
                             JSONObject jsonObject = new JSONObject(message);
                             UiUtils.showSnackLong(content, getString(R.string.diary_delete_failed)
                                     + " " + jsonObject.optString("message"));
-
                         }
 
                     } catch (JSONException | IOException e) {

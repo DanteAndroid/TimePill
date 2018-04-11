@@ -14,7 +14,6 @@ import android.support.v4.view.ViewPropertyAnimatorListenerAdapter;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.View;
 import android.view.animation.DecelerateInterpolator;
 import android.view.inputmethod.EditorInfo;
@@ -459,7 +458,6 @@ public class LoginActivity extends BaseActivity implements PatternLockViewListen
     }
 
     private void saveAccount(User user) {
-        Log.d(TAG, "saveAccount: " + user.getId());
         getBase().save(user);
         id = user.getId();
         SpUtil.save(Constants.ACCOUNT, emailAccount);

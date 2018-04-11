@@ -5,7 +5,9 @@ import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v4.view.ViewCompat;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.StaggeredGridLayoutManager;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.MenuInflater;
 import android.view.View;
@@ -13,6 +15,7 @@ import android.view.ViewGroup;
 import android.widget.PopupMenu;
 import android.widget.TextView;
 
+import com.blankj.utilcode.utils.ToastUtils;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.listener.OnItemClickListener;
 import com.dante.diary.R;
@@ -22,7 +25,14 @@ import com.dante.diary.base.ViewActivity;
 import com.dante.diary.edit.EditNotebookActivity;
 import com.dante.diary.login.LoginManager;
 import com.dante.diary.model.Notebook;
+import com.dante.diary.net.HttpErrorAction;
 import com.dante.diary.utils.UiUtils;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.IOException;
+import java.util.Locale;
 
 import butterknife.BindView;
 import io.realm.RealmResults;
@@ -75,17 +85,64 @@ public class NoteBookListFragment extends RecyclerFragment {
 
             @Override
             public void onItemLongClick(BaseQuickAdapter adapter, View view, int position) {
-//                onNotebookLongClicked(view, position);
-                showNotebookEditDialog(view, position);
-
+                onNotebookLongClicked(view, position);
             }
         });
 
     }
 
-    private void onNotebookLongClicked(View view, int index) {
-        Notebook n = adapter.getItem(index);
-        //显示日记本总字数
+    private void onNotebookLongClicked(View view, int position) {
+        Notebook n = adapter.getItem(position);
+//        showNotebookEditDialog(cover, position);
+        new AlertDialog.Builder(getActivity()).setItems(R.array.actions, (dialog, which) -> {
+            if (which == 0) {
+                View cover = view.findViewById(R.id.cover);
+                showNotebookEditDialog(cover, position);
+            } else if (which == 1) {
+                deleteNotebook(view, position, n);
+            }
+        }).show();
+
+    }
+
+    private void deleteNotebook(View view, int position, Notebook n) {
+        new AlertDialog.Builder(getActivity()).setMessage(
+                String.format(Locale.getDefault(), getString(R.string.delete_notebook_hint), n.getSubject()))
+                .setPositiveButton(R.string.delete, (dialog, which) -> {
+                    LoginManager.getApi().deleteNotebook(n.getId())
+                            .compose(applySchedulers())
+                            .subscribe(responseBodyResponse -> {
+                                try {
+                                    String error = responseBodyResponse.errorBody().string();
+                                    if (TextUtils.isEmpty(error)) {
+                                        adapter.remove(position);
+                                        UiUtils.showSnack(barActivity.bottomBar, R.string.delete_notebook_success);
+                                    } else {
+                                        String errorMessage = "";
+                                        try {
+                                            errorMessage = new JSONObject(error).optString("message");
+                                        } catch (JSONException e) {
+                                            e.printStackTrace();
+                                        }
+                                        ToastUtils.showShortToast(getString(R.string.delete_notebook_failed) + " " + errorMessage);
+                                    }
+
+                                } catch (NullPointerException e) {
+                                    ToastUtils.showShortToast(getString(R.string.delete_notebook_success));
+                                    e.printStackTrace();
+                                } catch (IOException e) {
+                                    e.printStackTrace();
+                                }
+                            }, new HttpErrorAction<Throwable>() {
+                                @Override
+                                public void call(Throwable throwable) {
+                                    super.call(throwable);
+                                    ToastUtils.showShortToast(getString(R.string.delete_notebook_failed) + " " + errorMessage);
+                                }
+                            });
+                })
+                .setNegativeButton(R.string.nope, null)
+                .show();
     }
 
     @Override
@@ -94,13 +151,19 @@ public class NoteBookListFragment extends RecyclerFragment {
     }
 
     private void moreClicked(View view, int position) {
+        Notebook n = adapter.getItem(position);
         PopupMenu popup = new PopupMenu(getContext(), view);
         MenuInflater inflater = popup.getMenuInflater();
         inflater.inflate(R.menu.menu_more, popup.getMenu());
         popup.setOnMenuItemClickListener(item -> {
             switch (item.getItemId()) {
                 case R.id.action_edit:
-                    showNotebookEditDialog(view, position);
+                    ViewGroup parent = (ViewGroup) view.getParent().getParent();
+                    View cover = parent.findViewById(R.id.cover);
+                    showNotebookEditDialog(cover, position);
+                    break;
+                case R.id.action_delete:
+                    deleteNotebook(view, position, n);
                     break;
                 default:
                     break;
@@ -156,11 +219,9 @@ public class NoteBookListFragment extends RecyclerFragment {
     }
 
 
-    private void showNotebookEditDialog(View view, int position) {
-        ViewGroup parent = (ViewGroup) view.getParent().getParent();
-        View cover = parent.findViewById(R.id.cover);
+    private void showNotebookEditDialog(View cover, int position) {
         Notebook notebook = adapter.getItem(position);
-        if (!LoginManager.isMe(notebook.getUserId())) return;
+        if (notebook == null || !LoginManager.isMe(notebook.getUserId())) return;
         int id = notebook.getId();
 
         ViewCompat.setTransitionName(cover, String.valueOf(id));
@@ -169,7 +230,6 @@ public class NoteBookListFragment extends RecyclerFragment {
         ActivityOptionsCompat options = ActivityOptionsCompat
                 .makeSceneTransitionAnimation(getActivity(), cover, String.valueOf(id));
         ActivityCompat.startActivity(getContext(), intent, options.toBundle());
-
 
     }
 }

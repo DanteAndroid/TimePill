@@ -21,6 +21,9 @@
     <color name="halfTransparent">#66000000</color>
     <color name="darkTransparent">#ba000000</color>
     <color name="blackOverlay">#66000000</color>
+    <color name="redTransparent">#30d2132f</color>
+    <color name="veryTransparent">#30000000</color>
+
 
     <color name="teal_500">#009687</color>
     <color name="blue_grey_500">#607d8b</color>

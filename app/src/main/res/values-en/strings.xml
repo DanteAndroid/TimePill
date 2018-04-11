@@ -203,7 +203,7 @@
     <string name="input_text">Input text</string>
     <string name="check_old_pattern">Verify old pattern</string>
     <string name="confirm">Confirm</string>
-    <string name="delete">Delete</string>
+    <string name="remove">Remove</string>
     <string name="delete_photo_hint">Are you sure to remove attach picture?</string>
     <string name="draw_exit_message">Are you sure to exit without saving?</string>
     <string name="fill">Fill color</string>
@@ -316,5 +316,12 @@
     <string name="timepill_key_copied_no_share">KEY copied</string>
     <string name="timepills_not_found">Unable to find your timepills</string>
     <string name="my_timepills">My Timpills</string>
+    <string name="private_notebook">Private</string>
+    <string name="expired">Expired</string>
+    <string name="notExpired">Unexpired</string>
+    <string name="delete_notebook_failed">Delete notebook failed</string>
+    <string name="delete_notebook_hint">Are you sure to delete notebook %s ?</string>
+    <string name="delete">Delete</string>
+    <string name="delete_notebook_success">Notebook deleted</string>
 
 </resources>

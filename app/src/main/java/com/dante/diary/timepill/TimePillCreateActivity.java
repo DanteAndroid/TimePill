@@ -235,6 +235,7 @@ public class TimePillCreateActivity extends BaseActivity {
 //                                ToastUtils.showShortToast(R.string.record_start);
                             } else {
                                 UiUtils.showSnack(record, R.string.record_failed);
+                                record.endRecord();
                             }
                         }, throwable -> Log.e(TAG, "error: " + throwable.getMessage()));
                 getCompositeSubscription().add(subscription);

@@ -30,6 +30,9 @@ class NotebookListAdapter extends BaseQuickAdapter<Notebook, BaseViewHolder> {
     protected void convert(BaseViewHolder helper, Notebook item) {
         Context context = helper.itemView.getContext();
         helper.addOnClickListener(R.id.more);
+        helper.getView(R.id.isPrivate).setVisibility(item.isIsPublic() ? View.GONE : View.VISIBLE);
+        helper.getView(R.id.notExpired).setVisibility(item.isExpired() ? View.GONE : View.VISIBLE);
+
         Glide.with(context)
                 .load(item.getCoverUrl())
                 .placeholder(R.drawable.default_cover)
@@ -40,12 +43,13 @@ class NotebookListAdapter extends BaseQuickAdapter<Notebook, BaseViewHolder> {
         helper.setText(R.id.notebookSubject, item.getSubject())
                 .setText(R.id.createdToExpired, String.format("%s ~ %s", item.getCreated(), item.getExpired()));
 
+
         TextView expireState = helper.getView(R.id.expireState);
         if (item.isExpired()) {
-            expireState.setText("已过期");
+            expireState.setText(R.string.expired);
             expireState.setTextColor(ContextCompat.getColor(context, R.color.tertiaryText));
         } else {
-            expireState.setText("未过期");
+            expireState.setText(R.string.notExpired);
             expireState.setTextColor(ContextCompat.getColor(context, R.color.secondText));
         }
 

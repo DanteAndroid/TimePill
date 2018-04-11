@@ -94,7 +94,7 @@
     <string name="delete_diary">删除日记</string>
     <string name="content_copied">内容已复制</string>
     <string name="diary_delete_failed">日记刪除失败</string>
-    <string name="diary_delete_success">日记删除成功</string>
+    <string name="diary_delete_success">日记已删除</string>
     <string name="edit_diary">编辑日记</string>
     <string name="cant_get_diary">无法获得日记内容，请稍后重试</string>
     <string name="diary_update_success">日记已更新</string>
@@ -200,7 +200,8 @@
     <string name="file_name">文件名</string>
     <string name="save">保存</string>
     <string name="cancel">取消</string>
-    <string name="delete">移除</string>
+    <string name="remove">移除</string>
+    <string name="delete">删除</string>
     <string name="delete_photo_hint">确定要移除图片吗？</string>
     <string name="set_short_splash_desc">使用简短的启动动画</string>
     <string name="set_short_splash">简化启动页</string>
@@ -305,4 +306,10 @@
     <string name="timepill_key_copied_no_share">KEY 已复制</string>
     <string name="timepills_not_found">没找到您创建的胶囊，可能因为您使用旧版本创建的</string>
     <string name="my_timepills">我的胶囊</string>
+    <string name="private_notebook">私密</string>
+    <string name="expired">已过期</string>
+    <string name="notExpired">未过期</string>
+    <string name="delete_notebook_failed">删除日记本失败</string>
+    <string name="delete_notebook_hint">确实要删除日记本 %s 吗？</string>
+    <string name="delete_notebook_success">日记本已删除</string>
 </resources>

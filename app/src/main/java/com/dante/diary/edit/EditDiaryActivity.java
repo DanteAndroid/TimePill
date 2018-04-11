@@ -211,7 +211,7 @@ public class EditDiaryActivity extends BaseActivity {
         attachPhoto.setVisibility(View.VISIBLE);
         attachPhoto.setOnClickListener(v -> new AlertDialog.Builder(EditDiaryActivity.this)
                 .setMessage(R.string.delete_photo_hint)
-                .setPositiveButton(R.string.delete, (dialog, which) -> {
+                .setPositiveButton(R.string.remove, (dialog, which) -> {
                     attachPhoto.setVisibility(View.GONE);
                     photoFile = null;
                 }).show());
@@ -409,7 +409,7 @@ public class EditDiaryActivity extends BaseActivity {
             subjects.add(s.getSubject());
         }
 
-        ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, subjects);
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(this, R.layout.spinner_layout, subjects);
         adapter.setDropDownViewResource(R.layout.spinner_subject_dropdown_item);
         subjectSpinner.setAdapter(adapter);
         subjectSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
@@ -430,7 +430,6 @@ public class EditDiaryActivity extends BaseActivity {
     @Override
     public boolean onPrepareOptionsMenu(Menu menu) {
         boolean enabled;
-        Log.d(TAG, "onPrepareOptionsMenu: ");
         if (isEditMode && diaryContent != null && diary != null) {
             enabled = (!diaryContent.equals(diary.getContent())) || notebookId != diary.getNotebookId();
         } else {

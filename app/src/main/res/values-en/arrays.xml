@@ -37,4 +37,8 @@
         <item>Have seen any movies?</item>
         <item>Have seen any animations?</item>
     </string-array>
+    <string-array name="actions">
+        <item>Edit</item>
+        <item>Delete</item>
+    </string-array>
 </resources>

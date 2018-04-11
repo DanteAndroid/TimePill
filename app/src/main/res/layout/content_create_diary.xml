@@ -20,7 +20,8 @@
         android:layout_marginBottom="8dp"
         android:alpha="0"
         android:background="@color/item_background"
-        android:minHeight="34dp">
+        android:minHeight="42dp"
+        tools:alpha="1">
     </Spinner>
 
     <FrameLayout

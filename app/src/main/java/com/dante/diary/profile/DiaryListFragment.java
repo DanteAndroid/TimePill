@@ -8,7 +8,6 @@ import android.os.Environment;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -213,7 +212,6 @@ public class DiaryListFragment extends RecyclerFragment {
     }
 
     private void onDiaryClicked(View view, int i) {
-        Log.d(TAG, "onDiaryClicked: " + type);
         if (isFromNotebook) {
             Intent intent = new Intent(getContext().getApplicationContext(), DiariesViewerActivity.class);
             intent.putExtra(Constants.POSITION, i);

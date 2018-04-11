@@ -309,7 +309,7 @@ public class MainDiaryFragment extends RecyclerFragment implements OrderedRealmC
 
     private void onPictureClicked(View view, int i) {
         String url = adapter.getItem(i).getPhotoUrl();
-
+        if (url == null) return;
         if (url.endsWith(".gif")) {
             Intent intent = new Intent(getActivity().getApplicationContext(), PictureActivity.class);
             intent.putExtra("isGif", true);

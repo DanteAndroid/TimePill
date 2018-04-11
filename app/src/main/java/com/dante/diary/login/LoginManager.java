@@ -2,7 +2,6 @@ package com.dante.diary.login;
 
 import android.app.AlertDialog;
 import android.content.Context;
-import android.util.Log;
 
 import com.blankj.utilcode.utils.AppUtils;
 import com.dante.diary.R;
@@ -20,7 +19,6 @@ import java.util.List;
 import rx.Observable;
 
 import static com.blankj.utilcode.utils.Utils.getContext;
-import static com.bumptech.glide.gifdecoder.GifHeaderParser.TAG;
 
 /**
  * Created by yons on 17/3/6.
@@ -71,7 +69,6 @@ public class LoginManager {
 
     public static User getMyUser() {
         User me = DataBase.getInstance().findUser(getMyId());
-        Log.d(TAG, "get Account: " + me.getId());
         return me;
     }
 

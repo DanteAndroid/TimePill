@@ -130,6 +130,8 @@ public class RecordHelper {
     }
 
     public static double playAudio(File audioFile) {
+        if (audioFile == null) return 0;
+
         MediaPlayer mediaPlayer = new MediaPlayer();
         double seconds = 0;
         FileInputStream fis = null;

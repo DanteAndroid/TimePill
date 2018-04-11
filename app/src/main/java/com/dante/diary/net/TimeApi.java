@@ -105,6 +105,9 @@ public interface TimeApi {
     @POST("notebooks")
     Observable<Notebook> createNotebook(@FieldMap Map<String, Object> data);
 
+    @DELETE("notebooks/{id}")
+    Observable<Response<ResponseBody>> deleteNotebook(@Path("id") int notebookId);
+
     @Multipart
     @POST("notebooks/{id}/cover")
     Observable<Notebook> setNotebookCover(@Path("id") int notebookId, @Part MultipartBody.Part file);

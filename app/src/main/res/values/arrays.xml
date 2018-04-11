@@ -37,4 +37,8 @@
         <item>最近有看什么电影吗</item>
         <item>最近有看什么动漫吗</item>
     </string-array>
+    <string-array name="actions">
+        <item>编辑</item>
+        <item>删除</item>
+    </string-array>
 </resources>

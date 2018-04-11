@@ -8,7 +8,7 @@ buildscript {
         google()
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:3.0.1'
+        classpath 'com.android.tools.build:gradle:3.1.0'
         classpath 'com.jakewharton.hugo:hugo-plugin:1.2.1' //打印log的工具
         classpath "io.realm:realm-gradle-plugin:4.3.1"
         classpath 'me.tatarka:gradle-retrolambda:3.6.0'

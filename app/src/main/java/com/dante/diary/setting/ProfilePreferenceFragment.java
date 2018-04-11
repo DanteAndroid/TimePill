@@ -8,7 +8,6 @@ import android.preference.EditTextPreference;
 import android.preference.ListPreference;
 import android.preference.Preference;
 import android.preference.PreferenceFragment;
-import android.util.Log;
 import android.view.MenuItem;
 import android.view.WindowManager;
 import android.widget.Button;
@@ -190,7 +189,6 @@ public class ProfilePreferenceFragment extends PreferenceFragment {
             });
 
             loadAvatar(user);
-            Log.d(TAG, "initUserInfo: " + user.toString());
             intro.setSummary(introduction);
             intro.setOnPreferenceClickListener(preference -> {
                 AlertDialog dialog = new AlertDialog.Builder(getActivity())
@@ -199,10 +197,10 @@ public class ProfilePreferenceFragment extends PreferenceFragment {
                 dialog.getWindow().setSoftInputMode(
                         WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE);
                 dialog.show();
-                EditText editText = (EditText) dialog.findViewById(R.id.introEt);
+                EditText editText = dialog.findViewById(R.id.introEt);
                 editText.setText(introduction);
                 editText.setSelection(editText.getText().length());
-                Button commit = (Button) dialog.findViewById(R.id.commit);
+                Button commit = dialog.findViewById(R.id.commit);
                 commit.setOnClickListener(v -> {
 //                        if (editText.getText().length() == 0) {
 //                            UiUtils.showSnack(commit, R.string.say_more);
