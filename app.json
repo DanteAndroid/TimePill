@@ -3,7 +3,7 @@
 	"lastest_version_code": 43,
 	"former_version": "v1.9.1",
 	"forceUpdate": false,
-	"message": "- 夜间模式写日记的字体颜色修复\n - 空的日记本可删除了",
+	"message": "- 添加历史消息\n - 空的日记本可删除了",
 	"share_app_description": "from 时间胶囊：http://www.coolapk.com/apk/com.dante.diary",
 	"apk_url":"https://github.com/DanteAndroid/TimePill/releases/download/v1.9.0/app-armeabi-v7a-release.apk",
 	"announcement":"回复一些用户的反馈：\n\n1.日记评论是可以举报的，长按评论即可；\n2.日记本过期时间是创建的时候设置的；\n3.最新版本1.9.0可以删除空的日记本。",
