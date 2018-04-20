@@ -1,7 +1,7 @@
 {
-	"lastest_version": "v1.9.1",
-	"lastest_version_code": 41,
-	"former_version": "v1.9.0",
+	"lastest_version": "v1.9.3",
+	"lastest_version_code": 43,
+	"former_version": "v1.9.1",
 	"forceUpdate": false,
 	"message": "- 夜间模式写日记的字体颜色修复\n - 空的日记本可删除了",
 	"share_app_description": "from 时间胶囊：http://www.coolapk.com/apk/com.dante.diary",
