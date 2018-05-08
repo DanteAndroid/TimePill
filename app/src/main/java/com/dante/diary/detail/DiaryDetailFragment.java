@@ -245,7 +245,7 @@ public class DiaryDetailFragment extends BaseFragment implements SwipeRefreshLay
         toolbar.inflateMenu(R.menu.menu_detail);
         toolbar.setOnClickListener(v -> scrollView.smoothScrollTo(0, 0));
         fetch();
-
+        log("initdata" + getActivity().getLocalClassName());
     }
 
     @Override
@@ -408,6 +408,8 @@ public class DiaryDetailFragment extends BaseFragment implements SwipeRefreshLay
         }
         getActivity().supportPostponeEnterTransition();
         diaryDate.setText(DateUtil.getDisplayDay(diary.getCreated()));
+//        content.setColor(ContextCompat.getColor(getActivity(), R.color.primaryText));
+//        content.setTextSize(ConvertUtils.sp2px(16));
         content.setText(diary.getContent());
         diaryLayout.setOnLongClickListener(this);
         content.setOnLongClickListener(this);

@@ -60,6 +60,10 @@ public class PictureFragment extends BaseFragment implements View.OnLongClickLis
         return fragment;
     }
 
+    @Override
+    protected int initStatusBarColor() {
+        return android.R.color.transparent;
+    }
 
     @Override
     protected int initLayoutId() {

@@ -6,8 +6,8 @@ import android.app.PendingIntent;
 import android.app.TaskStackBuilder;
 import android.content.Context;
 import android.content.Intent;
+import android.support.v4.app.NotificationCompat;
 
-import com.avos.avospush.notification.NotificationCompat;
 import com.dante.diary.R;
 import com.dante.diary.chat.ConversationActivity;
 import com.dante.diary.utils.SpUtil;
@@ -22,6 +22,7 @@ import static com.dante.diary.base.App.context;
  */
 public class NotificationUtils {
 
+    private static final String CHANNEL_ID = "CHANNEL_ID";
     /**
      * tag list，用来标记是否应该展示 Notification
      * 比如已经在聊天页面了，实际就不应该再弹出 notification
@@ -54,10 +55,9 @@ public class NotificationUtils {
 
     public static void showNotification(int mId, String title, String content, Intent intent) {
         NotificationCompat.Builder mBuilder =
-                new NotificationCompat.Builder(context)
+                new NotificationCompat.Builder(context, CHANNEL_ID)
                         .setSmallIcon(R.drawable.notification_icon)
                         .setAutoCancel(true)
-
                         .setContentTitle(title)
                         .setContentText(content);
 
@@ -78,6 +78,8 @@ public class NotificationUtils {
         NotificationManager mNotificationManager =
                 (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
         // mId allows you to update the notification later on.
-        mNotificationManager.notify(mId, mBuilder.build());
+        if (mNotificationManager != null) {
+            mNotificationManager.notify(mId, mBuilder.build());
+        }
     }
 }

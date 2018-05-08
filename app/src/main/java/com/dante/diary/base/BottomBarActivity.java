@@ -118,7 +118,7 @@ public class BottomBarActivity extends BaseActivity implements FragNavController
             }
         });
         bottomBar.setOnTabReselectListener(tabId -> {
-            controller.clearStack();
+//            controller.clearStack();
 //            scrollToTop();
         });
     }

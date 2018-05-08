@@ -1,6 +1,5 @@
 package com.dante.diary.notification;
 
-import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.view.View;
@@ -11,7 +10,7 @@ import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.listener.OnItemClickListener;
 import com.dante.diary.R;
 import com.dante.diary.base.RecyclerFragment;
-import com.dante.diary.detail.DiaryDetailFragment;
+import com.dante.diary.base.ViewActivity;
 import com.dante.diary.interfaces.IOnItemClickListener;
 import com.dante.diary.login.LoginManager;
 import com.dante.diary.model.TipResult;
@@ -60,8 +59,8 @@ public class NotificationListFragment extends RecyclerFragment implements IOnIte
 //                }
 //            }
         });
-            fab.setImageResource(R.drawable.ic_done_all_white_36dp);
-            fab.setOnClickListener(v -> readAllDone());
+        fab.setImageResource(R.drawable.ic_done_all_white_36dp);
+        fab.setOnClickListener(v -> readAllDone());
     }
 
     @Override
@@ -118,12 +117,17 @@ public class NotificationListFragment extends RecyclerFragment implements IOnIte
     protected void fetch() {
         changeRefresh(true);
 
-        LoginManager.getApi().getTips().compose(applySchedulers())
+        LoginManager.getApi().getTips()
+                .zipWith(LoginManager.getApi().getTipsHistory(), (t1, t2) -> {
+                    t1.addAll(t2);
+                    return t1;
+                })
+                .compose(applySchedulers())
                 .subscribe(tipResults -> {
-                    if (tipResults.isEmpty()) {
-                        fab.hide();
-                    } else {
-                        fab.show();
+                    for (int i = 0; i < tipResults.size(); i++) {
+                        if (tipResults.get(i).read == 0) {
+                            fab.show();
+                        }
                     }
                     adapter.setNewData(tipResults);
                     changeRefresh(false);
@@ -134,20 +138,19 @@ public class NotificationListFragment extends RecyclerFragment implements IOnIte
     }
 
     private void onNotificationClicked(View view, int i) {
-        TextView n = (TextView) view.findViewById(R.id.notification);
-        n.setTextColor(ContextCompat.getColor(getContext(), R.color.tertiaryText));
-
+        TextView n = view.findViewById(R.id.notification);
         TipResult notification = adapter.getItem(i);
-        int type = adapter.getItem(i).getItemType();
+        if (getActivity() == null || notification == null) return;
+        n.setTextColor(ContextCompat.getColor(getActivity(), R.color.tertiaryText));
+        int type = notification.getItemType();
         if (type == TipResult.TYPE_FOLLOW) {
             goProfile(notification.content.getFollowUser().getId());
-
         } else if (type == TipResult.TYPE_COMMENT) {
-            Fragment fragment = DiaryDetailFragment.newInstance(notification.content.getDairyId(),
-                    notification.content.getCommentId());
-            add(fragment);
+            ViewActivity.viewDiary(getActivity(), notification.content.getDairyId());
+//            Fragment fragment = DiaryDetailFragment.newInstance(notification.content.getDairyId(),
+//                    notification.content.getCommentId());
+//            add(fragment);
         }
-
         readDone(notification.id);
     }
 

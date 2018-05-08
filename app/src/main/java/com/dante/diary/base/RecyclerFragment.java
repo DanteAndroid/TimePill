@@ -29,6 +29,7 @@ public abstract class RecyclerFragment extends BaseFragment implements SwipeRefr
     @BindView(R.id.fab)
     public FloatingActionButton fab;
 
+
     @Override
     protected int initLayoutId() {
         return R.layout.fragment_recycler;

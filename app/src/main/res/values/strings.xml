@@ -67,7 +67,7 @@
     <string name="privacy_public">大家可见</string>
     <string name="privacy_property">可见性</string>
     <string name="create_notebook">创建日记本</string>
-    <string name="expire_time">过期时间：%s</string>
+    <string name="expire_time">过期时间：</string>
     <string name="fail_to_create_notebook">创建日记本失败</string>
     <string name="edit_notebook">编辑日记本</string>
     <string name="update_success">更新成功</string>
@@ -312,4 +312,10 @@
     <string name="delete_notebook_failed">删除日记本失败</string>
     <string name="delete_notebook_hint">确实要删除日记本 %s 吗？</string>
     <string name="delete_notebook_success">日记本已删除</string>
+    <string name="privacy">隐私性：</string>
+    <string name="a_month">一个月</string>
+    <string name="half_year">半年</string>
+    <string name="a_year">一年</string>
+    <string name="custom">自定义</string>
+    <string name="three_month">三个月</string>
 </resources>

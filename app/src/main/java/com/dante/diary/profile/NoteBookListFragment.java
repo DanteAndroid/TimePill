@@ -117,6 +117,7 @@ public class NoteBookListFragment extends RecyclerFragment {
                                     if (TextUtils.isEmpty(error)) {
                                         adapter.remove(position);
                                         UiUtils.showSnack(barActivity.bottomBar, R.string.delete_notebook_success);
+                                        onRefresh();
                                     } else {
                                         String errorMessage = "";
                                         try {
@@ -129,6 +130,7 @@ public class NoteBookListFragment extends RecyclerFragment {
 
                                 } catch (NullPointerException e) {
                                     ToastUtils.showShortToast(getString(R.string.delete_notebook_success));
+                                    onRefresh();
                                     e.printStackTrace();
                                 } catch (IOException e) {
                                     e.printStackTrace();

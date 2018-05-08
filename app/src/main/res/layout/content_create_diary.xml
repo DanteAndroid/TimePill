@@ -38,6 +38,7 @@
             android:hint="@string/create_diary_hint"
             android:lineSpacingMultiplier="1.2"
             android:padding="6dp"
+            android:textColor="@color/primaryText"
             android:textColorHint="@color/tertiaryText"
         />
 
@@ -65,6 +66,7 @@
             android:layout_height="wrap_content"
             android:background="?attr/selectableItemBackgroundBorderless"
             android:clickable="true"
+            android:focusable="true"
             android:paddingBottom="8dp"
             android:paddingTop="8dp"
             android:visibility="gone"
@@ -77,6 +79,7 @@
             android:layout_height="wrap_content"
             android:background="?attr/selectableItemBackgroundBorderless"
             android:clickable="true"
+            android:focusable="true"
             android:paddingBottom="8dp"
             android:paddingTop="8dp"
             app:srcCompat="@drawable/ic_insert_photo_black_24px"/>
@@ -87,6 +90,7 @@
             android:layout_height="wrap_content"
             android:background="?attr/selectableItemBackgroundBorderless"
             android:clickable="true"
+            android:focusable="true"
             android:paddingBottom="8dp"
             android:paddingTop="8dp"
             app:srcCompat="@drawable/ic_brush_black_24px"/>
@@ -100,6 +104,7 @@
             android:checked="true"
             android:gravity="end|center_vertical"
             android:text="@string/use_topic_pic"
+            android:textColor="@color/secondText"
             android:visibility="gone"/>
     </LinearLayout>
 

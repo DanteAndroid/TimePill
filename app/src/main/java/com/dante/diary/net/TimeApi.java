@@ -128,6 +128,9 @@ public interface TimeApi {
     @GET("tip")
     Observable<List<TipResult>> getTips();
 
+    @GET("tip/history")
+    Observable<List<TipResult>> getTipsHistory();
+
     @POST("tip/read/{ids}")
     Observable<Response<ResponseBody>> tipsRead(@Path("ids") String ids);
 

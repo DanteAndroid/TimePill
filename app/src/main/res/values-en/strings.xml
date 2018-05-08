@@ -48,7 +48,7 @@
     <string name="edit_diary">Edit this diary</string>
     <string name="edit_notebook">Edit this notebook</string>
     <string name="email_not_install">No email client found</string>
-    <string name="expire_time">Expire time: %s</string>
+    <string name="expire_time">Expire time:</string>
     <string name="fail_read_pictures">Failed to read pictures</string>
     <string name="fail_to_create_notebook">Failed to create notebook</string>
     <string name="fail_to_upload_avatar">Failed to update avatar</string>
@@ -323,5 +323,11 @@
     <string name="delete_notebook_hint">Are you sure to delete notebook %s ?</string>
     <string name="delete">Delete</string>
     <string name="delete_notebook_success">Notebook deleted</string>
+    <string name="privacy">Privacy:</string>
+    <string name="a_month">A month</string>
+    <string name="half_year">Half of year</string>
+    <string name="a_year">A year</string>
+    <string name="custom">Custom</string>
+    <string name="three_month">Three month</string>
 
 </resources>

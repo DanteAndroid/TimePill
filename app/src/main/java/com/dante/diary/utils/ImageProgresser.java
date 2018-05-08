@@ -18,7 +18,7 @@ public class ImageProgresser {
      * 给 ImageView 上层添加一个相对布局
      * 然后在此相对布局中心加上 Progressbar
      *
-     * @param view 需要在中间位置添加 Progress 的view
+     * @param view 需要在中间添加 Progress 的view
      * @return 该 ProgressBar，可以用于加载后的隐藏与再次显示
      */
     @NonNull

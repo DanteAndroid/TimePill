@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.AppBarLayout;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.transition.Fade;
@@ -46,6 +47,16 @@ public abstract class BaseFragment extends Fragment {
         }
     }
 
+    public void setStatusBarColor(int colorRes) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            if (getActivity() != null) {
+                if (getActivity().getWindow() == null) return;
+                getActivity().getWindow().setStatusBarColor(
+                        ContextCompat.getColor(getActivity(), colorRes));
+            }
+        }
+    }
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -58,6 +69,15 @@ public abstract class BaseFragment extends Fragment {
         return rootView;
     }
 
+    protected int initStatusBarColor() {
+        return R.color.colorPrimaryDark;
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        setStatusBarColor(initStatusBarColor());
+    }
 
     @TargetApi(Build.VERSION_CODES.LOLLIPOP)
     protected void setAnimations() {
@@ -118,7 +138,7 @@ public abstract class BaseFragment extends Fragment {
     }
 
     public void initAppBar() {
-        toolbar = (Toolbar) getView().findViewById(R.id.toolbar);
+        toolbar = getView().findViewById(R.id.toolbar);
         log("initAppBar");
         if (getActivity() != null && null != toolbar) {
             log("initAppBar set");

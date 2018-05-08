@@ -38,6 +38,9 @@ public class NotificationListAdapter extends BaseMultiItemQuickAdapter<TipResult
     protected void convert(BaseViewHolder helper, TipResult item) {
         helper.addOnClickListener(R.id.done);
         TextView notification = helper.getView(R.id.notification);
+        notification.setTextColor(ContextCompat.getColor(helper.itemView.getContext(),
+                item.read == 1 ? R.color.tertiaryText : R.color.primaryText));
+
         switch (helper.getItemViewType()) {
             case TipResult.TYPE_COMMENT:
                 String user = item.content.getCommentUser().getName();

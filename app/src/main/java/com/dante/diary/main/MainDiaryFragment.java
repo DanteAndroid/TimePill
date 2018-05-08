@@ -119,7 +119,12 @@ public class MainDiaryFragment extends RecyclerFragment implements OrderedRealmC
         return R.layout.fragment_diary_main;
     }
 
-//    @Override
+    @Override
+    protected int initStatusBarColor() {
+        return android.R.color.transparent;
+    }
+
+    //    @Override
 //    protected void setAnimations() {
 //        setReturnTransition(initTransitions());
 //        setReenterTransition(new Slide(Gravity.RIGHT));
@@ -131,11 +136,11 @@ public class MainDiaryFragment extends RecyclerFragment implements OrderedRealmC
     @Override
     public void onStart() {
         super.onStart();
-        log(" onStart...");
         if (topic == null) {
             appBar.setExpanded(false);
         }
     }
+
 
     @Override
     protected void initViews() {

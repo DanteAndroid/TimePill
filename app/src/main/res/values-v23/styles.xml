@@ -6,15 +6,14 @@
         <item name="android:windowContentTransitions">true</item>
         <item name="android:windowDrawsSystemBarBackgrounds">true</item>
         <!--<item name="android:windowTranslucentStatus">true</item>-->
-        <item name="android:statusBarColor">@android:color/transparent</item>
     </style>
-
 
     <style name="AppTheme.NoActionBar.Placeholder">
         <item name="android:windowBackground">@drawable/holder_logo</item>
     </style>
 
     <style name="AppTheme.NoActionBar.Default">
+        <item name="android:windowTranslucentStatus">false</item>
         <item name="android:statusBarColor">@color/colorPrimaryDark</item>
     </style>
 

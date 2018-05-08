@@ -84,6 +84,15 @@ public class DateUtil {
         return calendar.getTime();
     }
 
+    public static Date nextMonthsOfToday(int month) {
+        Date today = new Date();
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(today);
+        calendar.add(Calendar.MONTH, month);
+        calendar.add(Calendar.DAY_OF_MONTH, -1);
+        return calendar.getTime();
+    }
+
     public static Date nextWeekDateOfToday() {
         Date today = new Date();
         Calendar calendar = Calendar.getInstance();

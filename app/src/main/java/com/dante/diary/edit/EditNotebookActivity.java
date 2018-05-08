@@ -1,5 +1,7 @@
 package com.dante.diary.edit;
 
+import android.app.DatePickerDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Color;
@@ -10,21 +12,26 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.Nullable;
+import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.TextInputEditText;
 import android.support.design.widget.TextInputLayout;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewCompat;
 import android.support.v7.app.AppCompatDelegate;
+import android.support.v7.widget.Toolbar;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.transition.Slide;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.CalendarView;
 import android.widget.ImageView;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
 import android.widget.Switch;
 import android.widget.TextView;
 
@@ -44,9 +51,12 @@ import com.dante.diary.utils.DateUtil;
 import com.dante.diary.utils.UiUtils;
 
 import java.io.File;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
 
 import butterknife.BindView;
+import butterknife.ButterKnife;
 import rx.Observable;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
@@ -67,7 +77,7 @@ public class EditNotebookActivity extends BaseActivity {
     TextInputLayout descWrapper;
     @BindView(R.id.expire)
     TextView expire;
-    @BindView(R.id.expireCalendar)
+    //    @BindView(R.id.expireCalendar)
     CalendarView expireCalendar;
     @BindView(R.id.privacy)
     Switch privacy;
@@ -78,6 +88,24 @@ public class EditNotebookActivity extends BaseActivity {
     int notebookId;
     @BindView(R.id.notebookCover)
     ImageView notebookCover;
+    @BindView(R.id.month)
+    RadioButton month;
+    @BindView(R.id.halfYear)
+    RadioButton halfYear;
+    @BindView(R.id.aYear)
+    RadioButton aYear;
+    @BindView(R.id.custom)
+    RadioButton custom;
+    @BindView(R.id.expireTimeGroup)
+    RadioGroup expireTimeGroup;
+    @BindView(R.id.toolbar)
+    Toolbar toolbar;
+    @BindView(R.id.appBar)
+    AppBarLayout appBar;
+    @BindView(R.id.visibility)
+    TextView visibility;
+    @BindView(R.id.noteBookExpireTime)
+    TextView noteBookExpireTime;
     //    @BindView(R.id.calendarScrollView)
 //    ScrollView calendarScrollView;
     private boolean isEditMode;
@@ -86,6 +114,7 @@ public class EditNotebookActivity extends BaseActivity {
     private String expireDate;
     private boolean notebookChanged;
     private boolean coverChanged;
+    private DatePickerDialog pickerDialog;
 
     @Override
     protected int initLayoutId() {
@@ -104,7 +133,7 @@ public class EditNotebookActivity extends BaseActivity {
             notebookId = getIntent().getIntExtra(Constants.ID, 0);
             notebook = getBase().findNotebook(notebookId);
             if (notebook == null) {
-                UiUtils.showSnack(expireCalendar, R.string.unable_to_find_notebook);
+                UiUtils.showSnack(notebookCover, R.string.unable_to_find_notebook);
                 return;
             }
             isEditMode = notebookId > 0;
@@ -119,6 +148,57 @@ public class EditNotebookActivity extends BaseActivity {
             isPrivate = !isChecked;
             notifyNotebookChanged();
         });
+    }
+
+    private void initExpireTimeGroup() {
+
+        custom.setOnCheckedChangeListener((buttonView, isChecked) -> {
+            if (isChecked) {
+                showPicker();
+            }
+        });
+        expireTimeGroup.setOnCheckedChangeListener((group, checkedId) -> {
+            switch (checkedId) {
+                case R.id.month:
+                    expireDate = DateUtil.getDisplayDay(DateUtil.nextMonthDateOfToday());
+                    Log.d(TAG, "initExpireTimeGroup: checked");
+                    break;
+                case R.id.halfYear:
+                    expireDate = DateUtil.getDisplayDay(DateUtil.nextMonthsOfToday(6));
+                    break;
+                case R.id.aYear:
+                    expireDate = DateUtil.getDisplayDay(DateUtil.nextMonthsOfToday(12));
+                    break;
+                case R.id.custom:
+                    showPicker();
+                    break;
+                default:
+                    expireDate = DateUtil.getDisplayDay(DateUtil.nextMonthDateOfToday());
+                    break;
+            }
+        });
+    }
+
+    private void showPicker() {
+        if (pickerDialog == null) {
+            Date date = DateUtil.nextMonthDateOfToday();
+            Calendar calendar = Calendar.getInstance();
+            calendar.setTime(date);
+            pickerDialog = new DatePickerDialog(
+                    EditNotebookActivity.this, (view, year, month, dayOfMonth) -> {
+                expireDate = year + "-" + (++month) + "-" + dayOfMonth;
+                custom.setText(expireDate);
+            },
+                    calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH));
+
+            pickerDialog.setButton(DialogInterface.BUTTON_NEGATIVE, getString(R.string.cancel), (dialog, which) -> {
+                if (which == DialogInterface.BUTTON_NEGATIVE) {
+                    expireTimeGroup.check(R.id.month);
+                    custom.setText(R.string.custom);
+                }
+            });
+        }
+        pickerDialog.show();
     }
 
     private void initCover() {
@@ -189,17 +269,18 @@ public class EditNotebookActivity extends BaseActivity {
 
     private void initCalendar() {
         expireDate = DateUtil.getDisplayDay(DateUtil.nextMonthDateOfToday());
-        expire.setText(String.format(getString(R.string.expire_time),
-                isEditMode ? notebook.getExpired() : expireDate));
         if (isEditMode) {
-            expireCalendar.setVisibility(View.GONE);
+            expireTimeGroup.setVisibility(View.GONE);
+            noteBookExpireTime.setVisibility(View.VISIBLE);
+            noteBookExpireTime.setText(notebook.getExpired());
         } else {
-            expireCalendar.setMinDate(DateUtil.nextMonthDateOfToday().getTime());
-            expireCalendar.setDate(DateUtil.nextMonthDateOfToday().getTime());
-            expireCalendar.setOnDateChangeListener((view, year, month, dayOfMonth) -> {
-                expireDate = year + "-" + (++month) + "-" + dayOfMonth;
-                expire.setText(String.format(getString(R.string.expire_time), expireDate));
-            });
+            initExpireTimeGroup();
+//            expireCalendar.setMinDate(DateUtil.nextMonthDateOfToday().getTime());
+//            expireCalendar.setDate(DateUtil.nextMonthDateOfToday().getTime());
+//            expireCalendar.setOnDateChangeListener((view, year, month, dayOfMonth) -> {
+//                expireDate = year + "-" + (++month) + "-" + dayOfMonth;
+//                expire.setText(String.format(getString(R.string.expire_time), expireDate));
+//            });
         }
     }
 
@@ -281,12 +362,12 @@ public class EditNotebookActivity extends BaseActivity {
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(n -> {
                     if (isEditMode) {
-                        UiUtils.showSnack(expireCalendar, R.string.update_success);
+                        UiUtils.showSnack(notebookCover, R.string.update_success);
                     } else {
                         notebook = n;
                         notebookId = n.getId();
                         String s = String.format(getString(R.string.create_notebook_success), notebookSubject);
-                        UiUtils.showSnack(expireCalendar, s);
+                        UiUtils.showSnack(notebookCover, s);
                     }
                     setResult(RESULT_OK);
                     new Handler().postDelayed(() -> {
@@ -302,9 +383,9 @@ public class EditNotebookActivity extends BaseActivity {
                         super.call(throwable);
                         if (!TextUtils.isEmpty(errorMessage)) {
                             if (isEditMode) {
-                                UiUtils.showSnack(expireCalendar, String.format(getString(R.string.update_failed) + " ", errorMessage));
+                                UiUtils.showSnack(notebookCover, String.format(getString(R.string.update_failed) + " ", errorMessage));
                             } else {
-                                UiUtils.showSnack(expireCalendar, getString(R.string.fail_to_create_notebook) + " " + errorMessage);
+                                UiUtils.showSnack(notebookCover, getString(R.string.fail_to_create_notebook) + " " + errorMessage);
                             }
                         }
                     }
@@ -348,5 +429,12 @@ public class EditNotebookActivity extends BaseActivity {
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_send, menu);
         return true;
+    }
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        // TODO: add setContentView(...) invocation
+        ButterKnife.bind(this);
     }
 }

@@ -25,6 +25,7 @@
             android:theme="@style/ViewerTheme.TransNav"/>
         <activity
             android:name=".detail.DiariesViewerActivity"
+            android:theme="@style/AppTheme.NoActionBar.Default"
             android:windowSoftInputMode="adjustResize"/>
         <activity
             android:name=".edit.EditNotebookActivity"
