@@ -27,7 +27,6 @@ public class NetService {
     private static Retrofit retrofit;
 
     private static OkHttpClient.Builder client = new OkHttpClient.Builder();
-
     private static Retrofit.Builder builder;
 
     private static TimeApi api;
