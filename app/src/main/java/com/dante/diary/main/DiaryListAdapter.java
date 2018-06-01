@@ -62,7 +62,6 @@ public class DiaryListAdapter extends BaseQuickAdapter<Diary, BaseViewHolder> {
         if (item.getUser() == null) {
             //没有user对象，则是获取用户的日记列表
             name.setVisibility(View.GONE);
-
             String displayDay = DateUtil.getDisplayDay(item.getCreated());
             date.setText(displayDay);
             date.setVisibility(displayDay.equals(lastDate) || displayDay.equals(DateUtil.getDisplayDay(new Date())) ? View.GONE : View.VISIBLE);

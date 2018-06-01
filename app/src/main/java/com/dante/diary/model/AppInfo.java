@@ -37,6 +37,7 @@ public class AppInfo {
     private String shareApp;
     @SerializedName("egg_url")
     private String eggUrl;
+
     private String announcement;
 
     public String getVersion() {

@@ -35,7 +35,6 @@ public class NetService {
 
 
     private static <T> T createService(Class<T> serviceClass) {
-
         return createService(serviceClass, null, null);
     }
 

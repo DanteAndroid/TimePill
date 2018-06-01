@@ -7,6 +7,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.preference.CheckBoxPreference;
+import android.preference.ListPreference;
 import android.preference.Preference;
 import android.preference.PreferenceFragment;
 import android.preference.SwitchPreference;
@@ -66,12 +67,14 @@ public class SettingFragment extends PreferenceFragment implements Preference.On
     public static final String HAS_PATTERN_LOCK = "pattern_lock";
     public static final String PATTERN_LOCK_PSW = "pattern_lock_psw";
     public static final String AUTO_NIGHT_MODE = "auto_night_mode";
+    public static final String CACHE_STRATEGY = "cache_strategy";
     private static final long DURATION = 300;
     private Preference clearCache;
     private Preference feedback;
     private SwitchPreference night;
     private CheckBoxPreference my;
     private SwitchPreference patternLock;
+    private ListPreference cacheStrategy;
     private Preference about;
 
     private View rootView;
@@ -94,6 +97,7 @@ public class SettingFragment extends PreferenceFragment implements Preference.On
         my = (CheckBoxPreference) findPreference(MY_HOME);
         shortSplash = (CheckBoxPreference) findPreference(SHORT_SPLASH);
         about = findPreference(ABOUT);
+
 
         night.setOnPreferenceChangeListener((preference, newValue) -> {
             if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
@@ -171,8 +175,8 @@ public class SettingFragment extends PreferenceFragment implements Preference.On
                     patternLock.setChecked(hasPassword);
                 })
                 .bindView(v -> {
-                    PatternLockView patternLockView = (PatternLockView) v.findViewById(R.id.pattern_lock);
-                    TextView textView = (TextView) v.findViewById(R.id.title);
+                    PatternLockView patternLockView = v.findViewById(R.id.pattern_lock);
+                    TextView textView = v.findViewById(R.id.title);
                     if (removePassword) {
                         textView.setText(title);
                     }
@@ -313,10 +317,10 @@ public class SettingFragment extends PreferenceFragment implements Preference.On
         dialog.getWindow().setSoftInputMode(
                 WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE);
         dialog.show();
-        EditText editText = (EditText) dialog.findViewById(R.id.introEt);
+        EditText editText = dialog.findViewById(R.id.introEt);
         editText.setHint(R.string.feedback_hint);
         editText.setSelection(editText.getText().length());
-        Button commit = (Button) dialog.findViewById(R.id.commit);
+        Button commit = dialog.findViewById(R.id.commit);
         commit.setOnClickListener(v -> {
             if (editText.getText().length() < 5) {
                 UiUtils.showSnack(commit, R.string.say_more);

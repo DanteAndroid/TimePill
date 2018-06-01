@@ -19,7 +19,7 @@
         android:layout_height="wrap_content"
         android:layout_marginLeft="@dimen/activity_horizontal_margin"
         android:layout_toRightOf="@+id/avatar"
-        android:textColor="@color/primaryText"
+        android:textColor="@color/btg_global_text_blue"
         android:textSize="16sp"
         tools:text="用户张小二"/>
 

@@ -26,6 +26,7 @@ import android.widget.TextView;
 
 import com.andrognito.patternlockview.PatternLockView;
 import com.andrognito.patternlockview.listener.PatternLockViewListener;
+import com.avos.avoscloud.AVInstallation;
 import com.avos.avoscloud.AVObject;
 import com.blankj.utilcode.utils.KeyboardUtils;
 import com.dante.diary.R;
@@ -446,6 +447,9 @@ public class LoginActivity extends BaseActivity implements PatternLockViewListen
                 user.saveEventually();
             }
         });
+
+        String installationId = AVInstallation.getCurrentInstallation().getInstallationId();
+
     }
 
     private void eraseMemory() {

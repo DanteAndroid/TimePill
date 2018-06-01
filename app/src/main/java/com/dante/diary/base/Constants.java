@@ -49,4 +49,5 @@ public class Constants {
     public static final String TOPIC_PICTURE = "topic_pic";
     public static final String KEYWORD = "keyword";
     public static final String IS_NEW_USER = "is_new_user";
+    public static final String CHANNEL_ID = "dante_channel";
 }

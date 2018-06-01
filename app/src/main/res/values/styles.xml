@@ -15,7 +15,7 @@
         <item name="windowNoTitle">true</item>
         <item name="android:windowBackground">@color/whiteBackground</item>
     </style>
-
+    <style name="AppTheme.NoActionBar.Default"/>
     <style name="ViewerTheme.TransNav.Placeholder">
         <item name="android:windowBackground">@drawable/holder_logo</item>
     </style>

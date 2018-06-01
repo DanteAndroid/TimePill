@@ -1,7 +1,10 @@
 package com.dante.diary.profile;
 
 
+import android.animation.Animator;
+import android.animation.AnimatorListenerAdapter;
 import android.content.Intent;
+import android.content.res.ColorStateList;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.design.internal.NavigationMenu;
@@ -20,6 +23,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.DecelerateInterpolator;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -158,12 +162,8 @@ public class ProfileFragment extends BaseFragment {
                 .compose(applySchedulers())
                 .subscribe(responseBodyResponse -> {
                     changeFollowState(true);
-                    try {
-                        log("" + responseBodyResponse.body().string());
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                });
+                    UiUtils.showSnack(rootView, getString(R.string.follow_success));
+                }, Throwable::printStackTrace);
         compositeSubscription.add(subscription);
     }
 
@@ -173,19 +173,38 @@ public class ProfileFragment extends BaseFragment {
                 .subscribe(responseBodyResponse -> {
                     changeFollowState(false);
                     UiUtils.showSnack(rootView, getString(R.string.unfollow_success));
-                });
+                }, Throwable::printStackTrace);
         compositeSubscription.add(subscription);
     }
 
     private void changeFollowState(boolean hasFollow) {
         if (hasFollow) {
-            fab.hide();
-            followState.setText("已关注");
-            followState.setVisibility(View.VISIBLE);
-            followState.setOnClickListener(v -> unFollow());
+            fab.animate().scaleX(0.2f).scaleY(0.2f).setDuration(150).setInterpolator(new DecelerateInterpolator())
+                    .setListener(new AnimatorListenerAdapter() {
+                        @Override
+                        public void onAnimationEnd(Animator animation) {
+                            super.onAnimationEnd(animation);
+                            fab.setOnClickListener(v -> unFollow());
+                            fab.setImageResource(R.drawable.ic_done_white_24dp);
+                            fab.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.colorPrimaryLight)));
+                            fab.animate().scaleX(1f).scaleY(1f).setDuration(250).start();
+                        }
+                    }).start();
+
+
         } else {
-            followState.setText("关注");
-            followState.setOnClickListener(v -> follow());
+            fab.animate().scaleX(0.2f).scaleY(0.2f).setDuration(150).setInterpolator(new DecelerateInterpolator())
+                    .setListener(new AnimatorListenerAdapter() {
+                        @Override
+                        public void onAnimationEnd(Animator animation) {
+                            super.onAnimationEnd(animation);
+                            fab.setImageResource(R.drawable.ic_favorite_white_24dp);
+                            fab.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.colorAccent)));
+                            fab.setOnClickListener(v -> follow());
+                            fab.animate().scaleX(1f).scaleY(1f).setDuration(250).start();
+                        }
+                    }).start();
+
         }
 
     }
@@ -240,7 +259,7 @@ public class ProfileFragment extends BaseFragment {
                 }
             }
 
-        } else if (!hasFollow) {
+        } else {
             fab.show();
         }
         startPostponedEnterTransition();
@@ -279,14 +298,17 @@ public class ProfileFragment extends BaseFragment {
                     try {
                         String result = responseBodyResponse.body().string();
                         hasFollow = !TextUtils.isEmpty(result);
-                        changeFollowState(hasFollow);
+                        if (hasFollow) {
+                            fab.setImageResource(R.drawable.ic_done_white_24dp);
+                            fab.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.colorPrimaryLight)));
+                            fab.setOnClickListener(v -> unFollow());
+                        }
                         loadProfile();
 
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
                 }, throwable -> {
-                    fab.show();
                     changeFollowState(false);
                     loadProfile();
 

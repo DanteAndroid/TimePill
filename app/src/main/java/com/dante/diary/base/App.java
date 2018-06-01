@@ -6,11 +6,13 @@ import android.content.Context;
 import android.os.StrictMode;
 
 import com.avos.avoscloud.AVOSCloud;
+import com.avos.avoscloud.PushService;
 import com.avos.avoscloud.im.v2.AVIMMessageManager;
 import com.avos.avoscloud.im.v2.messages.AVIMTextMessage;
 import com.blankj.utilcode.utils.Utils;
 import com.bugtags.library.Bugtags;
 import com.dante.diary.chat.PMMessageHandler;
+import com.dante.diary.login.LoginActivity;
 
 import io.realm.Realm;
 
@@ -39,9 +41,12 @@ public class App extends Application {
         isRunning = true;
 //        refWatcher = LeakCanary.install(this);
         Bugtags.start(BUGTAGS_APP_KEY, this, Bugtags.BTGInvocationEventNone);
+        PushService.setDefaultChannelId(context, Constants.CHANNEL_ID);
         AVOSCloud.initialize(this, LEAN_APP_ID, LEAN_APP_KEY);
 //        AVOSCloud.setDebugLogEnabled(BuildConfig.DEBUG);
         AVIMMessageManager.registerMessageHandler(AVIMTextMessage.class, new PMMessageHandler());
+        // 设置默认打开的 Activity
+        PushService.setDefaultPushCallback(this, LoginActivity.class);
         Realm.init(this);
         Utils.init(this);
         StrictMode.VmPolicy.Builder builder = new StrictMode.VmPolicy.Builder();

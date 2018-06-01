@@ -79,6 +79,7 @@ public class Updater {
             return;
         }
 
+        if (context.isFinishing()) return;
         context.runOnUiThread(() -> new AlertDialog.Builder(context)
                 .setMessage(appInfo.getAnnouncement())
                 .setPositiveButton(R.string.got_it,
