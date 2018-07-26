@@ -10,8 +10,8 @@ android {
         applicationId "com.dante.diary"
         minSdkVersion 19
         targetSdkVersion 27
-        versionCode 48
-        versionName "1.9.8"
+        versionCode 49
+        versionName "1.9.9"
         vectorDrawables.useSupportLibrary = true
         multiDexEnabled true
         manifestPlaceholders = [

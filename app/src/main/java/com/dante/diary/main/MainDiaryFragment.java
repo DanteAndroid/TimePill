@@ -288,7 +288,7 @@ public class MainDiaryFragment extends RecyclerFragment implements OrderedRealmC
             public void onAnimationEnd(Animator animation) {
                 isHiding = false;
             }
-        }).setDuration(300).start();
+        }).setDuration(250).start();
         isHiding = true;
     }
 

@@ -23,7 +23,6 @@ import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.transition.Slide;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -161,7 +160,6 @@ public class EditNotebookActivity extends BaseActivity {
             switch (checkedId) {
                 case R.id.month:
                     expireDate = DateUtil.getDisplayDay(DateUtil.nextMonthDateOfToday());
-                    Log.d(TAG, "initExpireTimeGroup: checked");
                     break;
                 case R.id.halfYear:
                     expireDate = DateUtil.getDisplayDay(DateUtil.nextMonthsOfToday(6));

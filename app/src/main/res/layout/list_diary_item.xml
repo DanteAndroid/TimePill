@@ -43,9 +43,8 @@
                 android:layout_height="22dp"
                 android:layout_below="@+id/userName"
                 android:layout_marginTop="8dp"
-
                 android:gravity="center"
-                android:textColor="@color/secondText"
+                android:textColor="@color/tertiaryText"
                 android:textSize="16sp"
                 tools:text="《This is diary title》"/>
 
@@ -86,7 +85,7 @@
                 android:layout_below="@+id/notebookSubject"
                 android:layout_marginTop="8dp"
                 android:ellipsize="end"
-                android:lineSpacingMultiplier="1.2"
+                android:lineSpacingMultiplier="1.1"
                 android:maxHeight="128dp"
                 android:maxLines="5"
                 android:textColor="@color/secondText"
