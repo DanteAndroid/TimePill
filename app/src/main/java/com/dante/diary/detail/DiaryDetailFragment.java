@@ -119,7 +119,6 @@ public class DiaryDetailFragment extends BaseFragment implements SwipeRefreshLay
     private int diaryId;
     private String commentTemp;
     private BottomDialogFragment commentFragment;
-    private long start;
 
     public DiaryDetailFragment() {
         // Required empty public constructor
@@ -209,15 +208,12 @@ public class DiaryDetailFragment extends BaseFragment implements SwipeRefreshLay
                 comment(comment.getUserId(), comment.getUser().getName());
             }
         });
-        scrollView.setOnScrollChangeListener(new NestedScrollView.OnScrollChangeListener() {
-            @Override
-            public void onScrollChange(NestedScrollView v, int scrollX, int scrollY, int oldScrollX, int oldScrollY) {
-                int dy = scrollY - oldScrollY;
-                if (dy > 5) {
-                    fab.hide();
-                } else if (dy < -5) {
-                    fab.show();
-                }
+        scrollView.setOnScrollChangeListener((NestedScrollView.OnScrollChangeListener) (v, scrollX, scrollY, oldScrollX, oldScrollY) -> {
+            int dy = scrollY - oldScrollY;
+            if (dy > 5) {
+                fab.hide();
+            } else if (dy < -5) {
+                fab.show();
             }
         });
     }
@@ -245,7 +241,6 @@ public class DiaryDetailFragment extends BaseFragment implements SwipeRefreshLay
         toolbar.inflateMenu(R.menu.menu_detail);
         toolbar.setOnClickListener(v -> scrollView.smoothScrollTo(0, 0));
         fetch();
-        log("initdata" + getActivity().getLocalClassName());
     }
 
     @Override
@@ -294,11 +289,6 @@ public class DiaryDetailFragment extends BaseFragment implements SwipeRefreshLay
                             post(comment, 0);
                         }
                     });
-                }).listenDismiss(dialog -> {
-                    if (!TextUtils.isEmpty(commentTemp)) {
-                        UiUtils.showSnack(rootView, getString(R.string.content_saved_as_draft));
-                    }
-
                 });
         commentFragment.show();
 
@@ -331,11 +321,6 @@ public class DiaryDetailFragment extends BaseFragment implements SwipeRefreshLay
                             }
                         }
                     });
-                }).listenDismiss(dialog -> {
-                    if (!TextUtils.isEmpty(commentTemp)) {
-                        UiUtils.showSnack(rootView, getString(R.string.content_saved_as_draft));
-                    }
-
                 });
         commentFragment.show();
 
@@ -429,6 +414,7 @@ public class DiaryDetailFragment extends BaseFragment implements SwipeRefreshLay
     }
 
     private void initPicture() {
+        if (diary == null) return;
         if (!TextUtils.isEmpty(diary.getPhotoThumbUrl())) {
             boolean gif = diary.getPhotoUrl().endsWith(".gif");
             isGif.setVisibility(View.GONE);
@@ -450,6 +436,7 @@ public class DiaryDetailFragment extends BaseFragment implements SwipeRefreshLay
                     })
                     .into(attachPicture);
             attachPicture.setOnClickListener(v -> {
+                if (diary == null) return;
                 if (gif) {
                     Intent intent = new Intent(getActivity().getApplicationContext(), PictureActivity.class);
                     intent.putExtra("isGif", true);
