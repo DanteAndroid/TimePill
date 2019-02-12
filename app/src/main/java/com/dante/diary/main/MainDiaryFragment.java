@@ -50,7 +50,6 @@ import com.dante.diary.net.HttpErrorAction;
 import com.dante.diary.setting.SettingActivity;
 import com.dante.diary.setting.SettingFragment;
 import com.dante.diary.timepill.TimePillActivity;
-import com.dante.diary.utils.AppUtil;
 import com.dante.diary.utils.ImageProgresser;
 import com.dante.diary.utils.Imager;
 import com.dante.diary.utils.SpUtil;
@@ -532,11 +531,12 @@ public class MainDiaryFragment extends RecyclerFragment implements OrderedRealmC
             }
         } else if (id == R.id.time_pill) {
             startActivity(new Intent(getActivity(), TimePillActivity.class));
-        } else if (id == R.id.donate) {
-            AppUtil.donate(getActivity());
-        } else if (id == R.id.hongbao) {
-            AppUtil.openBrowser(getActivity(), Constants.ALI_PAY_HONGBAO);
         }
+//        else if (id == R.id.donate) {
+//            AppUtil.donate(getActivity());
+//        } else if (id == R.id.hongbao) {
+//            AppUtil.openBrowser(getActivity(), Constants.ALI_PAY_HONGBAO);
+//        }
         return true;
     }
 

@@ -436,7 +436,7 @@ public class DiaryDetailFragment extends BaseFragment implements SwipeRefreshLay
                     })
                     .into(attachPicture);
             attachPicture.setOnClickListener(v -> {
-                if (diary == null) return;
+                if (diary == null || getActivity() == null) return;
                 if (gif) {
                     Intent intent = new Intent(getActivity().getApplicationContext(), PictureActivity.class);
                     intent.putExtra("isGif", true);

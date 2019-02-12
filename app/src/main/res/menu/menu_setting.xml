@@ -10,16 +10,16 @@
           android:orderInCategory="1"
           android:title="@string/night_mode"
           app:showAsAction="never"/>
-    <item android:id="@+id/donate"
-          android:orderInCategory="2"
-          android:title="@string/donate"
-          app:showAsAction="never"/>
+    <!--<item android:id="@+id/donate"-->
+    <!--android:orderInCategory="2"-->
+    <!--android:title="@string/donate"-->
+    <!--app:showAsAction="never"/>-->
     <item android:id="@+id/time_pill"
           android:orderInCategory="3"
           android:title="@string/app_name"
           app:showAsAction="never"/>
-    <item android:id="@+id/hongbao"
-          android:orderInCategory="4"
-          android:title="@string/hongbao"
-          app:showAsAction="never"/>
+    <!--<item android:id="@+id/hongbao"-->
+    <!--android:orderInCategory="4"-->
+    <!--android:title="@string/hongbao"-->
+    <!--app:showAsAction="never"/>-->
 </menu>
