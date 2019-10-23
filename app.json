@@ -1,11 +1,11 @@
 {
-	"lastest_version": "v2.0",
+	"lastest_version": "v2.2",
 	"lastest_version_code": 50,
-	"former_version": "v1.9.8",
-	"forceUpdate": true,
-	"message": "- 修复夜间模式回复颜色\n - 修复bugs",
+	"former_version": "v2.0",
+	"forceUpdate": false,
+	"message": "- 修复夜间模式\n - 修复bug",
 	"share_app_description": "from 时间胶囊：http://www.coolapk.com/apk/com.dante.diary",
-	"apk_url":"https://github.com/DanteAndroid/TimePill/releases/download/v2.0/app-armeabi-v7a-release.apk",
+	"apk_url":"https://github.com/DanteAndroid/TimePill/releases/download/v2.2/app-armeabi-v7a-release.apk",
 	"announcement":"关于私信：\n\n1.同样使用『时间胶囊』客户端的用户才看得到对方的小信封图标 \n2.只有点击私信也就是小信封那个图标才能私信",
   	"egg_url":"http://img.zcool.cn/community/017d26554bd4fe000001bf725e4d59.jpg@1280w_1l_2o_100sh.webp"
 }
