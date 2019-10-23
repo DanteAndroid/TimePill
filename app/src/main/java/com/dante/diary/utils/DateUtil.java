@@ -1,6 +1,5 @@
 package com.dante.diary.utils;
 
-import android.support.annotation.NonNull;
 import android.util.Log;
 
 import com.blankj.utilcode.utils.TimeUtils;
@@ -10,6 +9,8 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
+
+import androidx.annotation.NonNull;
 
 /**
  * deals with string work like copy, parse.

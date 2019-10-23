@@ -38,13 +38,12 @@
         tools:text="共 13 条评论"
         tools:visibility="gone"/>
 
-    <android.support.v7.widget.RecyclerView
+    <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/commentsList"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:visibility="gone"
-        tools:listitem="@layout/list_comment_item">
-    </android.support.v7.widget.RecyclerView>
+        tools:listitem="@layout/list_comment_item"></androidx.recyclerview.widget.RecyclerView>
 
 
 </LinearLayout>

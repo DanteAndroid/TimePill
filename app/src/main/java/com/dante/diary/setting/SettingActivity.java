@@ -2,11 +2,12 @@ package com.dante.diary.setting;
 
 
 import android.os.Bundle;
-import android.support.annotation.Nullable;
 import android.view.MenuItem;
 
 import com.dante.diary.R;
 import com.dante.diary.base.BaseActivity;
+
+import androidx.annotation.Nullable;
 
 
 public class SettingActivity extends BaseActivity {

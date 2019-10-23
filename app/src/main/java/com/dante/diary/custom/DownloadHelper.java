@@ -8,7 +8,6 @@ import android.content.IntentFilter;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Environment;
-import android.support.v4.content.FileProvider;
 import android.text.TextUtils;
 import android.util.Log;
 import android.webkit.MimeTypeMap;
@@ -20,12 +19,14 @@ import com.dante.diary.base.App;
 
 import java.io.File;
 
-import static com.bumptech.glide.gifdecoder.GifHeaderParser.TAG;
+import androidx.core.content.FileProvider;
+
 
 /**
  * Download and install apk file.
  */
 public class DownloadHelper {
+    private static final String TAG = "DownloadHelper";
     private BroadcastReceiver receiver;
     private String url;
     private String apkName;

@@ -5,12 +5,6 @@ import android.animation.AnimatorListenerAdapter;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
-import android.support.annotation.Nullable;
-import android.support.design.widget.TextInputEditText;
-import android.support.design.widget.TextInputLayout;
-import android.support.v4.view.ViewCompat;
-import android.support.v4.view.ViewPropertyAnimatorCompat;
-import android.support.v4.view.ViewPropertyAnimatorListenerAdapter;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
@@ -37,21 +31,29 @@ import com.dante.diary.interfaces.QueryResultCallback;
 import com.dante.diary.main.MainActivity;
 import com.dante.diary.model.DataBase;
 import com.dante.diary.model.User;
+import com.dante.diary.net.API;
 import com.dante.diary.net.HttpErrorAction;
 import com.dante.diary.setting.SettingFragment;
+import com.dante.diary.utils.AppUtil;
 import com.dante.diary.utils.DateUtil;
 import com.dante.diary.utils.SpUtil;
 import com.dante.diary.utils.UiUtils;
+import com.google.android.material.textfield.TextInputEditText;
+import com.google.android.material.textfield.TextInputLayout;
 
 import java.util.Date;
 import java.util.List;
 
+import androidx.annotation.Nullable;
+import androidx.core.view.ViewCompat;
+import androidx.core.view.ViewPropertyAnimatorCompat;
+import androidx.core.view.ViewPropertyAnimatorListenerAdapter;
 import butterknife.BindView;
 import top.wefor.circularanim.CircularAnim;
 
 public class LoginActivity extends BaseActivity implements PatternLockViewListener {
     public static final int STARTUP_DELAY = 400;
-    public static final int ANIM_DURATION = 1200;
+    public static final int ANIM_DURATION = 1000;
     public static final int ITEM_DELAY = 300;
     private static final String TAG = "LoginActivity";
     @BindView(R.id.account)
@@ -68,6 +70,8 @@ public class LoginActivity extends BaseActivity implements PatternLockViewListen
     Button login;
     @BindView(R.id.register)
     Button register;
+    @BindView(R.id.getBackPassword)
+    TextView getBackPassword;
     @BindView(R.id.container)
     LinearLayout container;
     @BindView(R.id.timePill)
@@ -90,7 +94,7 @@ public class LoginActivity extends BaseActivity implements PatternLockViewListen
     TextInputLayout nameWrapper;
     @BindView(R.id.pattern_lock)
     PatternLockView patternView;
-    private int LOGO_TRANSLATION_Y = -600;
+    private int LOGO_TRANSLATION_Y = -700;
     private String nickName;
     private String password;
     private int id;
@@ -201,6 +205,12 @@ public class LoginActivity extends BaseActivity implements PatternLockViewListen
         password = SpUtil.getString(Constants.PASSWORD);
         accountEt.setText(emailAccount);
         pswEt.setText(password);
+        getBackPassword.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                AppUtil.openBrowser(LoginActivity.this, API.RESET_PASSWORD);
+            }
+        });
         login.setOnClickListener(v -> {
             moveSlogan();
             CircularAnim.show(reveal).triggerView(login).duration(300).go(() -> {

@@ -1,6 +1,5 @@
 package com.dante.diary.notification;
 
-import android.support.v4.content.ContextCompat;
 import android.widget.TextView;
 
 import com.chad.library.adapter.base.BaseMultiItemQuickAdapter;
@@ -11,6 +10,8 @@ import com.dante.diary.model.TipResult;
 import com.jaychang.st.SimpleText;
 
 import java.util.List;
+
+import androidx.core.content.ContextCompat;
 
 /**
  * Created by yons on 17/3/17.

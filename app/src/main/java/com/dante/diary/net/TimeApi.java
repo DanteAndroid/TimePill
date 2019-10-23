@@ -1,7 +1,5 @@
 package com.dante.diary.net;
 
-import android.support.annotation.Nullable;
-
 import com.dante.diary.model.Comment;
 import com.dante.diary.model.Diary;
 import com.dante.diary.model.Notebook;
@@ -11,6 +9,7 @@ import com.dante.diary.model.User;
 import java.util.List;
 import java.util.Map;
 
+import androidx.annotation.Nullable;
 import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
 import okhttp3.ResponseBody;

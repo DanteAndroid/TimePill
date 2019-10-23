@@ -2,20 +2,19 @@ package com.dante.diary.utils;
 
 import android.app.Activity;
 import android.app.Dialog;
-import android.support.design.widget.Snackbar;
 import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 
 import com.dante.diary.R;
+import com.google.android.material.snackbar.Snackbar;
 
-import static com.bumptech.glide.gifdecoder.GifHeaderParser.TAG;
 
 /**
  * Util to show hint such as snackBar or dialog.
  */
 public class UiUtils {
-
+    private static final String TAG = "UiUtils";
     public static void showSnack(View rootView, int textId) {
         if (null != rootView) {
             Snackbar.make(rootView, textId, Snackbar.LENGTH_SHORT).show();
@@ -68,7 +67,7 @@ public class UiUtils {
         Dialog dialog = new Dialog(activity);
         dialog.setContentView(R.layout.intro_detail);
         dialog.show();
-        TextView textView = (TextView) dialog.findViewById(R.id.introduction);
+        TextView textView = dialog.findViewById(R.id.introduction);
         textView.setOnClickListener(v1 -> dialog.dismiss());
         textView.setText(text);
     }

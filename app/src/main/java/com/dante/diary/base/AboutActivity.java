@@ -2,7 +2,6 @@ package com.dante.diary.base;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -15,6 +14,7 @@ import com.dante.diary.detail.PictureActivity;
 import com.dante.diary.utils.AppUtil;
 import com.dante.diary.utils.SpUtil;
 
+import androidx.annotation.Nullable;
 import butterknife.BindView;
 
 import static com.dante.diary.base.App.context;

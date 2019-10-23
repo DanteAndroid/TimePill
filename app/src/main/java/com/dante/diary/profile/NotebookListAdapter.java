@@ -1,7 +1,6 @@
 package com.dante.diary.profile;
 
 import android.content.Context;
-import android.support.v4.content.ContextCompat;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -14,6 +13,8 @@ import com.dante.diary.login.LoginManager;
 import com.dante.diary.model.Notebook;
 
 import java.util.List;
+
+import androidx.core.content.ContextCompat;
 
 /**
  * Created by yons on 17/3/9.

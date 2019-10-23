@@ -17,8 +17,6 @@ import java.util.List;
 import butterknife.BindView;
 import jp.wasabeef.glide.transformations.CropCircleTransformation;
 
-import static com.dante.diary.base.App.context;
-
 /**
  * Created by yons on 17/3/10.
  */
@@ -70,7 +68,7 @@ public class DiaryCommentsAdapter extends BaseQuickAdapter<Comment, BaseViewHold
         //评论用户的头像
         Glide.with(helper.itemView.getContext())
                 .load(item.getUser().getAvatarUrl())
-                .bitmapTransform(new CropCircleTransformation(context))
+                .transform(new CropCircleTransformation())
                 .into((ImageView) helper.getView(R.id.commentAvatar));
     }
 }

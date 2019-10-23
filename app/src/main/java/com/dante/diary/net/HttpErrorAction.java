@@ -1,12 +1,11 @@
 package com.dante.diary.net;
 
-import android.support.annotation.CallSuper;
-
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
 
+import androidx.annotation.CallSuper;
 import retrofit2.adapter.rxjava.HttpException;
 import rx.functions.Action1;
 

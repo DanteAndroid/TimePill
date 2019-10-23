@@ -3,7 +3,6 @@ package com.dante.diary.main;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
-import android.support.annotation.Nullable;
 import android.util.Log;
 
 import com.dante.diary.R;
@@ -17,6 +16,8 @@ import com.dante.diary.utils.UiUtils;
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
+
+import androidx.annotation.Nullable;
 
 public class MainActivity extends BottomBarActivity {
     private static final String TAG = "MainActivity";

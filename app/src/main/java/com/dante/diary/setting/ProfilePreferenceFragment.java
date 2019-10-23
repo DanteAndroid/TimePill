@@ -2,6 +2,7 @@ package com.dante.diary.setting;
 
 import android.app.AlertDialog;
 import android.content.Intent;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.preference.EditTextPreference;
@@ -9,13 +10,16 @@ import android.preference.ListPreference;
 import android.preference.Preference;
 import android.preference.PreferenceFragment;
 import android.view.MenuItem;
+import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
 
 import com.blankj.utilcode.utils.ClipboardUtils;
 import com.bumptech.glide.Glide;
-import com.bumptech.glide.load.resource.drawable.GlideDrawable;
+import com.bumptech.glide.load.DataSource;
+import com.bumptech.glide.load.engine.GlideException;
+import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions;
 import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.target.Target;
 import com.dante.diary.R;
@@ -28,6 +32,7 @@ import com.dante.diary.utils.UiUtils;
 
 import java.io.File;
 
+import androidx.annotation.Nullable;
 import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
@@ -89,16 +94,15 @@ public class ProfilePreferenceFragment extends PreferenceFragment {
 
     private void loadAvatar(User user) {
         Glide.with(getActivity()).load(user.getAvatarUrl())
-                .crossFade()
-                .listener(new RequestListener<String, GlideDrawable>() {
-
+                .transition(DrawableTransitionOptions.withCrossFade())
+                .listener(new RequestListener<Drawable>() {
                     @Override
-                    public boolean onException(Exception e, String model, Target<GlideDrawable> target, boolean isFirstResource) {
+                    public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
                         return false;
                     }
 
                     @Override
-                    public boolean onResourceReady(GlideDrawable resource, String model, Target<GlideDrawable> target, boolean isFromMemoryCache, boolean isFirstResource) {
+                    public boolean onResourceReady(Drawable resource, Object model, Target<Drawable> target, DataSource dataSource, boolean isFirstResource) {
                         findPreference("avatar").setIcon(resource);
                         return true;
                     }
@@ -156,7 +160,7 @@ public class ProfilePreferenceFragment extends PreferenceFragment {
                     break;
                 default:
                     if (introduction.startsWith("男。") || introduction.startsWith("女。")) {
-                        introduction = introduction.substring(2, introduction.length());
+                        introduction = introduction.substring(2);
                     } else {
                         return true;
                     }
@@ -192,7 +196,7 @@ public class ProfilePreferenceFragment extends PreferenceFragment {
             intro.setSummary(introduction);
             intro.setOnPreferenceClickListener(preference -> {
                 AlertDialog dialog = new AlertDialog.Builder(getActivity())
-                        .setView(R.layout.intro_layout).setTitle(R.string.pref_intro)
+                        .setView(View.inflate(getActivity(), R.layout.intro_layout, null)).setTitle(R.string.pref_intro)
                         .create();
                 dialog.getWindow().setSoftInputMode(
                         WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE);

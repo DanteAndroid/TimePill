@@ -5,9 +5,6 @@ import android.app.Dialog;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.os.Environment;
-import android.support.annotation.NonNull;
-import android.support.design.widget.TextInputEditText;
-import android.support.v4.app.DialogFragment;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
@@ -17,11 +14,15 @@ import android.widget.ImageView;
 
 import com.dante.diary.R;
 import com.dante.diary.utils.DateUtil;
+import com.google.android.material.textfield.TextInputEditText;
 
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.Date;
+
+import androidx.annotation.NonNull;
+import androidx.fragment.app.DialogFragment;
 
 /**
  * Created by Ing. Oscar G. Medina Cruz on 09/11/2016.
@@ -47,8 +48,8 @@ public class SaveBitmapDialog extends DialogFragment {
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         View view = LayoutInflater.from(getContext())
                 .inflate(R.layout.layout_save_bitmap, null);
-        ImageView imageView = (ImageView) view.findViewById(R.id.iv_capture_preview);
-        final TextInputEditText textInputEditText = (TextInputEditText) view.findViewById(R.id.et_file_name);
+        ImageView imageView = view.findViewById(R.id.iv_capture_preview);
+        final TextInputEditText textInputEditText = view.findViewById(R.id.et_file_name);
         fileName = DateUtil.getDisplayDay(new Date());
         if (mPreviewBitmap != null)
             imageView.setImageBitmap(mPreviewBitmap);

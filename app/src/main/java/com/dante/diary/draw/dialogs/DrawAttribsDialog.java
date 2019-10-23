@@ -4,11 +4,6 @@ import android.app.Dialog;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.v4.app.DialogFragment;
-import android.support.v7.app.AlertDialog;
-import android.support.v7.widget.AppCompatRadioButton;
-import android.support.v7.widget.AppCompatSeekBar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.CompoundButton;
@@ -16,6 +11,12 @@ import android.widget.SeekBar;
 import android.widget.TextView;
 
 import com.dante.diary.R;
+
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.widget.AppCompatRadioButton;
+import androidx.appcompat.widget.AppCompatSeekBar;
+import androidx.fragment.app.DialogFragment;
 
 
 /**
@@ -44,18 +45,18 @@ public class DrawAttribsDialog extends DialogFragment {
                 .inflate(R.layout.layout_draw_attribs, null);
 
         final View previewColor = view.findViewById(R.id.preview_color);
-        final AppCompatSeekBar seekBarRed = (AppCompatSeekBar) view.findViewById(R.id.acsb_red);
-        final AppCompatSeekBar seekBarGreen = (AppCompatSeekBar) view.findViewById(R.id.acsb_green);
-        final AppCompatSeekBar seekBarBlue = (AppCompatSeekBar) view.findViewById(R.id.acsb_blue);
-        final TextView textViewRedValue = (TextView) view.findViewById(R.id.tv_current_red);
-        final TextView textViewGreenValue = (TextView) view.findViewById(R.id.tv_current_green);
-        final TextView textViewBlueValue = (TextView) view.findViewById(R.id.tv_current_blue);
-        AppCompatSeekBar seekBarStrokeWidth = (AppCompatSeekBar) view.findViewById(R.id.acsb_stroke_width);
-        final TextView textViewStrokeWidth = (TextView) view.findViewById(R.id.tv_stroke_width);
-        AppCompatSeekBar seekBarOpacity = (AppCompatSeekBar) view.findViewById(R.id.acsb_opacity);
-        final TextView textViewOpacity = (TextView) view.findViewById(R.id.tv_opacity);
-        AppCompatRadioButton appCompatRadioButtonFill = (AppCompatRadioButton) view.findViewById(R.id.rb_fill);
-        AppCompatRadioButton appCompatRadioButtonStroke = (AppCompatRadioButton) view.findViewById(R.id.rb_stroke);
+        final AppCompatSeekBar seekBarRed = view.findViewById(R.id.acsb_red);
+        final AppCompatSeekBar seekBarGreen = view.findViewById(R.id.acsb_green);
+        final AppCompatSeekBar seekBarBlue = view.findViewById(R.id.acsb_blue);
+        final TextView textViewRedValue = view.findViewById(R.id.tv_current_red);
+        final TextView textViewGreenValue = view.findViewById(R.id.tv_current_green);
+        final TextView textViewBlueValue = view.findViewById(R.id.tv_current_blue);
+        AppCompatSeekBar seekBarStrokeWidth = view.findViewById(R.id.acsb_stroke_width);
+        final TextView textViewStrokeWidth = view.findViewById(R.id.tv_stroke_width);
+        AppCompatSeekBar seekBarOpacity = view.findViewById(R.id.acsb_opacity);
+        final TextView textViewOpacity = view.findViewById(R.id.tv_opacity);
+        AppCompatRadioButton appCompatRadioButtonFill = view.findViewById(R.id.rb_fill);
+        AppCompatRadioButton appCompatRadioButtonStroke = view.findViewById(R.id.rb_stroke);
 //        final AppCompatSeekBar seekBarFontSize = (AppCompatSeekBar) view.findViewById(R.id.acsb_font_size);
 //        final TextView textViewFontSize = (TextView) view.findViewById(R.id.tv_font_size);
 //        AppCompatCheckBox appCompatCheckBoxAntiAlias = (AppCompatCheckBox) view.findViewById(R.id.chb_anti_alias);

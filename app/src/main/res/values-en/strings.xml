@@ -329,5 +329,6 @@
     <string name="a_year">A year</string>
     <string name="custom">Custom</string>
     <string name="three_month">Three month</string>
+    <string name="get_back_password">Get back password</string>
 
 </resources>

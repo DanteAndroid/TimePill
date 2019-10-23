@@ -11,7 +11,6 @@ import android.preference.ListPreference;
 import android.preference.Preference;
 import android.preference.PreferenceFragment;
 import android.preference.SwitchPreference;
-import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -47,6 +46,7 @@ import org.greenrobot.eventbus.EventBus;
 import java.io.File;
 import java.util.List;
 
+import androidx.appcompat.app.AppCompatActivity;
 import rx.Observable;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
@@ -312,7 +312,7 @@ public class SettingFragment extends PreferenceFragment implements Preference.On
 
     private void sendFeedback() {
         AlertDialog dialog = new AlertDialog.Builder(getActivity())
-                .setView(R.layout.intro_layout).setTitle(R.string.set_feedback)
+                .setView(View.inflate(getActivity(), R.layout.intro_layout, null)).setTitle(R.string.set_feedback)
                 .create();
         dialog.getWindow().setSoftInputMode(
                 WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE);

@@ -7,15 +7,10 @@ import android.app.Activity;
 import android.app.UiModeManager;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
-import android.support.design.internal.NavigationMenu;
-import android.support.design.widget.AppBarLayout;
-import android.support.design.widget.CollapsingToolbarLayout;
-import android.support.design.widget.CoordinatorLayout;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -27,7 +22,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
-import com.bumptech.glide.load.resource.drawable.GlideDrawable;
+import com.bumptech.glide.load.DataSource;
+import com.bumptech.glide.load.engine.GlideException;
 import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.target.Target;
 import com.chad.library.adapter.base.BaseQuickAdapter;
@@ -56,11 +52,19 @@ import com.dante.diary.utils.SpUtil;
 import com.dante.diary.utils.TransitionHelper;
 import com.dante.diary.utils.UiUtils;
 import com.dante.diary.utils.WrapContentLinearLayoutManager;
+import com.google.android.material.appbar.AppBarLayout;
+import com.google.android.material.appbar.CollapsingToolbarLayout;
+import com.google.android.material.internal.NavigationMenu;
 import com.google.gson.Gson;
 
 import java.io.IOException;
 import java.util.List;
 
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatDelegate;
+import androidx.coordinatorlayout.widget.CoordinatorLayout;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 import butterknife.BindView;
 import io.github.yavski.fabspeeddial.FabSpeedDial;
 import io.github.yavski.fabspeeddial.SimpleMenuListenerAdapter;
@@ -323,15 +327,15 @@ public class MainDiaryFragment extends RecyclerFragment implements OrderedRealmC
         }
 
         final ProgressBar progressBar = ImageProgresser.attachProgress(view);
-        Glide.with(this).load(url).listener(new RequestListener<String, GlideDrawable>() {
+        Glide.with(this).load(url).listener(new RequestListener<Drawable>() {
             @Override
-            public boolean onException(Exception e, String model, Target<GlideDrawable> target, boolean isFirstResource) {
+            public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
                 progressBar.setVisibility(View.GONE);
                 return false;
             }
 
             @Override
-            public boolean onResourceReady(GlideDrawable resource, String model, Target<GlideDrawable> target, boolean isFromMemoryCache, boolean isFirstResource) {
+            public boolean onResourceReady(Drawable resource, Object model, Target<Drawable> target, DataSource dataSource, boolean isFirstResource) {
                 progressBar.setVisibility(View.GONE);
                 TransitionHelper.startViewer(barActivity, view, url);
                 return false;
@@ -525,9 +529,10 @@ public class MainDiaryFragment extends RecyclerFragment implements OrderedRealmC
                 UiUtils.showSnack(rootView, R.string.android_version_is_old);
             } else {
                 UiModeManager modeManager = (UiModeManager) context.getSystemService(Context.UI_MODE_SERVICE);
-                boolean enableNight = !(modeManager.getNightMode() == UiModeManager.MODE_NIGHT_YES);
-                modeManager.setNightMode(enableNight ? UiModeManager.MODE_NIGHT_YES : UiModeManager.MODE_NIGHT_NO);
+                boolean enableNight = (modeManager.getNightMode() == UiModeManager.MODE_NIGHT_NO) || !SpUtil.getBoolean(Constants.IS_NIGHT);
+                AppCompatDelegate.setDefaultNightMode(enableNight ? AppCompatDelegate.MODE_NIGHT_YES : AppCompatDelegate.MODE_NIGHT_NO);
                 SpUtil.save(Constants.IS_NIGHT, enableNight);
+//                Objects.requireNonNull(getActivity()).invalidateOptionsMenu();
             }
         } else if (id == R.id.time_pill) {
             startActivity(new Intent(getActivity(), TimePillActivity.class));

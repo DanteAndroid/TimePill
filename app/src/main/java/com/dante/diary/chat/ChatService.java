@@ -1,6 +1,5 @@
 package com.dante.diary.chat;
 
-import android.support.annotation.NonNull;
 import android.util.Log;
 
 import com.avos.avoscloud.im.v2.AVIMClient;
@@ -16,6 +15,8 @@ import com.dante.diary.login.LoginManager;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+
+import androidx.annotation.NonNull;
 
 /**
  * Created by yons on 17/4/14.

@@ -2,9 +2,6 @@ package com.dante.diary.follow;
 
 import android.graphics.Typeface;
 import android.os.Bundle;
-import android.support.design.widget.TabLayout;
-import android.support.v4.content.ContextCompat;
-import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
 import android.widget.TextView;
@@ -17,10 +14,13 @@ import com.dante.diary.base.TabPagerAdapter;
 import com.dante.diary.login.LoginManager;
 import com.dante.diary.notification.NotificationListFragment;
 import com.dante.diary.profile.DiaryListFragment;
+import com.google.android.material.tabs.TabLayout;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import androidx.core.content.ContextCompat;
+import androidx.viewpager.widget.ViewPager;
 import butterknife.BindView;
 
 import static com.dante.diary.base.App.context;

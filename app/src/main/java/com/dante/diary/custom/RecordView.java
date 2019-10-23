@@ -11,13 +11,15 @@ import android.graphics.Paint;
 import android.graphics.PixelFormat;
 import android.graphics.drawable.Drawable;
 import android.os.Handler;
-import android.support.annotation.Nullable;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 
 import com.dante.diary.R;
+
+import androidx.annotation.Nullable;
+import androidx.core.content.ContextCompat;
 
 
 /**
@@ -100,7 +102,7 @@ public class RecordView extends View {
             invalidate();
             mHandler.postDelayed(refresh, SPREAD_SIZE_UPDATE_TIME);
         };
-        bg = mContext.getResources().getDrawable(R.drawable.ic_mic_white_36px, mContext.getTheme());
+        bg = ContextCompat.getDrawable(mContext, (R.drawable.ic_mic_white_36px));
         bitmapBg = drawableToBitmap(bg);
         mRecordViewBgPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
         mRecordViewBgPaint.setColor(mContext.getResources().getColor(R.color.colorPrimary));

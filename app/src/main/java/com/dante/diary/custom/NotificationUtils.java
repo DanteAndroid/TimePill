@@ -6,7 +6,6 @@ import android.app.PendingIntent;
 import android.app.TaskStackBuilder;
 import android.content.Context;
 import android.content.Intent;
-import android.support.v4.app.NotificationCompat;
 
 import com.dante.diary.R;
 import com.dante.diary.chat.ConversationActivity;
@@ -14,6 +13,8 @@ import com.dante.diary.utils.SpUtil;
 
 import java.util.LinkedList;
 import java.util.List;
+
+import androidx.core.app.NotificationCompat;
 
 import static com.dante.diary.base.App.context;
 

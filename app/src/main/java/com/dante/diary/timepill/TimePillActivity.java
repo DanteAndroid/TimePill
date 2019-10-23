@@ -3,7 +3,6 @@ package com.dante.diary.timepill;
 import android.app.AlertDialog;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -23,6 +22,7 @@ import com.dante.diary.utils.UiUtils;
 
 import java.util.List;
 
+import androidx.annotation.Nullable;
 import butterknife.BindView;
 import top.wefor.circularanim.CircularAnim;
 

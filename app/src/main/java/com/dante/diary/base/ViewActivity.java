@@ -3,13 +3,14 @@ package com.dante.diary.base;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
 
 import com.dante.diary.R;
 import com.dante.diary.detail.DiaryDetailFragment;
 import com.dante.diary.profile.DiaryListFragment;
 import com.dante.diary.profile.ProfileFragment;
+
+import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
 
 public class ViewActivity extends BaseActivity {
     public static final String TYPE_PROFILE = "profile";

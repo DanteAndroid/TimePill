@@ -6,18 +6,9 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.Handler;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.TextInputLayout;
-import android.support.v4.app.Fragment;
-import android.support.v4.content.ContextCompat;
-import android.support.v4.view.MenuItemCompat;
-import android.support.v4.widget.NestedScrollView;
-import android.support.v4.widget.SwipeRefreshLayout;
-import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.ShareActionProvider;
-import android.support.v7.widget.Toolbar;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
@@ -35,7 +26,8 @@ import android.widget.TextView;
 import com.blankj.utilcode.utils.ClipboardUtils;
 import com.blankj.utilcode.utils.IntentUtils;
 import com.bumptech.glide.Glide;
-import com.bumptech.glide.load.resource.drawable.GlideDrawable;
+import com.bumptech.glide.load.DataSource;
+import com.bumptech.glide.load.engine.GlideException;
 import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.target.Target;
 import com.chad.library.adapter.base.BaseQuickAdapter;
@@ -59,6 +51,8 @@ import com.dante.diary.utils.TextChecker;
 import com.dante.diary.utils.TransitionHelper;
 import com.dante.diary.utils.UiUtils;
 import com.dante.diary.utils.WrapContentLinearLayoutManager;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.android.material.textfield.TextInputLayout;
 import com.jaychang.st.SimpleText;
 
 import org.json.JSONException;
@@ -68,6 +62,15 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 
+import androidx.annotation.Nullable;
+import androidx.appcompat.widget.ShareActionProvider;
+import androidx.appcompat.widget.Toolbar;
+import androidx.core.content.ContextCompat;
+import androidx.core.view.MenuItemCompat;
+import androidx.core.widget.NestedScrollView;
+import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import butterknife.BindView;
 import jp.wasabeef.glide.transformations.RoundedCornersTransformation;
 
@@ -388,7 +391,7 @@ public class DiaryDetailFragment extends BaseFragment implements SwipeRefreshLay
 
         if (diary.getUser() != null) {
             Glide.with(this).load(diary.getUser().getAvatarUrl())
-                    .bitmapTransform(new RoundedCornersTransformation(getContext(), 5, 0))
+                    .transform(new RoundedCornersTransformation(5, 0))
                     .into(myAvatar);
         }
         getActivity().supportPostponeEnterTransition();
@@ -418,15 +421,15 @@ public class DiaryDetailFragment extends BaseFragment implements SwipeRefreshLay
         if (!TextUtils.isEmpty(diary.getPhotoThumbUrl())) {
             boolean gif = diary.getPhotoUrl().endsWith(".gif");
             isGif.setVisibility(View.GONE);
-            Glide.with(this).load(diary.getPhotoThumbUrl()).asBitmap().error(R.drawable.error_holder)
-                    .listener(new RequestListener<String, Bitmap>() {
+            Glide.with(this).asBitmap().load(diary.getPhotoThumbUrl()).error(R.drawable.error_holder)
+                    .listener(new RequestListener<Bitmap>() {
                         @Override
-                        public boolean onException(Exception e, String model, Target<Bitmap> target, boolean isFirstResource) {
+                        public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Bitmap> target, boolean isFirstResource) {
                             return false;
                         }
 
                         @Override
-                        public boolean onResourceReady(Bitmap resource, String model, Target<Bitmap> target, boolean isFromMemoryCache, boolean isFirstResource) {
+                        public boolean onResourceReady(Bitmap resource, Object model, Target<Bitmap> target, DataSource dataSource, boolean isFirstResource) {
                             attachPicture.setVisibility(View.VISIBLE);
                             if (gif) {
                                 isGif.setVisibility(View.VISIBLE);
@@ -446,15 +449,15 @@ public class DiaryDetailFragment extends BaseFragment implements SwipeRefreshLay
                 }
 
                 final ProgressBar progressBar = ImageProgresser.attachProgress(attachPicture);
-                Glide.with(this).load(diary.getPhotoUrl()).listener(new RequestListener<String, GlideDrawable>() {
+                Glide.with(this).load(diary.getPhotoUrl()).listener(new RequestListener<Drawable>() {
                     @Override
-                    public boolean onException(Exception e, String model, Target<GlideDrawable> target, boolean isFirstResource) {
+                    public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
                         progressBar.setVisibility(View.GONE);
                         return false;
                     }
 
                     @Override
-                    public boolean onResourceReady(GlideDrawable resource, String model, Target<GlideDrawable> target, boolean isFromMemoryCache, boolean isFirstResource) {
+                    public boolean onResourceReady(Drawable resource, Object model, Target<Drawable> target, DataSource dataSource, boolean isFirstResource) {
                         progressBar.setVisibility(View.GONE);
                         TransitionHelper.startViewer(getActivity(), attachPicture, diary.getPhotoUrl());
                         return false;

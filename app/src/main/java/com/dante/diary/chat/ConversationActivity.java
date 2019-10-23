@@ -3,7 +3,6 @@ package com.dante.diary.chat;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
 import android.util.Log;
 import android.view.Menu;
 import android.widget.Toast;
@@ -37,6 +36,7 @@ import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
+import androidx.annotation.Nullable;
 import butterknife.BindView;
 import rx.Subscriber;
 

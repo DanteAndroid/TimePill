@@ -6,8 +6,6 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
-import android.support.design.widget.Snackbar;
 import android.view.Menu;
 import android.view.MenuItem;
 
@@ -23,10 +21,12 @@ import com.dante.diary.draw.dialogs.RequestTextDialog;
 import com.dante.diary.draw.dialogs.SelectChoiceDialog;
 import com.dante.diary.utils.BitmapUtil;
 import com.dante.diary.utils.UiUtils;
+import com.google.android.material.snackbar.Snackbar;
 import com.tbruyelle.rxpermissions.RxPermissions;
 
 import java.io.File;
 
+import androidx.annotation.Nullable;
 import butterknife.BindView;
 import io.github.yavski.fabspeeddial.FabSpeedDial;
 import io.github.yavski.fabspeeddial.SimpleMenuListenerAdapter;

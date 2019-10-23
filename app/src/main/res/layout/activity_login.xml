@@ -42,7 +42,7 @@
             android:visibility="invisible"
             tools:visibility="visible">
 
-            <android.support.design.widget.TextInputLayout
+            <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/accountWrapper"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -50,7 +50,7 @@
                 android:textColor="@color/grey"
                 android:textColorHint="@color/grey">
 
-                <android.support.design.widget.TextInputEditText
+                <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/account"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -63,9 +63,9 @@
                     android:selectAllOnFocus="true"
                     android:textColor="@color/white"/>
 
-            </android.support.design.widget.TextInputLayout>
+            </com.google.android.material.textfield.TextInputLayout>
 
-            <android.support.design.widget.TextInputLayout
+            <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/pswWrapper"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -73,22 +73,22 @@
                 android:textColor="@color/white"
                 android:textColorHint="@color/grey">
 
-                <android.support.design.widget.TextInputEditText
+                <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/psw"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_height="43dp"
                     android:layout_marginTop="@dimen/activity_horizontal_margin"
                     android:hint="@string/password"
-                    android:imeActionId="@+id/login"
                     android:imeActionLabel="@string/login"
-                    android:imeOptions="actionUnspecified"
+                    android:imeOptions="actionDone"
                     android:inputType="textPassword"
                     android:maxLines="1"
                     android:selectAllOnFocus="true"
-                    android:textColor="@color/white"/>
+                    android:textColor="@color/white" />
 
-            </android.support.design.widget.TextInputLayout>
-            <android.support.design.widget.TextInputLayout
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/nameWrapper"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -99,22 +99,30 @@
                 android:visibility="gone"
                 tools:visibility="visible">
 
-                <android.support.design.widget.TextInputEditText
+                <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/name"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/activity_horizontal_margin"
                     android:hint="@string/nickName"
-                    android:imeActionId="@+id/register"
                     android:imeActionLabel="@string/registerAction"
-                    android:imeOptions="actionUnspecified"
+                    android:imeOptions="actionNext"
                     android:inputType="text"
                     android:maxLines="1"
                     android:selectAllOnFocus="true"
                     android:textColor="@color/white"/>
 
-            </android.support.design.widget.TextInputLayout>
+            </com.google.android.material.textfield.TextInputLayout>
 
+
+            <TextView
+                android:id="@+id/getBackPassword"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="@dimen/activity_horizontal_margin"
+                android:text="@string/get_back_password"
+                android:textColor="@android:color/holo_blue_dark" />
         </LinearLayout>
 
         <com.andrognito.patternlockview.PatternLockView
@@ -175,12 +183,13 @@
             />
         </FrameLayout>
 
+
     </LinearLayout>
 
     <ImageView
         android:id="@+id/timePill"
-        android:layout_width="56dp"
-        android:layout_height="56dp"
+        android:layout_width="62dp"
+        android:layout_height="62dp"
         android:layout_centerInParent="true"
         android:layout_margin="@dimen/activity_horizontal_margin"
         android:src="@mipmap/ic_launcher"

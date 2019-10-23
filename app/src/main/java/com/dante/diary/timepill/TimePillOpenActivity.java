@@ -1,7 +1,6 @@
 package com.dante.diary.timepill;
 
 import android.os.Bundle;
-import android.support.annotation.Nullable;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
@@ -23,6 +22,7 @@ import com.dante.diary.utils.UiUtils;
 import java.util.Date;
 import java.util.Locale;
 
+import androidx.annotation.Nullable;
 import butterknife.BindView;
 import hugo.weaving.DebugLog;
 
@@ -56,9 +56,7 @@ public class TimePillOpenActivity extends BaseActivity {
 
     public static boolean isValid(String content) {
         if (!TextUtils.isEmpty(content) && content.length() >= KEY_LENGTH) {
-            if (content.contains(PREFIX)) {
-                return true;
-            }
+            return content.contains(PREFIX);
         }
         return false;
     }

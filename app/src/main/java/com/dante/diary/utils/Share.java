@@ -4,12 +4,13 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
-import android.support.annotation.NonNull;
 
 import com.blankj.utilcode.utils.IntentUtils;
 import com.dante.diary.R;
 import com.dante.diary.base.App;
 import com.dante.diary.custom.Updater;
+
+import androidx.annotation.NonNull;
 
 
 /**

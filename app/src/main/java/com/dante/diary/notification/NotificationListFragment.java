@@ -1,7 +1,5 @@
 package com.dante.diary.notification;
 
-import android.support.v4.content.ContextCompat;
-import android.support.v7.widget.LinearLayoutManager;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
@@ -18,6 +16,9 @@ import com.dante.diary.utils.UiUtils;
 
 import java.io.IOException;
 import java.util.List;
+
+import androidx.core.content.ContextCompat;
+import androidx.recyclerview.widget.LinearLayoutManager;
 
 /**
  * Created by yons on 17/3/17.

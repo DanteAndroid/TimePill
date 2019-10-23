@@ -1,12 +1,13 @@
 package com.dante.diary.utils;
 
 import android.content.Context;
-import android.support.annotation.NonNull;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
+
+import androidx.annotation.NonNull;
 
 /**
  * Created by yons on 17/3/16.
@@ -37,9 +38,8 @@ public class ImageProgresser {
      * 否则会出现图片和Progress都没显示的问题
      *
      * @param view        需要添加Progress的view
-     * @param progressBar 自定义的Progressbar
-     * @param width       要添加Progress的view（图片没加载完）的宽（单位dp）
-     * @param height      要添加Progress的view（图片没加载完）的高（单位dp）
+     * @param widthInDp       要添加Progress的view（图片没加载完）的宽（单位dp）
+     * @param heightInDp      要添加Progress的view（图片没加载完）的高（单位dp）
      * @return 自定义的Progressbar，方便再次调用隐藏
      */
     @NonNull
@@ -53,9 +53,8 @@ public class ImageProgresser {
      * 否则会出现图片和Progress都没显示的问题
      *
      * @param view        需要添加Progress的view
-     * @param progressBar 自定义的Progressbar
-     * @param width       要添加Progress的view（图片没加载完）的宽（单位px）
-     * @param height      要添加Progress的view（图片没加载完）的高（单位px）
+     * @param widthInPx       要添加Progress的view（图片没加载完）的宽（单位px）
+     * @param heightInPx      要添加Progress的view（图片没加载完）的高（单位px）
      * @return 自定义的Progressbar，方便再次调用隐藏
      */
     @NonNull

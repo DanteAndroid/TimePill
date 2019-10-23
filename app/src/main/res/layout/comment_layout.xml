@@ -11,7 +11,7 @@
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_horizontal_margin">
 
-    <android.support.design.widget.TextInputLayout
+    <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/commentTextInputLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -19,7 +19,7 @@
         android:textColorHint="@color/whiteFont"
         app:hintAnimationEnabled="false">
 
-        <android.support.design.widget.TextInputEditText
+        <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/commentEt"
             android:layout_width="match_parent"
             android:textColor="@color/secondText"
@@ -29,7 +29,7 @@
             android:padding="10dp"
             android:textColorHint="#F6F6F6"/>
 
-    </android.support.design.widget.TextInputLayout>
+    </com.google.android.material.textfield.TextInputLayout>
 
     <ImageView
         android:id="@+id/commit"
@@ -38,7 +38,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="end"
         android:layout_marginBottom="8dp"
-        android:src="@drawable/ic_send_black_24px"
+        app:srcCompat="@drawable/ic_send_black_24px"
         android:text="@string/commit"/>
 
 </LinearLayout>

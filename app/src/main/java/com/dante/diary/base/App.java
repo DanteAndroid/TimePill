@@ -14,6 +14,7 @@ import com.bugtags.library.Bugtags;
 import com.dante.diary.chat.PMMessageHandler;
 import com.dante.diary.login.LoginActivity;
 
+import androidx.appcompat.app.AppCompatDelegate;
 import io.realm.Realm;
 
 /**
@@ -51,5 +52,6 @@ public class App extends Application {
         Utils.init(this);
         StrictMode.VmPolicy.Builder builder = new StrictMode.VmPolicy.Builder();
         StrictMode.setVmPolicy(builder.build());
+        AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
     }
 }

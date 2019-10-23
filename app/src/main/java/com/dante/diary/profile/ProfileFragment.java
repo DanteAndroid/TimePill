@@ -7,16 +7,7 @@ import android.content.Intent;
 import android.content.res.ColorStateList;
 import android.graphics.Typeface;
 import android.os.Bundle;
-import android.support.design.internal.NavigationMenu;
-import android.support.design.widget.CollapsingToolbarLayout;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.TabLayout;
-import android.support.v4.app.Fragment;
-import android.support.v4.content.ContextCompat;
-import android.support.v4.view.ViewPager;
 import android.text.TextUtils;
-import android.transition.Explode;
-import android.transition.Transition;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -49,11 +40,18 @@ import com.dante.diary.setting.SettingFragment;
 import com.dante.diary.utils.DateUtil;
 import com.dante.diary.utils.SpUtil;
 import com.dante.diary.utils.UiUtils;
+import com.google.android.material.appbar.CollapsingToolbarLayout;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.android.material.internal.NavigationMenu;
+import com.google.android.material.tabs.TabLayout;
 
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import androidx.core.content.ContextCompat;
+import androidx.fragment.app.Fragment;
+import androidx.viewpager.widget.ViewPager;
 import butterknife.BindView;
 import io.github.yavski.fabspeeddial.FabSpeedDial;
 import io.github.yavski.fabspeeddial.SimpleMenuListenerAdapter;
@@ -131,10 +129,6 @@ public class ProfileFragment extends BaseFragment {
         return false;
     }
 
-    @Override
-    protected Transition initTransitions() {
-        return new Explode();
-    }
 
     @Override
     protected int initLayoutId() {
@@ -213,7 +207,7 @@ public class ProfileFragment extends BaseFragment {
         progress.setVisibility(View.GONE);
         Glide.with(this)
                 .load(user.getAvatarUrl())
-                .bitmapTransform(new RoundedCornersTransformation(getContext(), 5, 0))
+                .transform(new RoundedCornersTransformation(5, 0))
                 .into(avatar);
 
         if (!LoginManager.isMe(id)) {

@@ -3,9 +3,6 @@ package com.dante.diary.base;
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
 import android.view.View;
 
@@ -19,6 +16,8 @@ import com.dante.diary.utils.SpUtil;
 import com.ncapdevi.fragnav.FragNavController;
 import com.roughike.bottombar.BottomBar;
 
+import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
 import butterknife.BindView;
 import rx.Subscription;
 
@@ -46,7 +45,7 @@ public class BottomBarActivity extends BaseActivity implements FragNavController
         }
 
         controller = new FragNavController(savedInstanceState, getSupportFragmentManager(), R.id.container, this, 4, MAIN);
-        controller.setTransitionMode(FragmentTransaction.TRANSIT_NONE);
+//        controller.setTransitionMode(FragmentTransaction.TRANSIT_NONE);
         initBottomBar();
         fetchNotifications();
     }
