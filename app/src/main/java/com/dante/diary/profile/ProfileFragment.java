@@ -178,10 +178,12 @@ public class ProfileFragment extends BaseFragment {
                         @Override
                         public void onAnimationEnd(Animator animation) {
                             super.onAnimationEnd(animation);
+                            fab.hide();
                             fab.setOnClickListener(v -> unFollow());
                             fab.setImageResource(R.drawable.ic_done_white_24dp);
                             fab.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.colorPrimaryLight)));
-                            fab.animate().scaleX(1f).scaleY(1f).setDuration(250).start();
+                            fab.show();
+                            fab.animate().scaleX(1f).scaleY(1f).setDuration(250).setListener(null).start();
                         }
                     }).start();
 
@@ -192,10 +194,12 @@ public class ProfileFragment extends BaseFragment {
                         @Override
                         public void onAnimationEnd(Animator animation) {
                             super.onAnimationEnd(animation);
+                            fab.hide();
                             fab.setImageResource(R.drawable.ic_favorite_white_24dp);
                             fab.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.colorAccent)));
                             fab.setOnClickListener(v -> follow());
-                            fab.animate().scaleX(1f).scaleY(1f).setDuration(250).start();
+                            fab.show();
+                            fab.animate().scaleX(1f).scaleY(1f).setDuration(250).setListener(null).start();
                         }
                     }).start();
 
