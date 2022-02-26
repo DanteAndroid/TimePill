@@ -1,0 +1,162 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation android:id="@+id/mobile_navigation"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    app:startDestination="@+id/navigation_home">
+
+    <action
+        android:id="@+id/action_global_editNotebookFragment"
+        app:destination="@+id/editNotebookFragment"></action>
+
+    <action
+        android:id="@+id/action_global_editDiaryFragment"
+        app:destination="@+id/editDiaryFragment"></action>
+
+    <action
+        android:id="@+id/action_global_meFragment"
+        app:destination="@+id/navigation_me"
+        app:launchSingleTop="true"
+        app:popUpTo="@+id/mobile_navigation"
+        app:popUpToInclusive="true" />
+
+    <action
+        android:id="@+id/action_global_specificdiaries_Fragment"
+        app:destination="@+id/navigation_specific_diaries"
+        app:launchSingleTop="true"
+        app:popUpTo="@+id/mobile_navigation"
+        app:popUpToInclusive="true"></action>
+
+    <action
+        android:id="@+id/action_global_followFragment"
+        app:destination="@+id/navigation_follow"
+        app:launchSingleTop="true"
+        app:popUpTo="@+id/mobile_navigation"
+        app:popUpToInclusive="true" />
+
+    <action
+        android:id="@+id/action_global_homeFragment"
+        app:destination="@+id/navigation_home"
+        app:launchSingleTop="true"
+        app:popUpTo="@+id/mobile_navigation"
+        app:popUpToInclusive="true" />
+
+    <fragment
+        android:id="@+id/navigation_home"
+        android:name="com.example.myapplication.ui.home.HomeFragment"
+        android:label="@string/title_home"
+        tools:layout="@layout/fragment_diaries">
+
+        <action
+            android:id="@+id/action_navigation_home_to_detailPagerFragment"
+            app:destination="@id/detailPagerFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/navigation_follow"
+        android:name="com.example.myapplication.ui.follow.FollowHomeFragment"
+        android:label="@string/title_follow"
+        tools:layout="@layout/fragment_tab_viewpager">
+
+        <action
+            android:id="@+id/action_navigation_follow_to_navigation_me"
+            app:destination="@id/navigation_me" />
+
+    </fragment>
+
+    <fragment
+        android:id="@+id/navigation_specific_diaries"
+        android:name="com.example.myapplication.ui.home.SpecificDiaryFragment"
+        android:label="@string/following_diary"
+        tools:layout="@layout/fragment_diaries">
+
+        <action
+            android:id="@+id/action_navigation_follow_diaries_to_detailPagerFragment"
+            app:destination="@id/detailPagerFragment"
+            app:enterAnim="@android:anim/slide_in_left"
+            app:exitAnim="@android:anim/slide_out_right"
+            app:popUpTo="@id/detailPagerFragment"
+            app:popUpToInclusive="true" />
+        <argument
+            android:name="id"
+            app:argType="integer" />
+
+        <argument
+            android:name="diaryType"
+            app:argType="integer" />
+    </fragment>
+    <fragment
+        android:id="@+id/navigation_me"
+        android:name="com.example.myapplication.ui.me.MeFragment"
+        android:label="@string/title_me"
+        tools:layout="@layout/fragment_me">
+        <action
+            android:id="@+id/action_navigation_me_to_notificationsFragment"
+            app:destination="@id/notificationsFragment" />
+        <action
+            android:id="@+id/action_navigation_me_to_detailPagerFragment"
+            app:destination="@id/detailPagerFragment"
+            app:popUpTo="@id/detailPagerFragment"
+            app:popUpToInclusive="true" />
+        <action
+            android:id="@+id/action_navigation_me_to_navigation_specific_diaries"
+            app:destination="@id/navigation_specific_diaries" />
+        <argument
+            android:name="userId"
+            app:argType="integer" />
+    </fragment>
+    <fragment
+        android:id="@+id/detailPagerFragment"
+        android:name="com.example.myapplication.ui.detail.DetailPagerFragment"
+        android:label="@string/detail_pager_label"
+        tools:layout="@layout/fragment_detail_pager">
+        <action
+            android:id="@+id/action_detailPagerFragment_to_navigation_me"
+            app:destination="@id/navigation_me" />
+        <argument
+            android:name="diaryType"
+            app:argType="integer" />
+        <argument
+            android:name="position"
+            app:argType="integer" />
+        <!--        <action-->
+        <!--            android:id="@+id/action_detailPagerFragment_to_editDiaryFragment"-->
+        <!--            app:destination="@id/editDiaryFragment" />-->
+    </fragment>
+    <fragment
+        android:id="@+id/notificationsFragment"
+        android:name="com.example.myapplication.ui.notifications.NotificationsFragment"
+        android:label="NotificationsFragment"
+        tools:layout="@layout/fragment_notifications">
+        <action
+            android:id="@+id/action_notificationsFragment_to_diaryDetailFragment"
+            app:destination="@id/diaryDetailFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/diaryDetailFragment"
+        android:name="com.example.myapplication.ui.detail.DiaryDetailFragment"
+        android:label="DiaryDetailFragment"
+        tools:layout="@layout/fragment_diary_detail" />
+    <fragment
+        android:id="@+id/editNotebookFragment"
+        android:name="com.example.myapplication.ui.edit.EditNotebookFragment"
+        android:label="fragment_edit_notebook"
+        tools:layout="@layout/fragment_edit_notebook">
+        <argument
+            android:name="notebook"
+            app:argType="com.example.myapplication.data.model.Notebook"
+            app:nullable="true" />
+    </fragment>
+    <fragment
+        android:id="@+id/editDiaryFragment"
+        android:name="com.example.myapplication.ui.edit.EditDiaryFragment"
+        android:label="EditDiaryFragment">
+        <!--        <action-->
+        <!--            android:id="@+id/action_editDiaryFragment_to_editNotebookFragment"-->
+        <!--            app:destination="@id/editNotebookFragment" />-->
+        <argument
+            android:name="diary"
+            app:argType="com.example.myapplication.data.model.Diary"
+            app:nullable="true" />
+    </fragment>
+</navigation>

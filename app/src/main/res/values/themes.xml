@@ -1,19 +1,35 @@
-<?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <style name="AppTheme.CenterAnimation">
-        <!--<item name="android:windowBackground">@drawable/ll_face_logo</item>-->
+    <!-- Base application theme. -->
+    <style name="Theme.MyApplication" parent="Theme.MaterialComponents.DayNight.NoActionBar">
+        <!-- Primary brand color. -->
+        <item name="colorPrimary">@color/primaryColor</item>
+        <item name="colorPrimaryVariant">@color/primaryDarkColor</item>
+        <item name="colorOnPrimary">@color/white</item>
+        <!-- Secondary brand color. -->
+        <item name="colorSecondary">@color/secondaryColor</item>
+        <item name="colorSecondaryVariant">@color/secondaryDarkColor</item>
+        <item name="colorOnSecondary">@color/black</item>
+        <!-- Status bar color. -->
+        <item name="android:statusBarColor">?attr/colorPrimaryVariant</item>
+        <!-- Customize your theme here. -->
+
     </style>
 
-    <style name="LoginButton" parent="Theme.AppCompat">
-        <item name="colorControlHighlight">@color/indigo_500</item>
-        <item name="colorButtonNormal">@color/pink_200</item>
+    <style name="Theme.MyApplication.NoActionBar" parent="Theme.MyApplication">
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
     </style>
-    <style name="RegisterButton" parent="Theme.AppCompat">
-        <item name="colorControlHighlight">@color/colorPrimary</item>
-        <item name="colorButtonNormal">@color/colorPrimaryLight</item>
+
+    <style name="Theme.Main" parent="Theme.MyApplication.NoActionBar">
+        <!--        <item name="android:statusBarColor">@color/primaryColor</item>-->
+        <!--        <item name="android:windowDrawsSystemBarBackgrounds">true</item>-->
+        <item name="android:windowTranslucentStatus">true</item>
+        <item name="bottomAppBarStyle">@style/Widget.MaterialComponents.BottomAppBar.Colored</item>
+        <item name="bottomSheetDialogTheme">@style/BottomSheetDialog</item>
     </style>
-    <style name="FlatButton" parent="Theme.AppCompat">
-        <item name="colorControlHighlight">@color/red</item>
-        <item name="colorButtonNormal">@color/red_dark</item>
-    </style>
+
+    <style name="Theme.MyApplication.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
+
+    <style name="Theme.MyApplication.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
+
 </resources>

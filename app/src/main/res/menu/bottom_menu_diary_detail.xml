@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <item
+        android:id="@+id/share_diary"
+        android:icon="@drawable/ic_share_white_24px"
+        android:title="@string/share_to"
+        app:showAsAction="ifRoom" />
+
+    <item
+        android:id="@+id/report_diary"
+        android:icon="@drawable/ic_baseline_report_24"
+        android:title="@string/report"
+        app:showAsAction="ifRoom" />
+
+    <!--    <item-->
+    <!--        android:id="@+id/navigation_notifications"-->
+    <!--        android:icon="@drawable/ic_notifications_black_24dp"-->
+    <!--        app:showAsAction="ifRoom"-->
+    <!--        android:title="@string/title_notifications" />-->
+
+    <!--    <item-->
+    <!--        android:id="@+id/navigation_me"-->
+    <!--        app:showAsAction="ifRoom"-->
+    <!--        android:icon="@drawable/ic_notifications_black_24dp"-->
+    <!--        android:title="@string/title_me" />-->
+
+</menu>

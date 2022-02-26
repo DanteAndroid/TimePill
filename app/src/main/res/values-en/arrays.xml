@@ -1,5 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string-array name="follow_title">
+        <item>Followings</item>
+        <item>My followers</item>
+    </string-array>
+    <string-array name="me_title">
+        <item>Today\'s diaries</item>
+        <item>My notebooks</item>
+    </string-array>
+    <string-array name="notification_title">
+        <item>Notifications</item>
+        <item>My followers</item>
+    </string-array>
     <string-array name="picture_menu">
         <item>Share</item>
         <item>Save</item>

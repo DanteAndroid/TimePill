@@ -1,12 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <TextView xmlns:android="http://schemas.android.com/apk/res/android"
-          xmlns:tools="http://schemas.android.com/tools"
-          android:layout_width="match_parent"
-          android:layout_height="wrap_content"
-          android:background="@color/item_background"
-          android:padding="@dimen/activity_horizontal_margin"
-          android:textColor="@color/secondText"
-          tools:text="Test notebook subject">
-
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:padding="@dimen/activity_horizontal_margin"
+    android:textColor="?android:textColorSecondary"
+    tools:text="Test notebook subject">
 
 </TextView>

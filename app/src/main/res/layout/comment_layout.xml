@@ -1,44 +1,44 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    android:id="@+id/reveal"
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout android:id="@+id/reveal"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@color/item_background"
     android:orientation="vertical"
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_horizontal_margin">
 
-    <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/commentTextInputLayout"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
-        android:textColorHint="@color/whiteFont"
-        app:hintAnimationEnabled="false">
+    <!--    <com.google.android.material.textfield.TextInputLayout-->
+    <!--        android:id="@+id/commentTextInputLayout"-->
+    <!--        android:layout_width="match_parent"-->
+    <!--        android:layout_height="wrap_content"-->
+    <!--        android:layout_marginTop="8dp"-->
+    <!--        app:boxBackgroundMode="outline"-->
+    <!--        app:hintAnimationEnabled="false">-->
 
-        <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/commentEt"
-            android:layout_width="match_parent"
-            android:textColor="@color/secondText"
-            android:layout_height="90dp"
-            android:gravity="start"
-            android:hint="@string/reply_to_diary"
-            android:padding="10dp"
-            android:textColorHint="#F6F6F6"/>
-
-    </com.google.android.material.textfield.TextInputLayout>
-
-    <ImageView
+    <ImageButton
         android:id="@+id/commit"
-        style="@style/Widget.AppCompat.Button.Borderless"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="end"
+        android:layout_marginTop="8dp"
         android:layout_marginBottom="8dp"
-        app:srcCompat="@drawable/ic_send_black_24px"
-        android:text="@string/commit"/>
+        android:background="?attr/actionBarItemBackground"
+        android:paddingEnd="@dimen/min_icon_target_padding"
+        android:paddingStart="@dimen/min_icon_target_padding"
+        android:text="@string/commit"
+        android:visibility="gone"
+        app:srcCompat="@drawable/ic_baseline_send_24" />
+
+    <!--    </com.google.android.material.textfield.TextInputLayout>-->
+
+    <com.google.android.material.textfield.TextInputEditText
+        android:id="@+id/commentEt"
+        android:layout_width="match_parent"
+        android:layout_height="80dp"
+        android:gravity="start"
+        android:hint="@string/reply_to_diary"
+        android:padding="10dp" />
 
 </LinearLayout>

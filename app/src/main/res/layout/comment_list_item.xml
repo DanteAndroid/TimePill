@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="?selectableItemBackground"
+    android:paddingBottom="@dimen/grid_1"
+    android:paddingEnd="@dimen/activity_horizontal_margin"
+    android:paddingStart="@dimen/activity_horizontal_margin"
+    android:paddingTop="@dimen/grid_1">
+
+    <ImageView
+        android:id="@+id/commentAvatar"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:ignore="ContentDescription"
+        tools:src="@mipmap/ic_launcher" />
+
+    <TextView
+        android:id="@+id/commentName"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="12dp"
+        android:textAppearance="?textAppearanceCaption"
+        app:layout_constraintStart_toEndOf="@id/commentAvatar"
+        app:layout_constraintTop_toTopOf="@id/commentAvatar"
+        tools:text="DanteId" />
+
+    <TextView
+        android:id="@+id/commentTime"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:alpha="0.6"
+        android:textAppearance="?textAppearanceCaption"
+        app:layout_constraintBaseline_toBaselineOf="@id/commentName"
+        app:layout_constraintEnd_toEndOf="parent"
+        tools:text="23:33:33" />
+
+    <TextView
+        android:id="@+id/commentContent"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="5dp"
+        android:autoLink="all"
+        app:layout_constraintEnd_toStartOf="@id/commentTime"
+        app:layout_constraintHorizontal_weight="1"
+        app:layout_constraintStart_toStartOf="@id/commentName"
+        app:layout_constraintTop_toBottomOf="@id/commentName"
+        tools:text="@string/test_comment" />
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

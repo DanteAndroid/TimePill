@@ -1,5 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string-array name="follow_title">
+        <item>关注的人</item>
+        <item>我的关注</item>
+    </string-array>
+    <string-array name="me_title">
+        <item>今天的日记</item>
+        <item>我的笔记本</item>
+    </string-array>
+    <string-array name="notification_title">
+        <item>消息</item>
+        <item>关注我的</item>
+    </string-array>
     <string-array name="picture_menu">
         <item>分享</item>
         <item>保存</item>

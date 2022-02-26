@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <style name="LoginButton" parent="Theme.MaterialComponents">
+        <item name="colorControlHighlight">@color/primaryColor</item>
+        <item name="colorButtonNormal">@color/secondaryColor</item>
+    </style>
+
+
+</resources>
