@@ -1,5 +1,6 @@
 package com.example.myapplication.ui.detail
 
+import android.graphics.Color
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -39,7 +40,8 @@ class DetailPagerFragment : Fragment() {
         sharedElementEnterTransition = MaterialContainerTransform().apply {
             drawingViewId = R.id.nav_host_fragment
             duration = resources.getInteger(R.integer.motion_duration_large).toLong()
-//            scrimColor = Color.TRANSPARENT
+            scrimColor = Color.TRANSPARENT
+            excludeTarget(R.id.bottom_app_bar, true)
             setAllContainerColors(requireContext().themeColor(R.attr.colorSurface))
         }
         postponeEnterTransition()
@@ -63,7 +65,7 @@ class DetailPagerFragment : Fragment() {
     }
 
     private fun subscribeUi() {
-        getDataSource().observe(viewLifecycleOwner, {
+        getDataSource().observe(viewLifecycleOwner) {
             if (binding.pager.adapter == null) {
                 adapter = DiaryDetailPagerAdapter(this, it)
                 binding.pager.adapter = adapter
@@ -83,7 +85,7 @@ class DetailPagerFragment : Fragment() {
                                 drawingViewId = R.id.nav_host_fragment
                                 duration =
                                     resources.getInteger(R.integer.motion_duration_large).toLong()
-                                //            scrimColor = Color.TRANSPARENT
+                                excludeTarget(R.id.bottom_app_bar, true)
                                 setAllContainerColors(requireContext().themeColor(R.attr.colorSurface))
                             }
                         }
@@ -94,7 +96,7 @@ class DetailPagerFragment : Fragment() {
             } else {
                 adapter.setData(it)
             }
-        })
+        }
     }
 
     fun currentFragment(): Fragment? {

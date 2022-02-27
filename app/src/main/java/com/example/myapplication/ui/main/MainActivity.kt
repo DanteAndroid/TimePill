@@ -72,13 +72,13 @@ class MainActivity : AppCompatActivity() {
             when (destination.id) {
                 R.id.navigation_home -> {
 //                    binding.collapseContent.isVisible = viewModel.topic.value != null
-
                     binding.bottomAppBarContentContainer.isVisible = true
 //                    getBottomAppBar().setFabAlignmentModeAndReplaceMenu(
 //                        BottomAppBar.FAB_ALIGNMENT_MODE_CENTER,
 //                        R.menu.bottom_nav_menu
 //                    )
                     switchAlignMode(false)
+                    showBottomBar(true)
                     binding.fab.let {
                         it.setImageResource(R.drawable.ic_baseline_edit_24)
                         it.setOnClickListener {
@@ -104,14 +104,13 @@ class MainActivity : AppCompatActivity() {
                 }
                 R.id.detailPagerFragment -> {
                     binding.collapseContent.isVisible = false
-
                     binding.bottomAppBarContentContainer.isVisible = false
 //                    getBottomAppBar().setFabAlignmentModeAndReplaceMenu(
 //                        BottomAppBar.FAB_ALIGNMENT_MODE_END,
 //                        R.menu.bottom_menu_diary_detail
 //                    )
                     switchAlignMode(true)
-                    showBottomBar(true)
+                    showBottomBar(false)
                     binding.fab.let {
                         it.setImageResource(R.drawable.fab_comment)
                         it.setOnClickListener {
@@ -222,11 +221,11 @@ class MainActivity : AppCompatActivity() {
 
     private fun switchAlignMode(isEnd: Boolean = false) {
         binding.run {
-            bottomAppBarContentContainer.isVisible = !isEnd
-            bottomAppBar.post {
-                bottomAppBar.fabAlignmentMode =
-                    if (isEnd) BottomAppBar.FAB_ALIGNMENT_MODE_END else BottomAppBar.FAB_ALIGNMENT_MODE_CENTER
-            }
+//            bottomAppBarContentContainer.isVisible = !isEnd
+//            bottomAppBar.post {
+            bottomAppBar.fabAlignmentMode =
+                if (isEnd) BottomAppBar.FAB_ALIGNMENT_MODE_END else BottomAppBar.FAB_ALIGNMENT_MODE_CENTER
+//            }
         }
     }
 

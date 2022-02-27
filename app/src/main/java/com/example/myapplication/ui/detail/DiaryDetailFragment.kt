@@ -56,7 +56,6 @@ class DiaryDetailFragment : Fragment() {
         arguments?.let {
             diaryId = it.getInt(KEY_DIARY_ID)
         }
-
     }
 
     fun commentDiary() {

@@ -80,8 +80,8 @@ class HomeFragment : Fragment() {
             val extras = FragmentNavigatorExtras(view to transitionName)
 
             val action = HomeFragmentDirections.actionNavigationHomeToDetailPagerFragment(
-                position,
-                DIARIES_TYPE_HOME
+                DIARIES_TYPE_HOME,
+                position
             )
             findNavController().navigate(action, extras)
         }
