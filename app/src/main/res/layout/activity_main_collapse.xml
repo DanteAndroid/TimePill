@@ -10,7 +10,6 @@
         android:id="@+id/appBar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:fitsSystemWindows="true"
         android:theme="@style/ThemeOverlay.MaterialComponents.Dark.ActionBar"
         app:expanded="false">
 
@@ -71,6 +70,8 @@
         android:layout_gravity="bottom"
         app:fabAlignmentMode="center"
         app:fabCradleMargin="@dimen/bottom_app_bar_fab_cradle_margin"
+        android:background="@color/primaryColor"
+        android:backgroundTint="@color/primaryColor"
         app:fabCradleRoundedCornerRadius="@dimen/bottom_app_bar_fab_cradle_corner_radius"
         app:hideOnScroll="true"
         app:menu="@menu/bottom_nav_menu">
@@ -80,7 +81,6 @@
             android:layout_width="wrap_content"
             android:layout_height="@dimen/min_touch_target_size"
             android:layout_marginVertical="@dimen/grid_0_5"
-            android:foreground="@drawable/bottom_app_bar_title_foreground"
             android:gravity="center_vertical"
             android:orientation="horizontal"
             android:paddingHorizontal="@dimen/grid_0_5">

@@ -21,9 +21,8 @@
     </style>
 
     <style name="Theme.Main" parent="Theme.MyApplication.NoActionBar">
-        <!--        <item name="android:statusBarColor">@color/primaryColor</item>-->
-        <!--        <item name="android:windowDrawsSystemBarBackgrounds">true</item>-->
         <item name="android:windowTranslucentStatus">true</item>
+        <item name="android:windowDrawsSystemBarBackgrounds">true</item>
         <item name="bottomAppBarStyle">@style/Widget.MaterialComponents.BottomAppBar.Colored</item>
         <item name="bottomSheetDialogTheme">@style/BottomSheetDialog</item>
     </style>
